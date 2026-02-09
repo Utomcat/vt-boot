@@ -114,13 +114,25 @@
 
 			<dependency>
 				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-internationalization-starter</artifactId>
+				<artifactId>vt-boot-cache-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-datasource-starter</artifactId>
 				<version>${reversion}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.ranyk</groupId>
 				<artifactId>vt-boot-log-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-internationalization-starter</artifactId>
 				<version>${reversion}</version>
 			</dependency>
 
