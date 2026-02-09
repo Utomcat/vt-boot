@@ -1,0 +1,86 @@
+package com.ranyk.vt.boot.base.exception;
+
+import cn.hutool.core.util.StrUtil;
+import com.ranyk.vt.boot.internationalization.utils.MessageUtils;
+import lombok.*;
+
+import java.io.Serial;
+
+/**
+ * CLASS_NAME: BaseException.java
+ *
+ * @author ranyk
+ * @version V1.0
+ * @description: 基础异常类
+ * @date: 2026-02-08
+ */
+@Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@SuppressWarnings("unused")
+@EqualsAndHashCode(callSuper = true)
+public class BaseException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 1208329283568743139L;
+
+    /**
+     * 所属模块
+     */
+    private String module;
+    /**
+     * 异常代码
+     */
+    private String code;
+    /**
+     * 错误信息参数
+     */
+    private Object[] args;
+
+    /**
+     * 构造函数 - 传入 模块 、 异常信息 构造
+     *
+     * @param module        模块
+     * @param detailMessage 异常信息
+     */
+    public BaseException(String module, String detailMessage) {
+        super(detailMessage, null);
+        this.module = module;
+
+    }
+
+    /**
+     * 构造函数 - 传入 异常代码 、 异常信息参数 构造
+     *
+     * @param code 异常代码
+     * @param args 异常信息参数
+     */
+    public BaseException(String code, Object[] args) {
+        super();
+        this.code = code;
+        this.args = args;
+    }
+
+    /**
+     * 构造函数 - 传入 异常信息 构造
+     *
+     * @param detailMessage 异常信息
+     */
+    public BaseException(String detailMessage) {
+        super(detailMessage);
+    }
+
+    /**
+     * 获取异常信息
+     *
+     * @return 返回异常信息
+     */
+    @Override
+    public String getMessage() {
+        if (StrUtil.isNotBlank(this.code)) {
+            return MessageUtils.message(this.code, this.args);
+        }
+        return super.getMessage();
+    }
+}

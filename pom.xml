@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.10</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+	<groupId>com.ranyk</groupId>
+    <artifactId>vt-boot</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>vt-boot</name>
+    <description>Spring Boot 3 + JDK 21</description>
+
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>vt-boot-starter</module>
+		<module>vt-boot-example</module>
+	</modules>
+
+    <url/>
+
+    <licenses>
+        <license/>
+    </licenses>
+
+    <developers>
+        <developer/>
+    </developers>
+
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+
+    <properties>
+        <java.version>21</java.version>
+
+		<reversion>0.0.1-SNAPSHOT</reversion>
+		<spring-boot.version>3.5.10</spring-boot.version>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+			<!-- Source: https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-client -->
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-client</artifactId>
+				<version>3.5.7</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-server -->
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-server</artifactId>
+				<version>3.5.7</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>4.0.0-M1</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.18.42</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct</artifactId>
+				<version>1.7.0.Beta1</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>5.8.43</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-async-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-base-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-internationalization-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-log-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-web-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<source>21</source>
+					<target>21</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>1.5.5.Final</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>p12</nonFilteredFileExtension>
+						<nonFilteredFileExtension>pem</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*/**</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+    </build>
+
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
