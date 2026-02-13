@@ -100,6 +100,54 @@
 				<scope>compile</scope>
 			</dependency>
 
+			<!-- Source: https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+			<dependency>
+				<groupId>org.mariadb.jdbc</groupId>
+				<artifactId>mariadb-java-client</artifactId>
+				<version>3.5.7</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot3-starter -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+				<version>3.5.16</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>4.0.1</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>3.5.16</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-extension -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-extension</artifactId>
+				<version>3.5.16</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-jsqlparser -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-jsqlparser</artifactId>
+				<version>3.5.16</version>
+				<scope>compile</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>com.ranyk</groupId>
 				<artifactId>vt-boot-async-starter</artifactId>
@@ -149,7 +197,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.15.0</version>
 				<configuration>
 					<source>21</source>
 					<target>21</target>
@@ -176,13 +224,24 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version>
-				<configuration>
-					<nonFilteredFileExtensions>
-						<nonFilteredFileExtension>p12</nonFilteredFileExtension>
-						<nonFilteredFileExtension>pem</nonFilteredFileExtension>
-					</nonFilteredFileExtensions>
-				</configuration>
+				<version>3.3.1</version>
+				<executions>
+					<execution>
+						<id>default-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<configuration>
+							<encoding>UTF-8</encoding>
+							<propertiesEncoding>UTF-8</propertiesEncoding>
+							<nonFilteredFileExtensions>
+								<nonFilteredFileExtension>p12</nonFilteredFileExtension>
+								<nonFilteredFileExtension>pem</nonFilteredFileExtension>
+							</nonFilteredFileExtensions>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 
