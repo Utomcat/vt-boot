@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString(callSuper=true)
+@SuppressWarnings("unused")
 public class BaseEntity implements Serializable {
 
     @Serial
