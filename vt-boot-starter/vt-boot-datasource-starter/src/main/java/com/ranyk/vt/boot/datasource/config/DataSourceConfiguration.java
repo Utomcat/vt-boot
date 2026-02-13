@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
  * @date: 2026-02-13
  */
 @AutoConfiguration
+@SuppressWarnings("all")
 @MapperScan("com.ranyk.vt.boot.**.repository")
 public class DataSourceConfiguration {
 
