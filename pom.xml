@@ -93,6 +93,22 @@
 				<scope>compile</scope>
 			</dependency>
 
+			<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct-processor</artifactId>
+				<version>1.7.0.Beta1</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-mapstruct-binding</artifactId>
+				<version>0.2.0</version>
+				<scope>compile</scope>
+			</dependency>
+
 			<!-- Source: https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
 			<dependency>
 				<groupId>cn.hutool</groupId>
@@ -210,18 +226,33 @@
 				<configuration>
 					<source>21</source>
 					<target>21</target>
+					<!-- 关键配置：annotationProcessorPaths 的顺序和内容 -->
 					<annotationProcessorPaths>
+						<!-- 1. 必须：Lombok 处理器 -->
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>1.18.30</version>
+							<version>1.18.42</version>
 						</path>
+						<!-- 2. 必须：Lombok-MapStruct 绑定处理器，确保 Lombok 生成完毕后 MapStruct 才工作 -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+						<!-- 3. 必须：MapStruct 处理器 -->
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
-							<version>1.5.5.Final</version>
+							<version>1.7.0.Beta1</version>
 						</path>
 					</annotationProcessorPaths>
+					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-Amapstruct.verbose=true</arg>
+						<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
+						<arg>-Amapstruct.suppressGeneratorVersionInfoComment=true</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 

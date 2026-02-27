@@ -23,9 +23,16 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 
+		<!-- MapStruct 核心库 -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
+		</dependency>
+
+		<!-- Lombok 和 MapStruct 的绑定依赖，确保两者可以协同工作 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
 		</dependency>
 
 		<dependency>
@@ -38,6 +45,7 @@
 			<artifactId>jackson-annotations</artifactId>
 		</dependency>
 
+		<!-- 国际化模块 -->
 		<dependency>
 			<groupId>com.ranyk</groupId>
 			<artifactId>vt-boot-internationalization-starter</artifactId>

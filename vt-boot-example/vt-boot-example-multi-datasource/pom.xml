@@ -11,7 +11,7 @@
     <artifactId>vt-boot-example-multi-datasource</artifactId>
 
     <name>vt-boot-example-multi-datasource</name>
-    <description>vt-boot-example-multi-datasource</description>
+    <description>多数据源插件 使用样例</description>
 
     <properties>
 
