@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.ranyk.vt.boot.example.single.datasource.domain.dto.AppLogDTO;
 import com.ranyk.vt.boot.example.single.datasource.domain.po.AppLogPO;
 import com.ranyk.vt.boot.example.single.datasource.domain.vo.AppLogVO;
+import com.ranyk.vt.boot.example.single.datasource.mapper.AppLogMapper;
 import com.ranyk.vt.boot.example.single.datasource.service.AppLogService;
 import com.ranyk.vt.boot.web.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +28,21 @@ public class AppLogApi {
      * 业务日志业务逻辑处理对象
      */
     private final AppLogService appLogService;
+    /**
+     * 业务日志对象转换 Mapper 对象
+     */
+    private final AppLogMapper appLogMapper;
 
     /**
      * 构造方法 - 向 Spring IOC 容器中自动注入业务逻辑处理对象
      *
      * @param appLogService 业务日志业务逻辑处理对象
+     * @param appLogMapper  业务日志对象转换 Mapper 对象
      */
     @Autowired
-    public AppLogApi(AppLogService appLogService) {
+    public AppLogApi(AppLogService appLogService, AppLogMapper appLogMapper) {
         this.appLogService = appLogService;
+        this.appLogMapper = appLogMapper;
     }
 
     /**
@@ -44,8 +51,8 @@ public class AppLogApi {
      * @return 业务日志列表, {@link AppLogVO} 对象 List 集合
      */
     @GetMapping("/list")
-    public Result<List<AppLogVO>> list(){
-        return Result.success(BeanUtil.copyToList(appLogService.queryList(), AppLogVO.class));
+    public Result<List<AppLogVO>> list() {
+        return Result.success(appLogMapper.dtoListToVOList(appLogService.queryList()));
     }
 
     /**
@@ -55,7 +62,7 @@ public class AppLogApi {
      * @return 保存结果, true: 保存成功; false: 保存失败;
      */
     @PostMapping
-    public Result<Boolean> saveOne(@RequestBody AppLogPO appLogPO){
+    public Result<Boolean> saveOne(@RequestBody AppLogPO appLogPO) {
         return Result.success(appLogService.saveOne(BeanUtil.copyProperties(appLogPO, AppLogDTO.class)));
     }
 }

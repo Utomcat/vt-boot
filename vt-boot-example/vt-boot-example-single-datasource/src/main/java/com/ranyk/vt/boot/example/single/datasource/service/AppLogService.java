@@ -1,9 +1,9 @@
 package com.ranyk.vt.boot.example.single.datasource.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ranyk.vt.boot.example.single.datasource.domain.dto.AppLogDTO;
 import com.ranyk.vt.boot.example.single.datasource.domain.entity.AppLog;
+import com.ranyk.vt.boot.example.single.datasource.mapper.AppLogMapper;
 import com.ranyk.vt.boot.example.single.datasource.repository.AppLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,15 +26,21 @@ public class AppLogService extends ServiceImpl<AppLogRepository, AppLog> {
      * 业务日志数据访问对象
      */
     private final AppLogRepository appLogRepository;
+    /**
+     * 业务日志对象转换 Mapper 对象
+     */
+    private final AppLogMapper appLogMapper;
 
     /**
      * 构造方法 - 向 Spring IOC 容器中自动注入业务逻辑处理对象
      *
      * @param appLogRepository 业务日志数据访问对象
+     * @param appLogMapper     业务日志对象转换 Mapper 对象
      */
     @Autowired
-    public AppLogService(AppLogRepository appLogRepository) {
+    public AppLogService(AppLogRepository appLogRepository, AppLogMapper appLogMapper) {
         this.appLogRepository = appLogRepository;
+        this.appLogMapper = appLogMapper;
     }
 
     /**
@@ -44,7 +50,7 @@ public class AppLogService extends ServiceImpl<AppLogRepository, AppLog> {
      */
     public List<AppLogDTO> queryList() {
         List<AppLog> list = list();
-        return BeanUtil.copyToList(list, AppLogDTO.class);
+        return appLogMapper.entityListToDTOList(list);
     }
 
     /**
@@ -54,7 +60,7 @@ public class AppLogService extends ServiceImpl<AppLogRepository, AppLog> {
      * @return 保存结果, true: 保存成功; false: 保存失败;
      */
     public Boolean saveOne(AppLogDTO appLogDTO) {
-        AppLog appLog = BeanUtil.copyProperties(appLogDTO, AppLog.class);
+        AppLog appLog = appLogMapper.dtoToEntity(appLogDTO);
         return this.save(appLog);
     }
 }
