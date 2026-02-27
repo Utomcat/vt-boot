@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: vt-boot-example-single-datasource
+  thymeleaf:
+    check-template-location: false
+  profiles:
+    active: local
+
+server:
+  port: 9082
