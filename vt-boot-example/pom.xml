@@ -12,88 +12,19 @@
 
     <name>vt-boot-example</name>
     <description>示例模块</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>vt-boot-example-multi-datasource</module>
+        <module>vt-boot-example-single-datasource</module>
+        <module>vt-boot-example-web</module>
+    </modules>
 
     <properties>
 
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-server</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>org.assertj</artifactId>
-                    <groupId>assertj-core</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ranyk</groupId>
-            <artifactId>vt-boot-async-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ranyk</groupId>
-            <artifactId>vt-boot-web-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ranyk</groupId>
-            <artifactId>vt-boot-log-starter</artifactId>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.ranyk.vt.boot.example.VtBootExampleApplication</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
 
 </project>
