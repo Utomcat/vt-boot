@@ -19,20 +19,40 @@ import java.util.List;
  * @date: 2026-02-26
  */
 @Service
+@SuppressWarnings("all")
 public class AppLogService extends ServiceImpl<AppLogRepository, AppLog> {
 
+    /**
+     * 业务日志数据访问对象
+     */
     private final AppLogRepository appLogRepository;
 
+    /**
+     * 构造方法 - 向 Spring IOC 容器中自动注入业务逻辑处理对象
+     *
+     * @param appLogRepository 业务日志数据访问对象
+     */
     @Autowired
     public AppLogService(AppLogRepository appLogRepository) {
         this.appLogRepository = appLogRepository;
     }
 
+    /**
+     * 获取业务日志列表
+     *
+     * @return 业务日志列表, {@link AppLogDTO} 列表
+     */
     public List<AppLogDTO> queryList() {
         List<AppLog> list = list();
         return BeanUtil.copyToList(list, AppLogDTO.class);
     }
 
+    /**
+     * 保存一条业务日志数据
+     *
+     * @param appLogDTO 业务日志数据对象 {@link AppLogDTO}
+     * @return 保存结果, true: 保存成功; false: 保存失败;
+     */
     public Boolean saveOne(AppLogDTO appLogDTO) {
         AppLog appLog = BeanUtil.copyProperties(appLogDTO, AppLog.class);
         return this.save(appLog);
