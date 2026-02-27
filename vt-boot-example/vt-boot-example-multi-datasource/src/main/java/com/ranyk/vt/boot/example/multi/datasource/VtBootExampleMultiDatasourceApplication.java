@@ -18,6 +18,11 @@ import org.springframework.context.annotation.ComponentScan;
 @MapperScan(basePackages = "com.ranyk.vt.boot.example.multi.datasource.repository")
 public class VtBootExampleMultiDatasourceApplication {
 
+    /**
+     * 启动方法
+     *
+     * @param args 启动参数
+     */
     public static void main(String[] args) {
         SpringApplication.run(VtBootExampleMultiDatasourceApplication.class, args);
     }
