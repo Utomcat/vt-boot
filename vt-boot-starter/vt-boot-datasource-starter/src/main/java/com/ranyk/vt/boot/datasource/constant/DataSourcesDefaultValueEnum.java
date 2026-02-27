@@ -16,15 +16,15 @@ public enum DataSourcesDefaultValueEnum {
     /**
      * 数据状态默认值
      */
-    STATUS_DEFAULT_VALUE("数据状态默认值", 0),
+    STATUS_DEFAULT_VALUE("数据状态默认值", 1),
     /**
      * 创建人默认值
      */
-    CREATE_BY_DEFAULT_VALUE("创建人默认值", 1L),
+    CREATE_BY_DEFAULT_VALUE("创建人默认值", "-"),
     /**
      * 更新人默认值
      */
-    UPDATE_BY_DEFAULT_VALUE("更新人默认值", 1L),
+    UPDATE_BY_DEFAULT_VALUE("更新人默认值", "-"),
     /**
      * 字符串默认值
      */

@@ -1,13 +1,15 @@
 package com.ranyk.vt.boot.datasource.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.ranyk.vt.boot.datasource.handler.DataObjectHandler;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -20,21 +22,21 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration
 @SuppressWarnings("all")
-@MapperScan("com.ranyk.vt.boot.**.repository")
+@AutoConfigureBefore({DataSourceAutoConfiguration.class, MybatisPlusAutoConfiguration.class})
 public class DataSourceConfiguration {
 
     /**
-     * 向 Spring Bean 容器中注入 自定义元对象处理器 对象
+     * 向 Spring Bean 容器中注入 自定义元对象处理器 对象 - 该操作是对 MyBatis Plus 的配置
      *
      * @return 返回自定义元对象处理器对象 {@link DataObjectHandler}
      */
     @Bean
-    public DataObjectHandler myMetaobjectHandler(){
+    public DataObjectHandler myMetaobjectHandler() {
         return new DataObjectHandler();
     }
 
     /**
-     * 向 Spring Bean 容器中注入 Mybatis Plus 拦截器对象, 当下注册了(执行顺序如下):
+     * 向 Spring Bean 容器中注入 Mybatis Plus 拦截器对象, 当下注册了(执行顺序如下): - 该操作是对 MyBatis Plus 的配置
      * <p>
      *     <ol>
      *         <li>防全表更新与删除插件</li>
@@ -66,6 +68,8 @@ public class DataSourceConfiguration {
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MARIADB));
         //乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        // SQL 性能规范插件/ 非法 SQL 拦截插件 - 插件 IllegalSQLInnerInterceptor 在 3.5.10 版本开始移除
         return interceptor;
     }
+
 }

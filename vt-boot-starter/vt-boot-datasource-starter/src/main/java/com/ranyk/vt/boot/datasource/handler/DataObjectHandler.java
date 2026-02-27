@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author ranyk
  * @version V1.0
- * @description: 数据库对象监听实现类
+ * @description: 数据库对象监听实现类, 该类用于在插入和修改时对公共字段进行填充, 如创建时间、更新时间、创建人、更新人、数据状态、备注等字段进行填充,以确保数据的完整性和一致性。
  * @date: 2026-02-13
  */
 public class DataObjectHandler implements MetaObjectHandler {
