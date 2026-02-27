@@ -1,10 +1,10 @@
 spring:
   application:
-    name: vt-boot-example
+    name: vt-boot-example-multi-datasource
   thymeleaf:
     check-template-location: false
   profiles:
     active: local
 
 server:
-  port: 9081
+  port: 9083

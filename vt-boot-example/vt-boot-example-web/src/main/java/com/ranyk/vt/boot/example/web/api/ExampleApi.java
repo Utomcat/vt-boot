@@ -1,4 +1,4 @@
-package com.ranyk.vt.boot.example.api;
+package com.ranyk.vt.boot.example.web.api;
 
 import com.ranyk.vt.boot.log.annotations.Log;
 import com.ranyk.vt.boot.web.vo.Result;
