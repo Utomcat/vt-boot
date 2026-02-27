@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    dynamic:
+      # 启用动态数据源，默认true
+      enabled: true
+      # 设置默认的数据源或者数据源组,默认值即为 master
+      primary: master
+      # 严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      strict: false
+      # 是否优雅关闭数据源，默认为false，设置为true时，关闭数据源时如果数据源中还存在活跃连接，至多等待10s后强制关闭
+      grace-destroy: true
+      datasource:
+        master:
+          url: jdbc:mariadb://localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useLegacyDatetimeCode=false&cachePrepStmts=true&useServerPrepStmts=true
+          username: root
+          password: 123456
+          # 3.2.0 开始支持 SPI 可省略此配置
+          driver-class-name: org.mariadb.jdbc.Driver
+        secondary:
+          url: jdbc:mariadb://localhost:3306/test1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useLegacyDatetimeCode=false&cachePrepStmts=true&useServerPrepStmts=true
+          username: root
+          password: 123456
+          # 3.2.0 开始支持 SPI 可省略此配置
+          driver-class-name: org.mariadb.jdbc.Driver
+        third:
+          url: jdbc:mariadb://localhost:3306/test2?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useLegacyDatetimeCode=false&cachePrepStmts=true&useServerPrepStmts=true
+          username: root
+          password: 123456
+          # 3.2.0 开始支持 SPI 可省略此配置
+          driver-class-name: org.mariadb.jdbc.Driver
