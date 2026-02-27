@@ -1,64 +1,70 @@
 package com.ranyk.vt.boot.base.exception;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serial;
 
 /**
- * CLASS_NAME: ServiceException.java
+ * CLASS_NAME: DataSourceException.java
  *
  * @author ranyk
  * @version V1.0
- * @description: 自定义业务异常类
- * @date: 2026-02-07
+ * @description: 自定义数据源异常类
+ * @date: 2026-02-26
  */
 @Data
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ServiceException extends BaseException {
+public class DataSourceException extends BaseException{
 
     @Serial
-    private static final long serialVersionUID = -4063634724930884784L;
+    private static final long serialVersionUID = 7419142890167806349L;
 
     /**
+     *
      * 构造函数 - 传入 异常信息 构造
      *
      * @param detailMessage 异常信息
      */
-    public ServiceException(String detailMessage) {
+    public DataSourceException(String detailMessage) {
         super(detailMessage);
     }
 
     /**
+     *
      * 构造函数 - 传入 模块 、 异常信息 构造
      *
      * @param module        模块
      * @param detailMessage 错误信息
      */
-    public ServiceException(String module, String detailMessage) {
+    public DataSourceException(String module, String detailMessage) {
         super(module, detailMessage);
     }
 
     /**
-     * 构造函数 - 传入 异常代码 、 错误信息参数 构造
      *
-     * @param code 错误代码
-     * @param args 错误信息参数
+     * 构造函数 - 传入 异常代码 、 异常信息参数 构造
+     *
+     * @param code   异常代码
+     * @param args   异常信息参数
      */
-    public ServiceException(String code, Object[] args) {
+    public DataSourceException(String code, Object[] args) {
         super(code, args);
     }
 
     /**
+     *
      * 构造函数 - 传入 模块 、 异常代码 、 异常信息参数 构造
      *
      * @param module 模块
      * @param code   异常代码
      * @param args   异常信息参数
      */
-    public ServiceException(String module, String code, Object[] args) {
+    public DataSourceException(String module, String code, Object[] args) {
         super(module, code, args);
     }
-
 }

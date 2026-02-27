@@ -39,6 +39,15 @@ public class BaseException extends RuntimeException {
     private Object[] args;
 
     /**
+     * 构造函数 - 传入 异常信息 构造
+     *
+     * @param detailMessage 异常信息
+     */
+    public BaseException(String detailMessage) {
+        super(detailMessage);
+    }
+
+    /**
      * 构造函数 - 传入 模块 、 异常信息 构造
      *
      * @param module        模块
@@ -63,24 +72,18 @@ public class BaseException extends RuntimeException {
     }
 
     /**
-     * 构造函数 - 传入 异常信息 构造
-     *
-     * @param detailMessage 异常信息
-     */
-    public BaseException(String detailMessage) {
-        super(detailMessage);
-    }
-
-    /**
      * 获取异常信息
      *
      * @return 返回异常信息
      */
     @Override
     public String getMessage() {
+        // 存在异常代码
         if (StrUtil.isNotBlank(this.code)) {
+            // 获取国际化异常信息
             return MessageUtils.message(this.code, this.args);
         }
+        // 否则直接返回异常信息
         return super.getMessage();
     }
 }
