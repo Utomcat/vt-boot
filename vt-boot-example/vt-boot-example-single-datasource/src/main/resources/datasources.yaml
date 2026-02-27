@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    dynamic:
+      # 是否启用动态数据源，默认true
+      enabled: false
+    # 数据库驱动类名
+    driverClassName: org.mariadb.jdbc.Driver
+    # 数据库连接URL
+    url: jdbc:mariadb://localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useLegacyDatetimeCode=false&cachePrepStmts=true&useServerPrepStmts=true
+    # 数据库连接用户名
+    username: root
+    # 数据库连接密码
+    password: 123456
+    # 数据库连接池配置
+    hikari:
+      # 数据库连接超时时间（毫秒）
+      connection-timeout: 600000
+      # 数据库连接池最大连接数
+      maximum-pool-size: 10
+      # 数据库连接池最小空闲连接数
+      minimum-idle: 5
+      # 数据库连接池最大空闲时间（毫秒）
+      idle-timeout: 500000
