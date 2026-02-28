@@ -20,10 +20,9 @@ import java.time.LocalDateTime;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 @ToString(callSuper=true)
-@SuppressWarnings("unused")
 public class BasePO implements Serializable {
     @Serial
     private static final long serialVersionUID = 3767708318679260L;

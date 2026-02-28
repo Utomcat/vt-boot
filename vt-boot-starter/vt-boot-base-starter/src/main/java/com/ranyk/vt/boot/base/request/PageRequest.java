@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * CLASS_NAME: PageRequest.java
@@ -20,16 +19,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class PageRequest extends BaseRequest implements Serializable {
+public class PageRequest extends BaseRequest {
     @Serial
     private static final long serialVersionUID = -1175101237192790749L;
 
     /**
      * 当前页码
      */
-    private Integer currentPage;
+    private Integer currentPage = 1;
     /**
      * 每页显示数量
      */
-    private Integer pageSize;
+    private Integer pageSize = 10;
 }

@@ -22,6 +22,7 @@ import java.io.Serial;
  * @date: 2026-02-07
  */
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
@@ -33,17 +34,17 @@ public class PageResponse<T> extends MultipleResponse<T> {
     /**
      * 当前页码
      */
-    private Integer currentPage;
+    private Integer currentPage = 1;
     /**
      * 每页显示数量
      */
-    private Integer pageSize;
+    private Integer pageSize  = 10;
     /**
      * 总页数
      */
-    private Integer totalPage;
+    private Integer totalPage = 0;
     /**
      * 数据总数
      */
-    private Integer total;
+    private Integer total = 0;
 }

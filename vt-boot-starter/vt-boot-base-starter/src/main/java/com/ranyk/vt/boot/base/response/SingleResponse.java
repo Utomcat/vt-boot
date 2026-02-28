@@ -1,6 +1,7 @@
 package com.ranyk.vt.boot.base.response;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 
@@ -18,11 +19,12 @@ import java.io.Serial;
  * @date: 2026-02-07
  */
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class SingleResponse<T> extends BaseResponse {
+public class SingleResponse<T> extends BaseResponse<T> {
     @Serial
     private static final long serialVersionUID = 5459415561490169322L;
 

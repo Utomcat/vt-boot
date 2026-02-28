@@ -1,33 +1,31 @@
-package com.ranyk.vt.boot.base.domain.dto;
+package com.ranyk.vt.boot.base.domain.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ranyk.vt.boot.base.request.PageRequest;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * CLASS_NAME: BaseDTO.java
+ * CLASS_NAME: PageBasePO.java
  *
  * @author ranyk
  * @version V1.0
- * @description: 基础数据传输对象
- * @date: 2026-02-26
+ * @description: 分页基础数据请求接收参数对象
+ * @date: 2026-02-27
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @ToString(callSuper=true)
-@SuppressWarnings("unused")
-public class BaseDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class PageBasePO extends PageRequest {
     @Serial
-    private static final long serialVersionUID = 5783833370832885138L;
-
+    private static final long serialVersionUID = -3731720459120351042L;
     /**
      * 主键ID 雪花算法生成
      */
@@ -60,12 +58,4 @@ public class BaseDTO implements Serializable {
      * 更新人 ID, 默认值为 1
      */
     private String updateBy;
-    /**
-     * 当前页码
-     */
-    private Integer currentPage = 1;
-    /**
-     * 每页显示数量
-     */
-    private Integer pageSize = 10;
 }

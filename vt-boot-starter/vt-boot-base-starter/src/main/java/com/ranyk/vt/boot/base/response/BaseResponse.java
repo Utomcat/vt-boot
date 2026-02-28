@@ -23,10 +23,12 @@ import java.io.Serializable;
  */
 @Data
 @ToString
+@SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
-public class BaseResponse implements Serializable {
+@SuppressWarnings("unused")
+public class BaseResponse<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1165419281884329145L;
 
