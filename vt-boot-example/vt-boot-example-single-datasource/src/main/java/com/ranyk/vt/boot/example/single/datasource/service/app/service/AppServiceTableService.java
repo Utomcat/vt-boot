@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @date: 2026-02-26
  */
 @Service
+@SuppressWarnings("all")
 public class AppServiceTableService extends ServiceImpl<AppServiceTableRepository, AppServiceTable> {
 
     /**

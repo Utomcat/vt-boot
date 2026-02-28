@@ -21,6 +21,7 @@ import java.util.List;
  * @description: 业务日志对象转换 Mapper 接口
  * @date: 2026-02-27
  */
+@SuppressWarnings("unused")
 @Mapper(componentModel = "spring")
 public interface AppLogMapper {
 

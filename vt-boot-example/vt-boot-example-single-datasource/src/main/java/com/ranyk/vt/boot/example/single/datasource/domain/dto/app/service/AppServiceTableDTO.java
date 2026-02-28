@@ -21,6 +21,7 @@ import java.io.Serial;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("unused")
 @EqualsAndHashCode(callSuper = true)
 public class AppServiceTableDTO extends BaseDTO {
 
