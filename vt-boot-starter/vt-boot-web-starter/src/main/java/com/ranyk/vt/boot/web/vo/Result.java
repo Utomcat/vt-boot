@@ -3,7 +3,10 @@ package com.ranyk.vt.boot.web.vo;
 import com.ranyk.vt.boot.base.constant.ResponseCode;
 import com.ranyk.vt.boot.base.response.SingleResponse;
 import lombok.*;
-import java.io.Serial;import java.io.Serializable;
+import lombok.experimental.SuperBuilder;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * CLASS_NAME: Result.java
@@ -15,9 +18,11 @@ import java.io.Serial;import java.io.Serializable;
  */
 @Data
 @ToString
+@SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
+@SuppressWarnings("unused")
 public class Result<T> implements Serializable{
     @Serial
     private static final long serialVersionUID = 1088505742827320434L;
@@ -71,7 +76,7 @@ public class Result<T> implements Serializable{
      * @return 返回结果 {@link Result} 对象
      */
     public static <T> Result<T> success(T data) {
-        Result<T> result = new Result<T>();
+        Result<T> result = new Result<>();
         result.setSuccess(Boolean.TRUE);
         result.setCode(ResponseCode.SUCCESS.name());
         result.setMsg(ResponseCode.SUCCESS.name());
@@ -88,7 +93,7 @@ public class Result<T> implements Serializable{
      * @return 错误结果 {@link Result} 对象
      */
     public static <T> Result<T> error(String code, String msg) {
-        Result<T> result = new Result<T>();
+        Result<T> result = new Result<>();
         result.setSuccess(Boolean.FALSE);
         result.setCode(code);
         result.setMsg(msg);
