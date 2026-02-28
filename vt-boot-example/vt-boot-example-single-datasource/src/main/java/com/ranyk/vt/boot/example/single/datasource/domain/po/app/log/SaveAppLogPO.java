@@ -1,4 +1,4 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.po;
+package com.ranyk.vt.boot.example.single.datasource.domain.po.app.log;
 
 import com.ranyk.vt.boot.base.domain.po.BasePO;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import java.io.Serial;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AppLogPO extends BasePO {
+public class SaveAppLogPO extends BasePO {
 
     @Serial
     private static final long serialVersionUID = 9029610146824615591L;

@@ -1,4 +1,4 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.entity;
+package com.ranyk.vt.boot.example.single.datasource.domain.entity.app.log;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ranyk.vt.boot.datasource.domain.entity.BaseEntity;
@@ -11,28 +11,28 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 
 /**
- * CLASS_NAME: AppServiceTable.java
+ * CLASS_NAME: AppLog.java
  *
  * @author ranyk
  * @version V1.0
- * @description: 业务测试表
+ * @description: 业务日志数据表映射对象
  * @date: 2026-02-26
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("app_service_table")
+@TableName("app_log")
 @EqualsAndHashCode(callSuper = true)
-public class AppServiceTable extends BaseEntity {
+public class AppLog extends BaseEntity {
     @Serial
-    private static final long serialVersionUID = 1447660024375069900L;
+    private static final long serialVersionUID = 4702056900180331481L;
     /**
-     * 业务名称
+     * 列1
      */
-    private String serviceName;
+    private String columnOne;
     /**
-     * 业务数据
+     * 列2
      */
-    private String serviceData;
+    private String columnTwo;
 }

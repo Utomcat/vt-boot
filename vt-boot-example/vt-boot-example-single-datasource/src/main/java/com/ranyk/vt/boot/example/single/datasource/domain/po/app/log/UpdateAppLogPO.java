@@ -1,4 +1,4 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.po;
+package com.ranyk.vt.boot.example.single.datasource.domain.po.app.log;
 
 import com.ranyk.vt.boot.base.domain.po.BasePO;
 import lombok.AllArgsConstructor;
@@ -10,27 +10,28 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 
 /**
- * CLASS_NAME: 业务记录前端返回对象.java
+ * CLASS_NAME: UpdateAppLogPO.java
  *
  * @author ranyk
  * @version V1.0
- * @description:
- * @date: 2026-02-26
+ * @description: 接收前端传入的更新业务日志记录数据类
+ * @date: 2026-02-27
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AppServiceTablePO extends BasePO {
+public class UpdateAppLogPO extends BasePO {
+
     @Serial
-    private static final long serialVersionUID = 4972468636889030363L;
+    private static final long serialVersionUID = -2644695838397065878L;
     /**
-     * 业务名称
+     * 列1
      */
-    private String serviceName;
+    private String columnOne;
     /**
-     * 业务数据
+     * 列2
      */
-    private String serviceData;
+    private String columnTwo;
 }

@@ -1,7 +1,6 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.entity;
+package com.ranyk.vt.boot.example.single.datasource.domain.dto.app.log;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.ranyk.vt.boot.datasource.domain.entity.BaseEntity;
+import com.ranyk.vt.boot.base.domain.dto.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,22 +10,22 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 
 /**
- * CLASS_NAME: AppLog.java
+ * CLASS_NAME: AppLogVO.java
  *
  * @author ranyk
  * @version V1.0
- * @description: 业务日志数据表映射对象
+ * @description: 日志记录前端返回对象
  * @date: 2026-02-26
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("app_log")
 @EqualsAndHashCode(callSuper = true)
-public class AppLog extends BaseEntity {
+public class AppLogDTO extends BaseDTO {
+
     @Serial
-    private static final long serialVersionUID = 4702056900180331481L;
+    private static final long serialVersionUID = 6511603435692413861L;
     /**
      * 列1
      */

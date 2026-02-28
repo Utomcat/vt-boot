@@ -1,6 +1,6 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.dto;
+package com.ranyk.vt.boot.example.single.datasource.domain.vo.app.log;
 
-import com.ranyk.vt.boot.base.domain.dto.BaseDTO;
+import com.ranyk.vt.boot.base.domain.vo.BaseVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,10 +22,9 @@ import java.io.Serial;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AppLogDTO extends BaseDTO {
-
+public class QueryAppLogVO extends BaseVO {
     @Serial
-    private static final long serialVersionUID = 6511603435692413861L;
+    private static final long serialVersionUID = -4094292077727437069L;
     /**
      * 列1
      */

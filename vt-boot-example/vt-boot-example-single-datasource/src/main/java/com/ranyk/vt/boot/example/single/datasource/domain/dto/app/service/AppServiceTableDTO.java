@@ -1,4 +1,4 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.dto;
+package com.ranyk.vt.boot.example.single.datasource.domain.dto.app.service;
 
 import com.ranyk.vt.boot.base.domain.dto.BaseDTO;
 import lombok.AllArgsConstructor;

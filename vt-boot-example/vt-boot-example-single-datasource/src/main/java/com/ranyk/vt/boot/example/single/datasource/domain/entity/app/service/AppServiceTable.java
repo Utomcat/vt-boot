@@ -1,6 +1,7 @@
-package com.ranyk.vt.boot.example.single.datasource.domain.vo;
+package com.ranyk.vt.boot.example.single.datasource.domain.entity.app.service;
 
-import com.ranyk.vt.boot.base.domain.dto.BaseDTO;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.ranyk.vt.boot.datasource.domain.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,21 +11,22 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 
 /**
- * CLASS_NAME: 业务记录前端返回对象.java
+ * CLASS_NAME: AppServiceTable.java
  *
  * @author ranyk
  * @version V1.0
- * @description:
+ * @description: 业务测试表
  * @date: 2026-02-26
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("app_service_table")
 @EqualsAndHashCode(callSuper = true)
-public class AppServiceTableVO extends BaseDTO {
+public class AppServiceTable extends BaseEntity {
     @Serial
-    private static final long serialVersionUID = 2936960023657528979L;
+    private static final long serialVersionUID = 1447660024375069900L;
     /**
      * 业务名称
      */

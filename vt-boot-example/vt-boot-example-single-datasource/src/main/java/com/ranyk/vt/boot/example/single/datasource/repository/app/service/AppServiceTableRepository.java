@@ -1,7 +1,7 @@
-package com.ranyk.vt.boot.example.single.datasource.repository;
+package com.ranyk.vt.boot.example.single.datasource.repository.app.service;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ranyk.vt.boot.example.single.datasource.domain.entity.AppServiceTable;
+import com.ranyk.vt.boot.example.single.datasource.domain.entity.app.service.AppServiceTable;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 

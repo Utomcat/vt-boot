@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.single.datasource;
 
+import com.ranyk.vt.boot.base.response.PageResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -20,6 +21,11 @@ class VtBootExampleSingleDatasourceApplicationTests {
     @Test
     void contextLoads() {
         System.out.println("Hello World - Single Datasource");
+    }
+
+    @Test
+    void test0(){
+        PageResponse.builder().build();
     }
 
 }
