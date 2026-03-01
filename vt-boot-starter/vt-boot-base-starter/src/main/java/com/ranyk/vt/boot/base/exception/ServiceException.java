@@ -15,6 +15,7 @@ import java.io.Serial;
 @Data
 @ToString
 @NoArgsConstructor
+@SuppressWarnings("unused")
 @EqualsAndHashCode(callSuper = true)
 public class ServiceException extends BaseException {
 
