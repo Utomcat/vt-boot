@@ -1,0 +1,4 @@
+spring:
+  web:
+    locale: zh_CN
+    locale-resolver: accept-header
