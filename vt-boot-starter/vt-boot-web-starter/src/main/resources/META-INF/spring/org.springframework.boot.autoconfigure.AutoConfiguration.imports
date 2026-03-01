@@ -1,1 +1,2 @@
 com.ranyk.vt.boot.web.config.WebMvcConfiguration
+com.ranyk.vt.boot.web.config.CorsAutoConfiguration

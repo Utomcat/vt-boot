@@ -83,6 +83,11 @@ public class BaseException extends RuntimeException {
             // 获取国际化异常信息
             return MessageUtils.message(this.code, this.args);
         }
+        // 不存在异常代码则从 detailMessage 属性中获取
+        if (StrUtil.isNotBlank(super.getMessage()) && super.getMessage().contains(".")){
+            this.code = super.getMessage();
+            return MessageUtils.message(this.code, this.args);
+        }
         // 否则直接返回异常信息
         return super.getMessage();
     }

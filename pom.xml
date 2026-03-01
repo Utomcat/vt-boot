@@ -173,6 +173,22 @@
 				<scope>compile</scope>
 			</dependency>
 
+			<!-- Source: https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-boot3-starter -->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-spring-boot3-starter</artifactId>
+				<version>1.44.0</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-aop -->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-spring-aop</artifactId>
+				<version>1.44.0</version>
+				<scope>compile</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>com.ranyk</groupId>
 				<artifactId>vt-boot-async-starter</artifactId>
@@ -206,6 +222,12 @@
 			<dependency>
 				<groupId>com.ranyk</groupId>
 				<artifactId>vt-boot-internationalization-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-satoken-starter</artifactId>
 				<version>${reversion}</version>
 			</dependency>
 

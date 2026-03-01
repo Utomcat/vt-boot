@@ -39,11 +39,17 @@ public @interface Log {
      * 日志类型枚举
      */
     enum LogType {
-        // 操作日志
+        /**
+         * 操作日志
+         */
         OPERATION,
-        // 错误日志
+        /**
+         * 错误日志
+         */
         ERROR,
-        // 访问日志
+        /**
+         * 访问日志
+         */
         ACCESS
     }
 }

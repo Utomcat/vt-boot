@@ -128,3 +128,40 @@ public class VtBootExampleMultiDatasourceApplication {
 
 }
 ```
+
+## 数据源配置数据加密
+> [官方文档 - 数据安全保护](https://baomidou.com/guides/security/)
+```java
+// 调用方法 生成16位随机AES密钥
+String randomKey = AES.generateRandomKey();
+// 调用方法 使用随机密钥加密数据
+String encryptedData = AES.encrypt(需要加密的数据原文, randomKey);
+```
+**通过上述方式可以进行对应的数据加密,但是需要注意, 需记住生成的 `AES` 密钥以及对应加密后的字符串,否则后续无法进行解密数据**
+> 配置数据源时, 对已将数据源配置的 url, username, password 字符串前均加上 `mpw:` 字符, 配置格式如下:
+```yaml
+spring:
+  datasource:
+    dynamic:
+      # 是否启用动态数据源，默认true
+      enabled: false
+    # 数据库驱动类名
+    driverClassName: org.mariadb.jdbc.Driver
+    # 数据库连接URL
+    url: mpw:加密后的数据库连接 URL 字符串
+    # 数据库连接用户名
+    username: mpw:加密后的数据库连接用户名字符串
+    # 数据库连接密码
+    password: mpw:加密后的数据库连接密码字符串
+    # 数据库连接池配置
+    hikari:
+      # 数据库连接超时时间（毫秒）
+      connection-timeout: 600000
+      # 数据库连接池最大连接数
+      maximum-pool-size: 10
+      # 数据库连接池最小空闲连接数
+      minimum-idle: 5
+      # 数据库连接池最大空闲时间（毫秒）
+      idle-timeout: 500000
+```
+> 在项目启动时, 需要加上参数 `--mpw.key=AES密钥` 才能正常启动项目, 如果是在 `IDE` 中启动项目, 则需要在 `Run Configuration` 中添加项目参数 (在 `IDEA` 中设置 `Program arguments` 参数)  `--mpw.key=AES密钥`

@@ -6,11 +6,11 @@ spring:
     # 数据库驱动类名
     driverClassName: org.mariadb.jdbc.Driver
     # 数据库连接URL
-    url: jdbc:mariadb://localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useLegacyDatetimeCode=false&cachePrepStmts=true&useServerPrepStmts=true
+    url: mpw:m5K8pL8AKhiWJ6VokE1QKcd4ljLJ7W3GpSS3ncOkczDl3gip2OeSCB3inQpXTb6RIf/OhXr1/U4/kkZWI0aaEDEWqsd1EeI38dnJkzH0ofoOizKtc3WN1RP0Q7ponZXdd4s/mjabHjCAiGZuL0MYav1q+vDuJ7/kqOmr84NyzsEb+6soASKDL7tdKn7xBMS0xoSoigSBxRwOjnFFrVGTQkBfB7aGHjF9IpfKN7j8vTM=
     # 数据库连接用户名
-    username: root
+    username: mpw:n/TcDVePDPzY9AL6tDQKcw==
     # 数据库连接密码
-    password: 123456
+    password: mpw:brbYC5TFDvfJ6CL94F2xEw==
     # 数据库连接池配置
     hikari:
       # 数据库连接超时时间（毫秒）

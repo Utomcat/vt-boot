@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/example")
 public class ExampleApi {
 
+    /**
+     * 测试方法
+     *
+     * @return 测试结果
+     */
     @GetMapping("/hello")
     @Log(operation = "示例 API 接口类 - 测试方法", type = Log.LogType.ACCESS)
     public Result<String> hello() {
