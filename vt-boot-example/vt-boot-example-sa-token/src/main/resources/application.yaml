@@ -1,0 +1,18 @@
+spring:
+  # 应用配置
+  application:
+    # 应用名称配置
+    name: vt-boot-example-single-datasource
+  # 模板配置
+  thymeleaf:
+    # 是否检查模板路径
+    check-template-location: false
+  # spring 配置配置
+  config:
+    # 语言配置文件
+    import: classpath:language.yaml,classpath:logback.yaml,classpath:sa-token.yaml,classpath:datasource.yaml,classpath:mybatisplus.yaml
+
+# 服务配置
+server:
+  # 服务端口
+  port: 9084
