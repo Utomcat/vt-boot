@@ -22,6 +22,26 @@
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ranyk</groupId>
+			<artifactId>vt-boot-base-starter</artifactId>
+		</dependency>
+
 	</dependencies>
 
 </project>

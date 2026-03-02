@@ -1,1 +1,1 @@
-com.ranyk.vt.boot.cache.config.CacheConfiguration
+com.ranyk.vt.boot.cache.config.CacheAutoConfiguration
