@@ -25,7 +25,11 @@ public class CaptchaDTO extends BaseDTO {
     private static final long serialVersionUID = 7047398975699171029L;
 
     /**
-     * 验证码
+     * 验证码缓存 KEY
+     */
+    private String captchaKey;
+    /**
+     * 验证码值
      */
     private String captcha;
 }

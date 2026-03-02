@@ -1,0 +1,20 @@
+vt:
+  cache:
+    # 是否启用缓存 (必须)
+    enabled: true
+    # 是否启用 caffeine 缓存 (必须)
+    is-caffeine-enabled: true
+    # 是否启用 redis 缓存 (必须)
+    is-redis-enabled: true
+
+spring:
+  data:
+    redis:
+      # redis 地址 - 非必须配置项, 默认使用 127.0.0.1
+      # host: 127.0.0.1
+      # redis 端口 - 非必须配置项, 默认使用 6379
+      # port: 6379
+      # redis 密码 - 非必须配置项, 默认无密码
+      # password:
+      # redis 数据库索引 - 非必须配置项, 默认使用 0
+      database: 13

@@ -28,6 +28,7 @@ public interface AccountMapper {
     @Mappings({
             @Mapping(source = "userName", target = "userName"),
             @Mapping(source = "password", target = "password"),
+            @Mapping(source = "captchaKey", target = "captchaKey"),
             @Mapping(source = "captcha", target = "captcha"),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),

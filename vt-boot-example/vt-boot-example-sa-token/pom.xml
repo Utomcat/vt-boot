@@ -75,6 +75,11 @@
             <groupId>com.ranyk</groupId>
             <artifactId>vt-boot-datasource-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-cache-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

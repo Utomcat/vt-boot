@@ -1,5 +1,7 @@
 package com.ranyk.vt.boot.example.satoken.api.captcha;
 
+import com.ranyk.vt.boot.example.satoken.domain.captcha.vo.CaptchaVO;
+import com.ranyk.vt.boot.example.satoken.mapper.captcha.CaptchaMapper;
 import com.ranyk.vt.boot.example.satoken.service.captcha.CaptchaService;
 import com.ranyk.vt.boot.log.annotations.Log;
 import com.ranyk.vt.boot.web.vo.Result;
@@ -24,15 +26,21 @@ public class CaptchaApi {
      * 验证码业务逻辑类对象
      */
     private final CaptchaService captchaService;
+    /**
+     * 验证码实体转换接口对象
+     */
+    private final CaptchaMapper captchaMapper;
 
     /**
      * 构造方法 - 向 Spring IOC 容器中自动注入 CaptchaService 对象
      *
      * @param captchaService 验证码业务逻辑类对象, {@link CaptchaService}
+     * @param captchaMapper  验证码实体转换接口对象, {@link CaptchaMapper}
      */
     @Autowired
-    public CaptchaApi(CaptchaService captchaService) {
+    public CaptchaApi(CaptchaService captchaService, CaptchaMapper captchaMapper) {
         this.captchaService = captchaService;
+        this.captchaMapper = captchaMapper;
     }
 
     /**
@@ -42,7 +50,7 @@ public class CaptchaApi {
      */
     @GetMapping
     @Log(operation = "获取验证码请求", type = Log.LogType.ACCESS)
-    public Result<String> captcha(){
-        return Result.success(captchaService.captcha());
+    public Result<CaptchaVO> captcha() {
+        return Result.success(captchaMapper.dtoToVO(captchaService.captcha()));
     }
 }

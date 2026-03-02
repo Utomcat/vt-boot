@@ -54,7 +54,7 @@ public class LoginApi {
     @PostMapping
     @Log(operation = "登录接口", type = Log.LogType.ACCESS)
     public Result<AccountVO> login(@RequestBody AccountPO accountPO) {
-        return Result.<AccountVO>builder().data(accountMapper.dtoToVO(longinService.login(accountMapper.loginRequestPOToDTO(accountPO)))).build();
+        return Result.success(accountMapper.dtoToVO(longinService.login(accountMapper.loginRequestPOToDTO(accountPO))));
     }
 
 }

@@ -10,7 +10,7 @@ spring:
   # spring 配置配置
   config:
     # 语言配置文件
-    import: classpath:language.yaml,classpath:logback.yaml,classpath:sa-token.yaml,classpath:datasource.yaml,classpath:mybatisplus.yaml
+    import: classpath:language.yaml,classpath:logback.yaml,classpath:sa-token.yaml,classpath:datasource.yaml,classpath:mybatisplus.yaml,classpath:cache.yaml
 
 # 服务配置
 server:

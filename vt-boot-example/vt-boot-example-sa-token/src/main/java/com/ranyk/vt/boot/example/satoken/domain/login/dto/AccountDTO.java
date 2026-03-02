@@ -32,6 +32,10 @@ public class AccountDTO extends BaseDTO {
      */
     private String password;
     /**
+     * 验证码的 key
+     */
+    private String captchaKey;
+    /**
      * 验证码
      */
     private String captcha;

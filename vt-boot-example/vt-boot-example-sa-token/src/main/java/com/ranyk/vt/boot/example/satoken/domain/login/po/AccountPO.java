@@ -33,6 +33,10 @@ public class AccountPO extends BasePO {
      */
     private String password;
     /**
+     * 验证码的 key
+     */
+    private String captchaKey;
+    /**
      * 验证码
      */
     private String captcha;

@@ -63,11 +63,9 @@ public class LonginService extends ServiceImpl<LoginAccountRepository, Account> 
      */
     public AccountDTO login(AccountDTO accountDTO) {
         // 校验验证码
-        if (!captchaService.verifyCaptcha(accountDTO.getCaptcha())) {
+        if (!captchaService.verifyCaptcha(accountDTO.getCaptchaKey(), accountDTO.getCaptcha())) {
             throw new ServiceException("user.captcha.error");
         }
-        // 删除验证码
-        captchaService.deleteCaptcha(accountDTO.getCaptcha());
         // 查询用户信息
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Account::getUserName, accountDTO.getUserName());
