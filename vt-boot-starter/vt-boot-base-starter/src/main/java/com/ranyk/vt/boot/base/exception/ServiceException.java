@@ -32,6 +32,16 @@ public class ServiceException extends BaseException {
     }
 
     /**
+     * 构造函数 - 传入 错误信息 、 错误信息 构造
+     *
+     * @param detailMessage 错误信息
+     * @param e             错误信息
+     */
+    public ServiceException(String detailMessage, Throwable e) {
+        super(detailMessage, e);
+    }
+
+    /**
      * 构造函数 - 传入 模块 、 异常信息 构造
      *
      * @param module        模块

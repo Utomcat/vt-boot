@@ -8,29 +8,29 @@ import lombok.ToString;
 import java.io.Serial;
 
 /**
- * CLASS_NAME: UserException.java
+ * CLASS_NAME: CacheException.java
  *
  * @author ranyk
  * @version V1.0
- * @description: 自定义用户异常类
- * @date: 2026-02-28
+ * @description: 自定义缓存异常类
+ * @date: 2026-03-02
  */
 @Data
 @NoArgsConstructor
 @SuppressWarnings("unused")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class UserException extends BaseException {
+public class CacheException extends BaseException {
     @Serial
-    private static final long serialVersionUID = -7941765945566402377L;
+    private static final long serialVersionUID = -7800059697578230752L;
 
     /**
      * 构造函数 - 传入 错误信息 构造
      *
      * @param detailMessage 错误信息
      */
-    public UserException(String detailMessage) {
-        super(detailMessage);
+    public CacheException(String detailMessage) {
+        super("vt-boot-cache-starter", detailMessage);
     }
 
     /**
@@ -39,8 +39,8 @@ public class UserException extends BaseException {
      * @param detailMessage 错误信息
      * @param e             错误信息
      */
-    public UserException(String detailMessage, Throwable e) {
-        super(detailMessage, e);
+    public CacheException(String detailMessage, Throwable e) {
+        super("vt-boot-cache-starter", detailMessage, e);
     }
 
     /**
@@ -49,7 +49,7 @@ public class UserException extends BaseException {
      * @param module        模块
      * @param detailMessage 错误信息
      */
-    public UserException(String module, String detailMessage) {
+    public CacheException(String module, String detailMessage) {
         super(module, detailMessage);
     }
 
@@ -59,7 +59,7 @@ public class UserException extends BaseException {
      * @param code 错误代码
      * @param args 错误信息参数
      */
-    public UserException(String code, Object[] args) {
+    public CacheException(String code, Object[] args) {
         super(code, args);
     }
 
@@ -70,7 +70,7 @@ public class UserException extends BaseException {
      * @param code   错误代码
      * @param args   错误信息参数
      */
-    public UserException(String module, String code, Object[] args) {
+    public CacheException(String module, String code, Object[] args) {
         super(module, code, args);
     }
 }

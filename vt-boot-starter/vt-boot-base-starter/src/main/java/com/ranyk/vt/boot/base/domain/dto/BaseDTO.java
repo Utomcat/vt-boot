@@ -63,9 +63,11 @@ public class BaseDTO implements Serializable {
     /**
      * 当前页码
      */
+    @Builder.Default
     private Integer currentPage = 1;
     /**
      * 每页显示数量
      */
+    @Builder.Default
     private Integer pageSize = 10;
 }

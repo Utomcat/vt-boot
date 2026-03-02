@@ -34,17 +34,21 @@ public class PageResponse<T> extends MultipleResponse<T> {
     /**
      * 当前页码
      */
+    @Builder.Default
     private Integer currentPage = 1;
     /**
      * 每页显示数量
      */
+    @Builder.Default
     private Integer pageSize  = 10;
     /**
      * 总页数
      */
+    @Builder.Default
     private Integer totalPage = 0;
     /**
      * 数据总数
      */
+    @Builder.Default
     private Integer total = 0;
 }

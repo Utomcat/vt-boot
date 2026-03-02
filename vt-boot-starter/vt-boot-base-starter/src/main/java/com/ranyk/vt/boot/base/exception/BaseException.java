@@ -60,6 +60,30 @@ public class BaseException extends RuntimeException {
     }
 
     /**
+     *
+     * 构造函数 - 传入 异常信息 、 异常对象 构造
+     *
+     * @param detailMessage 异常信息
+     * @param e             异常对象
+     */
+    public BaseException(String detailMessage, Throwable e) {
+        super(detailMessage, e);
+    }
+
+    /**
+     *
+     * 构造函数 - 传入 模块 、 异常信息 、 异常对象 构造
+     *
+     * @param module        模块
+     * @param detailMessage 异常信息
+     * @param e             异常对象
+     */
+    public BaseException(String module, String detailMessage, Throwable e) {
+        super(detailMessage, e);
+        this.module = module;
+    }
+
+    /**
      * 构造函数 - 传入 异常代码 、 异常信息参数 构造
      *
      * @param code 异常代码
@@ -84,7 +108,7 @@ public class BaseException extends RuntimeException {
             return MessageUtils.message(this.code, this.args);
         }
         // 不存在异常代码则从 detailMessage 属性中获取
-        if (StrUtil.isNotBlank(super.getMessage()) && super.getMessage().contains(".")){
+        if (StrUtil.isNotBlank(super.getMessage()) && super.getMessage().contains(".")) {
             this.code = super.getMessage();
             return MessageUtils.message(this.code, this.args);
         }
