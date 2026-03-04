@@ -27,6 +27,16 @@
             <groupId>com.ranyk</groupId>
             <artifactId>vt-boot-base-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-async-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-log-starter</artifactId>
+        </dependency>
     </dependencies>
 
 
