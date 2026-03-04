@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.satoken;
 
+import cn.hutool.core.util.RandomUtil;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.cache.util.CacheUtils;
 import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
@@ -122,7 +123,7 @@ class VtBootExampleSaTokenApplicationTests {
     @DisplayName("添加账户信息功能测试 - 新增一条不存在于系统内的账户名的账户")
     void addAccountTestNotSameUserName() {
         // 创建账户信息数据传输对象
-        AccountDTO userDTO = AccountDTO.builder().userName("ls").password("123456").build();
+        AccountDTO userDTO = AccountDTO.builder().userName(RandomUtil.randomNumbers(6)).password("123456").build();
 
         // 添加账户信息
         Assertions.assertAll(() -> accountService.saveOne(userDTO));
