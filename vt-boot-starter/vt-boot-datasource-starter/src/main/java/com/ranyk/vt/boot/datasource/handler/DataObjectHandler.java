@@ -1,10 +1,9 @@
 package com.ranyk.vt.boot.datasource.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.ranyk.vt.boot.datasource.constant.DataSourcesDefaultValueEnum;
+import com.ranyk.vt.boot.base.constant.AutoFillFieldEnum;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -24,20 +23,7 @@ public class DataObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        // 插入时填充字段 - 数据创建时间
-        this.setFieldValByNameIfNull("createTime", LocalDateTime.now(), metaObject);
-        // 插入时填充字段 - 数据更新时间
-        this.setFieldValByNameIfNull("updateTime", LocalDateTime.now(), metaObject);
-        // 插入时填充字段 - 创建人 ID
-        this.setFieldValByNameIfNull("createBy", DataSourcesDefaultValueEnum.CREATE_BY_DEFAULT_VALUE.getValue(), metaObject);
-        // 插入时填充字段 - 更新人 ID
-        this.setFieldValByNameIfNull("updateBy", DataSourcesDefaultValueEnum.UPDATE_BY_DEFAULT_VALUE.getValue(), metaObject);
-        // 插入时填充字段 - 备注
-        this.setFieldValByNameIfNull("remark", DataSourcesDefaultValueEnum.STRING_VALUE_DEFAULT_VALUE.getValue(), metaObject);
-        // 插入时填充字段 - 数据状态
-        this.setFieldValByNameIfNull("status", DataSourcesDefaultValueEnum.STATUS_DEFAULT_VALUE.getValue(), metaObject);
-        // 插入时填充字段 - 租户 ID
-        this.setFieldValByNameIfNull("tenantId", DataSourcesDefaultValueEnum.TENANT_ID_DEFAULT_VALUE.getValue(), metaObject);
+        AutoFillFieldEnum.getInsertAutoFillFieldList().forEach(fillFieldEnum -> this.setFieldValByNameIfNull(fillFieldEnum.getFieldName(), fillFieldEnum.getDefaultValue(), metaObject));
     }
 
     /**
@@ -47,10 +33,7 @@ public class DataObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        // 更新时填充字段 - 数据更新时间
-        this.setFieldValByNameIfNull("updateTime", LocalDateTime.now(), metaObject);
-        // 更新时填充字段 - 更新人 ID
-        this.setFieldValByNameIfNull("updateBy", DataSourcesDefaultValueEnum.UPDATE_BY_DEFAULT_VALUE.getValue(), metaObject);
+        AutoFillFieldEnum.getUpdateAutoFillFieldList().forEach(fillFieldEnum -> this.setFieldValByNameIfNull(fillFieldEnum.getFieldName(), fillFieldEnum.getDefaultValue(), metaObject));
     }
 
     /**
