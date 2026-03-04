@@ -40,6 +40,7 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
      */
     @Autowired
     public SaTokenInterceptorsConfig(SaTokenProperties saTokenProperties) {
+        log.info("Auto wired SaTokenProperties. Current configuration attribute is : {}", saTokenProperties);
         this.saTokenProperties = saTokenProperties;
     }
 
