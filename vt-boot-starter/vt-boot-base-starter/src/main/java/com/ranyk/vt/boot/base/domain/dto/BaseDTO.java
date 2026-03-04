@@ -33,6 +33,10 @@ public class BaseDTO implements Serializable {
      */
     private String id;
     /**
+     * 租户ID
+     */
+    private String tenantId;
+    /**
      * 数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）
      */
     private Integer status;
