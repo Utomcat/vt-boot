@@ -1,8 +1,8 @@
 package com.ranyk.vt.boot.example.satoken.api.login;
 
-import com.ranyk.vt.boot.example.satoken.domain.login.po.AccountPO;
-import com.ranyk.vt.boot.example.satoken.domain.login.vo.AccountVO;
-import com.ranyk.vt.boot.example.satoken.mapper.login.AccountMapper;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.AccountPO;
+import com.ranyk.vt.boot.example.satoken.domain.account.vo.AccountVO;
+import com.ranyk.vt.boot.example.satoken.mapper.account.AccountMapper;
 import com.ranyk.vt.boot.example.satoken.service.login.LonginService;
 import com.ranyk.vt.boot.log.annotations.Log;
 import com.ranyk.vt.boot.web.vo.Result;

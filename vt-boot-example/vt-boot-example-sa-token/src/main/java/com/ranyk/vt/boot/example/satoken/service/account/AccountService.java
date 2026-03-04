@@ -1,0 +1,203 @@
+package com.ranyk.vt.boot.example.satoken.service.account;
+
+import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ranyk.vt.boot.base.exception.ServiceException;
+import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
+import com.ranyk.vt.boot.example.satoken.domain.account.entity.Account;
+import com.ranyk.vt.boot.example.satoken.mapper.account.AccountMapper;
+import com.ranyk.vt.boot.example.satoken.repository.account.AccountRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * CLASS_NAME: AccountService.java
+ *
+ * @author ranyk
+ * @version V1.0
+ * @description: 账户业务逻辑类
+ * @date: 2026-03-03
+ */
+@Slf4j
+@Service
+public class AccountService extends ServiceImpl<AccountRepository, Account> {
+    /**
+     * 登录账户数据库操作接口对象
+     */
+    private final AccountRepository accountRepository;
+    /**
+     * 账户信息数据对象转换映射接口对象
+     */
+    private final AccountMapper accountMapper;
+
+    /**
+     * 构造函数 - 向 Spring IOC 容器中自动注入 AccountRepository 对象
+     *
+     * @param accountRepository 登录账户数据库操作接口对象 {@link AccountRepository}
+     * @param accountMapper     账户信息数据对象转换映射接口对象 {@link AccountMapper}
+     */
+    @Autowired
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
+        this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
+    }
+
+    /**
+     * 新增账户信息
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOne(AccountDTO accountDTO) {
+        // 验证用户名和密码是否存在值
+        validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), "新增一个账户信息");
+        // 通过账户名查询账户信息
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        // 查询条件 - 账户名
+        queryWrapper.eq(Account::getUserName, accountDTO.getUserName());
+        // 执行查询结果 - 是否存在相同账户名的数据
+        Long count = accountRepository.selectCount(queryWrapper);
+        // 存在相同账户名的数据
+        if (count > 0) {
+            log.error("新增一条账户信息 操作 - 账户名已存在!");
+            throw new ServiceException("user.username.exists");
+        }
+        // 数据转换 - 账户信息数据传输对象 转换为 数据实体对象
+        Account account = accountMapper.saveDTOToEntity(accountDTO);
+        // 密码进行加密处理
+        account.setPassword(SaSecureUtil.md5(account.getPassword()));
+        // 保存账户信息
+        boolean saveResult = saveOrUpdate(account);
+        // 判断保存结果是否成功
+        if (!saveResult) {
+            log.error("新增账户信息失败!");
+            throw new ServiceException("新增账户信息失败!");
+        }
+    }
+
+    /**
+     * 删除账户信息
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteOne(AccountDTO accountDTO) {
+        // 验证账户ID是否存在值
+        validateId(accountDTO.getId(), "删除一个账户信息");
+        Account account = accountMapper.deleteDTOToEntity(accountDTO);
+        boolean deleteResult = removeById(account);
+        if (!deleteResult) {
+            log.error("删除账户信息失败!");
+            throw new ServiceException("删除账户信息失败!");
+        }
+    }
+
+    /**
+     * 修改账户信息
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOne(AccountDTO accountDTO) {
+        // 验证账户ID是否存在值
+        validateId(accountDTO.getId(), "修改一个账户信息");
+        Account account = accountRepository.selectById(accountDTO.getId());
+        if (Objects.isNull(account)) {
+            throw new ServiceException("登录模块", "account.not.exists", new String[]{accountDTO.getUserName()});
+        }
+        // 当用户名存在时再进行用户名设置
+        Optional.ofNullable(accountDTO.getUserName()).filter(StrUtil::isNotBlank).ifPresent(account::setUserName);
+        // 当密码存在时再进行密码设置
+        Optional.ofNullable(accountDTO.getPassword()).filter(StrUtil::isNotBlank).ifPresent(account::setPassword);
+        boolean updateResult = updateById(account);
+        if (!updateResult) {
+            log.error("修改账户信息失败!");
+            throw new ServiceException("修改账户信息失败!");
+        }
+    }
+
+    /**
+     * 依据条件查询满足条件的一个账户信息 - 精确匹配
+     *
+     * @param accountDTO 账户信息查询参数封装对象 {@link AccountDTO}
+     * @return 账户信息数据传输对象 {@link AccountDTO}
+     */
+    public AccountDTO queryAccountByConditions(AccountDTO accountDTO) {
+        // 验证用户名和密码是否存在值
+        validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), true, true, "查询指定账户信息");
+        // 创建查询条件对象
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
+        return accountMapper.entityToDTO(accountRepository.selectOne(queryWrapper));
+    }
+
+    /**
+     * 依据条件查询满足条件的账户信息
+     *
+     * @param accountDTO 账户信息查询参数封装对象 {@link AccountDTO}
+     * @return 返回依据查询条件查询出的账户信息传输对象 {@link AccountDTO}
+     */
+    public AccountDTO queryOneAccountInfo(AccountDTO accountDTO) {
+        // 验证用户名和密码是否存在值
+        validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), "查询指定账户信息");
+        // 查询用户信息
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
+        queryWrapper.eq(StrUtil.isNotBlank(accountDTO.getPassword()), Account::getPassword, SaSecureUtil.md5(accountDTO.getPassword()));
+        // 执行查询结果
+        Account account = accountRepository.selectOne(queryWrapper);
+        // 返回对应的账户信息数据传输对象
+        return Optional.ofNullable(accountMapper.entityToDTO(account)).orElse(AccountDTO.builder().build());
+    }
+
+    /**
+     * 验证用户名和密码是否存在值
+     *
+     * @param userName       用户名
+     * @param password       密码
+     * @param args           参数, 第一个参数用于描述验证什么操作, 例如: "登录", "注册" 等
+     */
+    private void validateUserNameAndPassword(String userName, String password, String... args) {
+        validateUserNameAndPassword(userName, password, false, false, args);
+    }
+
+    /**
+     * 验证用户名和密码是否存在值
+     *
+     * @param userName       用户名
+     * @param password       密码
+     * @param ignoreUserName 是否忽略用户名验证, true: 忽略用户名验证; false: 不忽略用户名验证(默认);
+     * @param ignorePassword 是否忽略密码验证, true: 忽略密码验证; false: 不忽略密码验证(默认);
+     * @param args           参数, 第一个参数用于描述验证什么操作, 例如: "登录", "注册" 等
+     */
+    private void validateUserNameAndPassword(String userName, String password, Boolean ignoreUserName, Boolean ignorePassword, String... args) {
+        if (!ignoreUserName && StrUtil.isBlank(userName)) {
+            log.error("{} 操作 - 用户名不能为空!", args[0]);
+            throw new ServiceException("user.username.not.blank");
+        }
+        if (!ignorePassword && StrUtil.isBlank(password)) {
+            log.error("{} 操作 - 密码不能为空!", args[0]);
+            throw new ServiceException("user.password.not.blank");
+        }
+    }
+
+    /**
+     * 验证账户ID是否存在值
+     *
+     * @param id   账户ID
+     * @param args 参数, 第1个参数用于描述验证什么操作, 例如: "登录", "注册" 等
+     */
+    private void validateId(String id, String... args) {
+        if (StrUtil.isBlank(id)) {
+            log.error("{} 操作 - 账户ID不能为空!", args[0]);
+            throw new ServiceException(args[0] + " 操作 - 账户ID不能为空!");
+        }
+    }
+}
