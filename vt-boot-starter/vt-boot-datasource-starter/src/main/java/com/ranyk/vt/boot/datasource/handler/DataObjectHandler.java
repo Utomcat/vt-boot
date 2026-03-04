@@ -36,6 +36,8 @@ public class DataObjectHandler implements MetaObjectHandler {
         this.setFieldValByNameIfNull("remark", DataSourcesDefaultValueEnum.STRING_VALUE_DEFAULT_VALUE.getValue(), metaObject);
         // 插入时填充字段 - 数据状态
         this.setFieldValByNameIfNull("status", DataSourcesDefaultValueEnum.STATUS_DEFAULT_VALUE.getValue(), metaObject);
+        // 插入时填充字段 - 租户 ID
+        this.setFieldValByNameIfNull("tenantId", DataSourcesDefaultValueEnum.TENANT_ID_DEFAULT_VALUE.getValue(), metaObject);
     }
 
     /**

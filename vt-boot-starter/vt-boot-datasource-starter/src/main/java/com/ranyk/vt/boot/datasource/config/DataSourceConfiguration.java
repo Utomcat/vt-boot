@@ -6,11 +6,16 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.ranyk.vt.boot.datasource.config.properties.DatasourceConfigurationProperties;
+import com.ranyk.vt.boot.datasource.handler.CustomTenantHandler;
 import com.ranyk.vt.boot.datasource.handler.DataObjectHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -24,7 +29,23 @@ import org.springframework.context.annotation.Bean;
 @Slf4j
 @AutoConfiguration
 @AutoConfigureBefore({DataSourceAutoConfiguration.class, MybatisPlusAutoConfiguration.class})
+@EnableConfigurationProperties(value = com.ranyk.vt.boot.datasource.config.properties.DatasourceConfigurationProperties.class)
 public class DataSourceConfiguration {
+
+    /**
+     * 数据源配置属性对象
+     */
+    private final com.ranyk.vt.boot.datasource.config.properties.DatasourceConfigurationProperties datasourceConfigurationProperties;
+
+    /**
+     * 构造函数 - 向 Spring IOC 容器中自动注入数据源配置属性对象
+     *
+     * @param datasourceConfigurationProperties 数据源配置属性对象 {@link com.ranyk.vt.boot.datasource.config.properties.DatasourceConfigurationProperties}
+     */
+    @Autowired
+    public DataSourceConfiguration(DatasourceConfigurationProperties datasourceConfigurationProperties) {
+        this.datasourceConfigurationProperties = datasourceConfigurationProperties;
+    }
 
     /**
      * 向 Spring Bean 容器中注入 自定义元对象处理器 对象 - 该操作是对 MyBatis Plus 的配置
@@ -40,6 +61,7 @@ public class DataSourceConfiguration {
      * 向 Spring Bean 容器中注入 Mybatis Plus 拦截器对象, 当下注册了(执行顺序如下): - 该操作是对 MyBatis Plus 的配置
      * <p>
      *     <ol>
+     *         <li>多租户: TenantLineInnerInterceptor</li>
      *         <li>防全表更新与删除插件</li>
      *         <li>分页插件</li>
      *         <li>乐观锁插件</li>
@@ -63,6 +85,12 @@ public class DataSourceConfiguration {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        // 多租户插件 - 插件 TenantLineInnerInterceptor 类在插件依赖 mybatis-plus-jsqlparser 下
+        if (datasourceConfigurationProperties.getIsEnableTenant()) {
+            TenantLineInnerInterceptor tenantInterceptor = new TenantLineInnerInterceptor();
+            tenantInterceptor.setTenantLineHandler(new CustomTenantHandler());
+            interceptor.addInnerInterceptor(tenantInterceptor);
+        }
         //防全表更新与删除插件 - 插件 BlockAttackInnerInterceptor 类在插件依赖 mybatis-plus-jsqlparser 下
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         //分页插件 - 插件 PaginationInnerInterceptor 类在插件依赖 mybatis-plus-jsqlparser 下

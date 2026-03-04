@@ -13,6 +13,11 @@ import lombok.Getter;
  */
 @Getter
 public enum DataSourcesDefaultValueEnum {
+
+    /**
+     * 租户数据值默认值
+     */
+    TENANT_ID_DEFAULT_VALUE("租户数据值默认值", "0000000001"),
     /**
      * 数据状态默认值
      */
@@ -20,11 +25,11 @@ public enum DataSourcesDefaultValueEnum {
     /**
      * 创建人默认值
      */
-    CREATE_BY_DEFAULT_VALUE("创建人默认值", "-"),
+    CREATE_BY_DEFAULT_VALUE("创建人默认值", "1"),
     /**
      * 更新人默认值
      */
-    UPDATE_BY_DEFAULT_VALUE("更新人默认值", "-"),
+    UPDATE_BY_DEFAULT_VALUE("更新人默认值", "1"),
     /**
      * 字符串默认值
      */

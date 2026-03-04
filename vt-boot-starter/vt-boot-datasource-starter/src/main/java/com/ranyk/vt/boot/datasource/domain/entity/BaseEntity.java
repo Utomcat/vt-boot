@@ -34,6 +34,11 @@ public class BaseEntity implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private String id;
     /**
+     * 租户ID
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private String tenantId;
+    /**
      * 数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）
      */
     @TableLogic
