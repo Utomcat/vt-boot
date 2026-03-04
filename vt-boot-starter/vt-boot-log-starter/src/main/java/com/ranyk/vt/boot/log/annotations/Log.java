@@ -50,6 +50,42 @@ public @interface Log {
         /**
          * 访问日志
          */
-        ACCESS
+        ACCESS,
+        /**
+         * 登录日志
+         */
+        LOGIN,
+        /**
+         * 登出日志
+         */
+        LOGOUT,
+        /**
+         * 认证日志
+         */
+        AUTHENTICATION,
+        /**
+         * 数据新增日志
+         */
+        INSERT,
+        /**
+         * 数据修改日志
+         */
+        UPDATE,
+        /**
+         * 数据删除日志
+         */
+        DELETE,
+        /**
+         * 数据查询日志
+         */
+        SELECT,
+        /**
+         * 数据执行日志
+         */
+        EXECUTE,
+        /**
+         * 其他日志
+         */
+        OTHER
     }
 }
