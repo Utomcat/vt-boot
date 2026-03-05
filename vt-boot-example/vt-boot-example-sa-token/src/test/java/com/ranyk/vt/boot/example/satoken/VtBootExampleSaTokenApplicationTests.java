@@ -2,6 +2,7 @@ package com.ranyk.vt.boot.example.satoken;
 
 import cn.hutool.core.util.RandomUtil;
 import com.ranyk.vt.boot.base.exception.ServiceException;
+import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.cache.util.CacheUtils;
 import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.satoken.domain.captcha.dto.CaptchaDTO;
@@ -13,8 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Objects;
 
 /**
  * CLASS_NAME: VtBootExampleSaTokenApplicationTests.java
@@ -46,13 +45,13 @@ class VtBootExampleSaTokenApplicationTests {
     @DisplayName("测试缓存功能 - 使用默认的 Caffeine 缓存")
     void caffeineCache() {
         CacheUtils.cache("test", "test");
-        log.info("缓存数据: {}", CacheUtils.getCache("test"));
-        log.info("缓存完数据后, 缓存是否存在: {}", CacheUtils.exists("test"));
+        log.debug("缓存数据: {}", CacheUtils.getCache("test"));
+        log.debug("缓存完数据后, 缓存是否存在: {}", CacheUtils.exists("test"));
         String cacheStats = CacheUtils.getCacheStats();
-        log.info("缓存统计信息: {}", cacheStats);
+        log.debug("缓存统计信息: {}", cacheStats);
         Boolean deleteResult = CacheUtils.deleteCache("test");
-        log.info("删除缓存数据结果: {}", deleteResult);
-        log.info("删除缓存数据后, 缓存是否存在: {}", CacheUtils.exists("test"));
+        log.debug("删除缓存数据结果: {}", deleteResult);
+        log.debug("删除缓存数据后, 缓存是否存在: {}", CacheUtils.exists("test"));
     }
 
     /**
@@ -62,11 +61,11 @@ class VtBootExampleSaTokenApplicationTests {
     @DisplayName("测试缓存功能 - 使用 Redis 缓存")
     void redisCache() {
         CacheUtils.cacheWithRedis("test", "test");
-        log.info("使用 Redis 缓存数据: {}", CacheUtils.getCacheWithRedis("test"));
-        log.info("使用 Redis 缓存完数据后, 缓存是否存在: {}", CacheUtils.existsWithRedis("test"));
+        log.debug("使用 Redis 缓存数据: {}", CacheUtils.getCacheWithRedis("test"));
+        log.debug("使用 Redis 缓存完数据后, 缓存是否存在: {}", CacheUtils.existsWithRedis("test"));
         Boolean deleteResult = CacheUtils.deleteCacheWithRedis("test");
-        log.info("使用 Redis 删除缓存数据结果: {}", deleteResult);
-        log.info("使用 Redis 删除缓存数据后, 缓存是否存在: {}", CacheUtils.existsWithRedis("test"));
+        log.debug("使用 Redis 删除缓存数据结果: {}", deleteResult);
+        log.debug("使用 Redis 删除缓存数据后, 缓存是否存在: {}", CacheUtils.existsWithRedis("test"));
     }
 
     /**
@@ -76,14 +75,14 @@ class VtBootExampleSaTokenApplicationTests {
     @DisplayName("验证码生成功能测试")
     void captchaGenerateTest() {
         CaptchaDTO captcha = captchaService.captcha();
-        log.info("生成的验证码是: {}", captcha);
+        log.debug("生成的验证码是: {}", captcha);
         try {
-            log.info("本地缓存中的验证码是: {}", CacheUtils.getCache(captcha.getCaptcha() + ":captcha"));
+            log.debug("本地缓存中的验证码是: {}", CacheUtils.getCache(captcha.getCaptcha() + ":captcha"));
         } catch (Exception e) {
             log.error("本地缓存中的验证码获取失败, 异常信息为: {} , 异常栈为: ", e.getMessage(), e);
         }
         try {
-            log.info("Redis 缓存中的验证码是: {}", CacheUtils.getCacheWithRedis(captcha.getCaptcha() + ":captcha"));
+            log.debug("Redis 缓存中的验证码是: {}", CacheUtils.getCacheWithRedis(captcha.getCaptcha() + ":captcha"));
         } catch (Exception e) {
             log.error("Redis 缓存中的验证码获取失败, 异常信息为: {} , 异常栈为: ", e.getMessage(), e);
         }
@@ -113,7 +112,7 @@ class VtBootExampleSaTokenApplicationTests {
                 "期望抛出 ServiceException 异常, 异常信息为: 账户名已存在");
 
         // 日志记录
-        log.info("捕获到预期异常：{}", exception.getMessage());
+        log.debug("捕获到预期异常：{}", exception.getMessage());
 
         // 验证异常信息是否符合预期
         Assertions.assertEquals("user.username.exists", exception.getCode(), "异常 code 应包是 'user.username.exists' 错误码");
@@ -130,8 +129,8 @@ class VtBootExampleSaTokenApplicationTests {
 
         // 查询账户信息
         Assertions.assertTrue(() -> {
-            AccountDTO accountDTO = accountService.queryAccountByConditions(userDTO);
-            return Objects.equals(accountDTO.getUserName(), userDTO.getUserName());
+            PageResponse<AccountDTO> accountDTOPageResponse = accountService.queryAccountByConditions(userDTO);
+            return accountDTOPageResponse.getData().stream().anyMatch(item -> item.getUserName().equals(userDTO.getUserName()));
         }, "新增的一个不存在于系统内的账户名的账户, 保存失败!");
     }
 
@@ -159,7 +158,7 @@ class VtBootExampleSaTokenApplicationTests {
     @Test
     @DisplayName("查询账户信息功能测试 - 查询一条存在于系统内的账户 (精确查询)")
     void queryAccountTest() {
-        AccountDTO queryResult = accountService.queryAccountByConditions(AccountDTO.builder().userName("admin").build());
-        log.info("查询结果为: {}", queryResult);
+        PageResponse<AccountDTO> accountDTOPageResponse = accountService.queryAccountByConditions(AccountDTO.builder().userName("admin").build());
+        log.debug("查询结果为: {}", accountDTOPageResponse);
     }
 }

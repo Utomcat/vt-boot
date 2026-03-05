@@ -4,8 +4,9 @@ import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountRoleConnectionDTO;
 import com.ranyk.vt.boot.example.satoken.domain.account.entity.Account;
 import com.ranyk.vt.boot.example.satoken.domain.account.entity.AccountRoleConnection;
-import com.ranyk.vt.boot.example.satoken.domain.account.po.AccountPO;
-import com.ranyk.vt.boot.example.satoken.domain.account.vo.AccountVO;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.*;
+import com.ranyk.vt.boot.example.satoken.domain.account.vo.LoginAccountVO;
+import com.ranyk.vt.boot.example.satoken.domain.account.vo.QueryAccountVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -26,68 +27,114 @@ public interface AccountMapper {
     /**
      * 登录请求参数数据对象转换成数据传输对象
      *
-     * @param accountPO 登录请求参数数据对象 {@link AccountPO}
+     * @param loginAccountPO 登录请求参数数据对象 {@link LoginAccountPO}
      * @return 登录信息数据传输对象 {@link AccountDTO}
      */
     @Mappings({
-            @Mapping(source = "userName", target = "userName"),
-            @Mapping(source = "password", target = "password"),
-            @Mapping(source = "captchaKey", target = "captchaKey"),
-            @Mapping(source = "captcha", target = "captcha"),
+            @Mapping(target = "captchaKey", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "token", ignore = true),
-            @Mapping(target = "tenantId", ignore = true)
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "remark", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "ids", ignore = true)
     })
-    AccountDTO loginRequestPOToDTO(AccountPO accountPO);
+    AccountDTO loginRequestPOToDTO(LoginAccountPO loginAccountPO);
 
     /**
      * 保存请求参数数据转换成数据传输对象
      *
-     * @param accountPO 数据保存参数数据对象 {@link AccountPO}
+     * @param saveAccountPO 数据保存参数数据对象 {@link SaveAccountPO}
      * @return 账户信息数据传输对象 {@link AccountDTO}
      */
     @Mappings({
-            @Mapping(source = "userName", target = "userName"),
-            @Mapping(source = "password", target = "password"),
+            @Mapping(target = "status", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "token", ignore = true),
-            @Mapping(target = "tenantId", ignore = true)
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "captcha", ignore = true),
+            @Mapping(target = "captchaKey", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "ids", ignore = true)
     })
-    AccountDTO saveRequestPOToDTO(AccountPO accountPO);
+    AccountDTO saveRequestPOToDTO(SaveAccountPO saveAccountPO);
 
     /**
      * 删除请求参数数据转换成数据传输对象
      *
-     * @param accountPO 数据删除参数数据对象 {@link AccountPO}
+     * @param deleteAccountPO 数据删除参数数据对象 {@link DeleteAccountPO}
      * @return 账户信息数据传输对象 {@link AccountDTO}
      */
     @Mappings({
-            @Mapping(source = "id", target = "id"),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "token", ignore = true),
-            @Mapping(target = "tenantId", ignore = true)
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "captcha", ignore = true),
+            @Mapping(target = "captchaKey", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "remark", ignore = true),
+            @Mapping(target = "userName", ignore = true),
+            @Mapping(target = "password", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateTime", ignore = true)
     })
-    AccountDTO deleteRequestPOToDTO(AccountPO accountPO);
+    AccountDTO deleteRequestPOToDTO(DeleteAccountPO deleteAccountPO);
 
     /**
      * 更新请求参数数据转换成数据传输对象
      *
-     * @param accountPO 更新请求参数数据对象 {@link AccountPO}
+     * @param updateAccountPO 更新请求参数数据对象 {@link UpdateAccountPO}
      * @return 账户信息数据传输对象 {@link AccountDTO}
      */
     @Mappings({
-            @Mapping(source = "id", target = "id"),
-            @Mapping(source = "userName", target = "userName"),
-            @Mapping(source = "password", target = "password"),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "token", ignore = true),
-            @Mapping(target = "tenantId", ignore = true)
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "captcha", ignore = true),
+            @Mapping(target = "captchaKey", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateTime", ignore = true)
     })
-    AccountDTO updateRequestPOToDTO(AccountPO accountPO);
+    AccountDTO updateRequestPOToDTO(UpdateAccountPO updateAccountPO);
+
+    /**
+     * 查询请求参数数据转换成数据传输对象
+     *
+     * @param queryAccountPO 查询请求参数数据对象 {@link QueryAccountPO}
+     * @return 账户信息数据传输对象 {@link AccountDTO}
+     */
+    @Mappings({
+            @Mapping(target = "password", ignore = true),
+            @Mapping(target = "token", ignore = true),
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "captcha", ignore = true),
+            @Mapping(target = "captchaKey", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateTime", ignore = true)
+    })
+    AccountDTO queryRequestPOToDTO(QueryAccountPO queryAccountPO);
 
     /**
      * 数据传输对象转换成数据实体对象
@@ -100,44 +147,29 @@ public interface AccountMapper {
             @Mapping(target = "captchaKey", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
-            @Mapping(target = "token", ignore = true)
+            @Mapping(target = "token", ignore = true),
+            @Mapping(target = "ids", ignore = true),
     })
     AccountDTO entityToDTO(Account account);
 
     /**
-     * 保存账户信息 - 数据传输对象 转换为 数据实体对象
+     * 数据传输对象 转换为 数据实体对象
      *
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      * @return 账户信息数据实体对象 {@link Account}
      */
-    @Mappings({
-            @Mapping(source = "userName", target = "userName"),
-            @Mapping(source = "password", target = "password"),
-            @Mapping(target = "tenantId", source = "tenantId", defaultValue = "0000000001")
-    })
-    Account saveDTOToEntity(AccountDTO accountDTO);
-
-    /**
-     * 删除账户信息 - 数据传输对象 转换为 数据实体对象
-     *
-     * @param accountDTO 账号信息数据传输对象 {@link AccountDTO}
-     * @return 账户信息数据实体对象 {@link Account}
-     */
-    @Mappings({
-            @Mapping(target = "id", source = "id")
-    })
-    Account deleteDTOToEntity(AccountDTO accountDTO);
+    Account dtoToEntity(AccountDTO accountDTO);
 
     /**
      * 数据传输对象转换成数据视图对象
      *
      * @param accountDTO 登录信息数据传输对象 {@link AccountDTO}
-     * @return 账户信息数据视图对象 {@link AccountVO}
+     * @return 账户信息数据视图对象 {@link LoginAccountVO}
      */
     @Mappings({
             @Mapping(source = "token", target = "token"),
     })
-    AccountVO dtoToVO(AccountDTO accountDTO);
+    LoginAccountVO dtoToLoginAccountVO(AccountDTO accountDTO);
 
     /**
      * 数据实体对象 List 集合转换成 数据传输对象 List 集合
@@ -145,5 +177,21 @@ public interface AccountMapper {
      * @param accountRoleConnections 数据实体对象 {@link AccountRoleConnection} 的 List 集合
      * @return 数据传输对象 {@link AccountRoleConnectionDTO} 的 List 集合
      */
-    List<AccountRoleConnectionDTO> entityToDTO(List<AccountRoleConnection> accountRoleConnections);
+    List<AccountRoleConnectionDTO> accountRoleConnectionEntityListToDTO(List<AccountRoleConnection> accountRoleConnections);
+
+    /**
+     * 数据实体对象 List 集合转换成 数据传输对象 List 集合
+     *
+     * @param accounts 数据实体对象 {@link Account} 的 List 集合
+     * @return 数据传输对象 {@link AccountDTO} 的 List 集合
+     */
+    List<AccountDTO> accountEntityListToDTO(List<Account> accounts);
+
+    /**
+     * 数据传输对象 List 集合转换成 数据视图对象 List 集合
+     *
+     * @param accountDTOList 数据传输对象 {@link AccountDTO} 的 List 集合
+     * @return 数据视图对象 {@link QueryAccountVO} 的 List 集合
+     */
+    List<QueryAccountVO> accountDTOListToQueryAccountVOList(List<AccountDTO> accountDTOList);
 }

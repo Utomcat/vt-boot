@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * CLASS_NAME: DepartmentDTO.java
@@ -40,4 +41,11 @@ public class DepartmentDTO extends BaseDTO {
      * 父级部门ID列表, 逗号分隔
      */
     private String parentIds;
+
+    // 以下为扩展字段
+
+    /**
+     * 部门ID列表
+     */
+    private List<String> ids;
 }

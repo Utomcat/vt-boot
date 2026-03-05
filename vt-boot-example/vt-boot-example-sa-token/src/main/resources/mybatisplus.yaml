@@ -3,7 +3,7 @@ mybatis-plus:
   # 指定 MyBatis Mapper 对应的 XML 文件位置。如果在 Mapper 中有自定义方法，需要配置此项
   mapper-locations: classpath*:repository/**/*.xml
   # 指定 MyBatis 别名包扫描路径，用于给包中的类注册别名。注册后，在 Mapper 对应的 XML 文件中可以直接使用类名，无需使用全限定类名 (此项配置必须写到具体的包下, 不能使用通配符 * 进行配置, 多个 package 时, 多个 package 之间用逗号隔开)
-  type-aliases-package: com.ranyk.vt.boot.example.satoken.domain.accont.entity,com.ranyk.vt.boot.example.satoken.domain.department.entity,com.ranyk.vt.boot.example.satoken.domain.permissions.entity,com.ranyk.vt.boot.example.satoken.domain.role.entity
+  type-aliases-package: com.ranyk.vt.boot.example.satoken.domain.accont.entity,com.ranyk.vt.boot.example.satoken.domain.department.entity,com.ranyk.vt.boot.example.satoken.domain.permissions.entity,com.ranyk.vt.boot.example.satoken.domain.role.entity,com.ranyk.vt.boot.example.satoken.domain.dict.entity
   # MyBatis-Plus 的 Configuration 配置继承自 MyBatis 原生支持的配置，这意味着您可以通过 MyBatis XML 配置文件的形式进行配置，也可以通过 Spring Boot 或 Spring MVC 的配置文件进行设置
   configuration:
     # 开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN（下划线命名） 到经典 Java 属性名 aColumn（驼峰命名） 的类似映射

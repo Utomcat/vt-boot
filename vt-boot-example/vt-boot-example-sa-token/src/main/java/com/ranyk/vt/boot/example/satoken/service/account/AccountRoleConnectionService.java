@@ -67,6 +67,6 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
         // 执行查询
         List<AccountRoleConnection> accountRoleConnectionList = accountRoleConnectionRepository.selectList(queryWrapper);
         // 返回查询结果 - 转换为 DTO 列表
-        return accountMapper.entityToDTO(Optional.ofNullable(accountRoleConnectionList).orElse(Collections.emptyList()));
+        return accountMapper.accountRoleConnectionEntityListToDTO(Optional.ofNullable(accountRoleConnectionList).orElse(Collections.emptyList()));
     }
 }

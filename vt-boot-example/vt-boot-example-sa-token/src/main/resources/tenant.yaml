@@ -1,0 +1,8 @@
+# 租户配置
+vt:
+  boot:
+    # 是否启用多租户
+    is-enable-tenant: true
+    # 忽略表, 表示不需要进行自动插入租户ID的表名
+    ignore-table:
+      - account_info

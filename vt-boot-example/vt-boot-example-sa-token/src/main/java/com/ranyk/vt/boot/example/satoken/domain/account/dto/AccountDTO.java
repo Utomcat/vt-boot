@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * CLASS_NAME: AccountDTO.java
@@ -18,8 +19,8 @@ import java.io.Serial;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper=true)
-@EqualsAndHashCode(callSuper=true)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class AccountDTO extends BaseDTO {
     @Serial
     private static final long serialVersionUID = -1577378271785876221L;
@@ -42,5 +43,12 @@ public class AccountDTO extends BaseDTO {
     /**
      * 登录成功返回的 token 数据值
      */
-    private String  token;
+    private String token;
+
+    // 以下为扩展属性字段
+
+    /**
+     * 账户数据主键 ID 集合列表
+     */
+    private List<String> ids;
 }

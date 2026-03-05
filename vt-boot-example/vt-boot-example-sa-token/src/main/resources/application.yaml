@@ -16,7 +16,8 @@ spring:
     # 4. datasource.yaml: 数据源配置
     # 5. mybatisplus.yaml: MyBatisPlus 配置
     # 6. cache.yaml: 缓存配置
-    import: classpath:language.yaml,classpath:logback.yaml,classpath:sa-token.yaml,classpath:datasource.yaml,classpath:mybatisplus.yaml,classpath:cache.yaml
+    # 7. tenant.yaml: 租户配置
+    import: classpath:language.yaml,classpath:logback.yaml,classpath:sa-token.yaml,classpath:datasource.yaml,classpath:mybatisplus.yaml,classpath:cache.yaml,classpath:tenant.yaml
 
 # 服务配置
 server:

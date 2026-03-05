@@ -1,6 +1,7 @@
 package com.ranyk.vt.boot.example.satoken.service.captcha;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.ranyk.vt.boot.base.constant.CacheTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.cache.config.properties.CacheConfigurationProperties;
@@ -82,7 +83,7 @@ public class CaptchaService {
         // 定义验证码验证结果局部变量, 默认值为 FALSE
         Boolean verifyResult = Boolean.FALSE;
         // 获取验证码缓存 KEY, 如果未提供, 则默认使用 验证码值 + ":captcha" 作为缓存 KEY
-        captchaKey = Optional.ofNullable(captchaKey).orElse(captcha+":captcha");
+        captchaKey = Optional.ofNullable(captchaKey).filter(StrUtil::isNotBlank).orElse(captcha+":captcha");
         // 判断是否开启缓存功能
         if (!cacheConfigurationProperties.getEnabled()) {
             throw new ServiceException("缓存功能未启用, 验证码无法进行验证!");

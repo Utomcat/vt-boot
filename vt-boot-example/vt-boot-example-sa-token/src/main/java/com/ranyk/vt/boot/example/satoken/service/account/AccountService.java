@@ -3,8 +3,11 @@ package com.ranyk.vt.boot.example.satoken.service.account;
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ranyk.vt.boot.base.exception.ServiceException;
+import com.ranyk.vt.boot.base.response.PageResponse;
+import com.ranyk.vt.boot.datasource.util.PageUtils;
 import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.satoken.domain.account.entity.Account;
 import com.ranyk.vt.boot.example.satoken.mapper.account.AccountMapper;
@@ -70,7 +73,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
             throw new ServiceException("user.username.exists");
         }
         // 数据转换 - 账户信息数据传输对象 转换为 数据实体对象
-        Account account = accountMapper.saveDTOToEntity(accountDTO);
+        Account account = accountMapper.dtoToEntity(accountDTO);
         // 密码进行加密处理
         account.setPassword(SaSecureUtil.md5(account.getPassword()));
         // 保存账户信息
@@ -91,7 +94,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     public void deleteOne(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
         validateId(accountDTO.getId(), "删除一个账户信息");
-        Account account = accountMapper.deleteDTOToEntity(accountDTO);
+        Account account = accountMapper.dtoToEntity(accountDTO);
         boolean deleteResult = removeById(account);
         if (!deleteResult) {
             log.error("删除账户信息失败!");
@@ -115,7 +118,10 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
         // 当用户名存在时再进行用户名设置
         Optional.ofNullable(accountDTO.getUserName()).filter(StrUtil::isNotBlank).ifPresent(account::setUserName);
         // 当密码存在时再进行密码设置
-        Optional.ofNullable(accountDTO.getPassword()).filter(StrUtil::isNotBlank).ifPresent(account::setPassword);
+        Optional.ofNullable(accountDTO.getPassword()).filter(StrUtil::isNotBlank).ifPresent(password -> account.setPassword(SaSecureUtil.md5(password)));
+        // 当备注存在时再进行备注设置
+        Optional.ofNullable(accountDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(account::setRemark);
+        // 执行修改操作
         boolean updateResult = updateById(account);
         if (!updateResult) {
             log.error("修改账户信息失败!");
@@ -127,15 +133,18 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * 依据条件查询满足条件的一个账户信息 - 精确匹配
      *
      * @param accountDTO 账户信息查询参数封装对象 {@link AccountDTO}
-     * @return 账户信息数据传输对象 {@link AccountDTO}
+     * @return 分页对象 {@link PageResponse} - 账户信息数据传输对象 {@link AccountDTO}
      */
-    public AccountDTO queryAccountByConditions(AccountDTO accountDTO) {
+    public PageResponse<AccountDTO> queryAccountByConditions(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
         validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), true, true, "查询指定账户信息");
+        IPage<Account> page = PageUtils.buildPage(accountDTO);
         // 创建查询条件对象
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
-        return accountMapper.entityToDTO(accountRepository.selectOne(queryWrapper));
+        queryWrapper.like(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
+        queryWrapper.like(StrUtil.isNotBlank(accountDTO.getRemark()), Account::getRemark, accountDTO.getRemark());
+        IPage<Account> accountPage = page(page, queryWrapper);
+        return PageUtils.buildPageResponse(accountPage, accountMapper.accountEntityListToDTO(accountPage.getRecords()));
     }
 
     /**
@@ -160,9 +169,9 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     /**
      * 验证用户名和密码是否存在值
      *
-     * @param userName       用户名
-     * @param password       密码
-     * @param args           参数, 第一个参数用于描述验证什么操作, 例如: "登录", "注册" 等
+     * @param userName 用户名
+     * @param password 密码
+     * @param args     参数, 第一个参数用于描述验证什么操作, 例如: "登录", "注册" 等
      */
     private void validateUserNameAndPassword(String userName, String password, String... args) {
         validateUserNameAndPassword(userName, password, false, false, args);

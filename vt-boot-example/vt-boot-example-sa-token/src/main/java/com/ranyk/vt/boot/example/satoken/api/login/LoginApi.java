@@ -1,7 +1,7 @@
 package com.ranyk.vt.boot.example.satoken.api.login;
 
-import com.ranyk.vt.boot.example.satoken.domain.account.po.AccountPO;
-import com.ranyk.vt.boot.example.satoken.domain.account.vo.AccountVO;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.LoginAccountPO;
+import com.ranyk.vt.boot.example.satoken.domain.account.vo.LoginAccountVO;
 import com.ranyk.vt.boot.example.satoken.mapper.account.AccountMapper;
 import com.ranyk.vt.boot.example.satoken.service.login.LonginService;
 import com.ranyk.vt.boot.log.annotations.Log;
@@ -48,13 +48,13 @@ public class LoginApi {
     /**
      * 登录接口
      *
-     * @param accountPO 登录参数数据封装对象, {@link AccountPO}
-     * @return 登录结果, {@link AccountVO}
+     * @param loginAccountPO 登录参数数据封装对象, {@link LoginAccountPO}
+     * @return 登录结果, {@link LoginAccountVO}
      */
     @PostMapping
     @Log(operation = "登录接口", type = Log.LogType.ACCESS)
-    public Result<AccountVO> login(@RequestBody AccountPO accountPO) {
-        return Result.success(accountMapper.dtoToVO(longinService.login(accountMapper.loginRequestPOToDTO(accountPO))));
+    public Result<LoginAccountVO> login(@RequestBody LoginAccountPO loginAccountPO) {
+        return Result.success(accountMapper.dtoToLoginAccountVO(longinService.login(accountMapper.loginRequestPOToDTO(loginAccountPO))));
     }
 
 }

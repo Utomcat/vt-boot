@@ -1,9 +1,16 @@
 package com.ranyk.vt.boot.example.satoken.api.account;
 
-import com.ranyk.vt.boot.example.satoken.domain.account.po.AccountPO;
+import com.ranyk.vt.boot.base.response.PageResponse;
+import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.DeleteAccountPO;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.QueryAccountPO;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.SaveAccountPO;
+import com.ranyk.vt.boot.example.satoken.domain.account.po.UpdateAccountPO;
+import com.ranyk.vt.boot.example.satoken.domain.account.vo.QueryAccountVO;
 import com.ranyk.vt.boot.example.satoken.mapper.account.AccountMapper;
 import com.ranyk.vt.boot.example.satoken.service.account.AccountService;
 import com.ranyk.vt.boot.log.annotations.Log;
+import com.ranyk.vt.boot.web.vo.MultiResult;
 import com.ranyk.vt.boot.web.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,39 +51,55 @@ public class AccountApi {
     /**
      * 新增账户信息
      *
-     * @param accountPO 账户信息数据封装对象 {@link AccountPO}
+     * @param saveAccountPO 账户信息数据封装对象 {@link SaveAccountPO}
      * @return 返回新增账户信息操作结果 {@link Boolean}
      */
     @PostMapping
     @Log(operation = "新增账户信息", type = Log.LogType.INSERT)
-    public Result<Boolean> saveAccountInfo(@RequestBody AccountPO accountPO) {
-        accountService.saveOne(accountMapper.saveRequestPOToDTO(accountPO));
+    public Result<Boolean> saveAccountInfo(@RequestBody SaveAccountPO saveAccountPO) {
+        accountService.saveOne(accountMapper.saveRequestPOToDTO(saveAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
      * 删除账户信息
      *
-     * @param accountPO 账户信息数据封装对象 {@link AccountPO}
+     * @param deleteAccountPO 账户信息数据封装对象 {@link DeleteAccountPO}
      * @return 删除账户信息操作结果 {@link Boolean}
      */
     @DeleteMapping
     @Log(operation = "删除账户信息", type = Log.LogType.DELETE)
-    public Result<Boolean> deleteAccountInfo(@RequestBody AccountPO accountPO) {
-        accountService.deleteOne(accountMapper.deleteRequestPOToDTO(accountPO));
+    public Result<Boolean> deleteAccountInfo(@RequestBody DeleteAccountPO deleteAccountPO) {
+        accountService.deleteOne(accountMapper.deleteRequestPOToDTO(deleteAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
      * 更新账户信息
      *
-     * @param accountPO 账户信息数据封装对象 {@link AccountPO}
+     * @param updateAccountPO 账户信息数据封装对象 {@link UpdateAccountPO}
      * @return 更新账户信息操作结果 {@link Boolean}
      */
     @PutMapping
     @Log(operation = "更新账户信息", type = Log.LogType.UPDATE)
-    public Result<Boolean> updateAccountInfo(@RequestBody AccountPO accountPO) {
-        accountService.updateOne(accountMapper.updateRequestPOToDTO(accountPO));
+    public Result<Boolean> updateAccountInfo(@RequestBody UpdateAccountPO updateAccountPO) {
+        accountService.updateOne(accountMapper.updateRequestPOToDTO(updateAccountPO));
         return Result.success(Boolean.TRUE);
+    }
+
+    /**
+     * 查询账户信息
+     *
+     * @param queryAccountPO 账户信息数据封装对象 {@link QueryAccountPO}
+     * @return 查询账户信息操作结果 {@link Boolean}
+     */
+    @GetMapping
+    @Log(operation = "查询账户信息", type = Log.LogType.SELECT)
+    public MultiResult<QueryAccountVO> queryAccountInfo(QueryAccountPO queryAccountPO) {
+        PageResponse<AccountDTO> accountDTOPageResponse = accountService.queryAccountByConditions(accountMapper.queryRequestPOToDTO(queryAccountPO));
+        return MultiResult.successMulti(accountMapper.accountDTOListToQueryAccountVOList(accountDTOPageResponse.getData()),
+                Long.parseLong(String.valueOf(accountDTOPageResponse.getTotal())),
+                accountDTOPageResponse.getCurrentPage(),
+                accountDTOPageResponse.getPageSize());
     }
 }

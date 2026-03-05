@@ -3,6 +3,7 @@ package com.ranyk.vt.boot.example.satoken.service.login;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ranyk.vt.boot.base.constant.TenantEnum;
+import com.ranyk.vt.boot.base.context.TenantContext;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.satoken.service.account.AccountService;
@@ -69,6 +70,8 @@ public class LonginService {
         StpUtil.login(account.getId());
         // 登录成功后,将当前用户的租户信息保存到 session 中
         StpUtil.getSession().set(TenantEnum.TENANT_ID.getValue(), account.getTenantId());
+        // 登录成功后, 将当前用户的租户信息保存到 TenantContextHandler 中
+        TenantContext.setTenantId(account.getTenantId());
         // 返回登录后的 token 信息
         return AccountDTO.builder().token(StpUtil.getTokenInfo().getTokenValue()).build();
     }
