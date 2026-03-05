@@ -15,7 +15,11 @@ public enum TenantEnum {
     /**
      * 租户ID
      */
-    TENANT_ID("租户ID", "X-Tenant-Id");
+    TENANT_ID("租户ID", "X-Tenant-Id"),
+    /**
+     * 租户ID字段名
+     */
+    TENANT_ID_COLUMN("租户ID字段名", "tenant_id");
 
     /**
      * 描述
