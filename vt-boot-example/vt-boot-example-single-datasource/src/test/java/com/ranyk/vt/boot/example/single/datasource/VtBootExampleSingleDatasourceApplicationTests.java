@@ -42,13 +42,13 @@ class VtBootExampleSingleDatasourceApplicationTests {
         String username = AES.encrypt(dataSourceProperties.getUsername(), randomKey);
         String password = AES.encrypt(dataSourceProperties.getPassword(), randomKey);
         // --mpw.key=QTyyMQjUUQ21zmlQ
-        log.info("数据库连接密钥: {}", randomKey);
+        log.debug("数据库连接密钥: {}", randomKey);
         // mpw:m5K8pL8AKhiWJ6VokE1QKcd4ljLJ7W3GpSS3ncOkczDl3gip2OeSCB3inQpXTb6RIf/OhXr1/U4/kkZWI0aaEDEWqsd1EeI38dnJkzH0ofoOizKtc3WN1RP0Q7ponZXdd4s/mjabHjCAiGZuL0MYav1q+vDuJ7/kqOmr84NyzsEb+6soASKDL7tdKn7xBMS0xoSoigSBxRwOjnFFrVGTQkBfB7aGHjF9IpfKN7j8vTM=
-        log.info("数据库连接URL: {}", url);
+        log.debug("数据库连接URL: {}", url);
         // mpw:n/TcDVePDPzY9AL6tDQKcw==
-        log.info("数据库用户名: {}", username);
+        log.debug("数据库用户名: {}", username);
         // mpw:brbYC5TFDvfJ6CL94F2xEw==
-        log.info("数据库密码: {}", password);
+        log.debug("数据库密码: {}", password);
 
     }
 
@@ -58,6 +58,6 @@ class VtBootExampleSingleDatasourceApplicationTests {
     @Test
     void test1(){
         String url = AES.decrypt("m5K8pL8AKhiWJ6VokE1QKcd4ljLJ7W3GpSS3ncOkczDl3gip2OeSCB3inQpXTb6RIf/OhXr1/U4/kkZWI0aaEDEWqsd1EeI38dnJkzH0ofoOizKtc3WN1RP0Q7ponZXdd4s/mjabHjCAiGZuL0MYav1q+vDuJ7/kqOmr84NyzsEb+6soASKDL7tdKn7xBMS0xoSoigSBxRwOjnFFrVGTQkBfB7aGHjF9IpfKN7j8vTM=", "QTyyMQjUUQ21zmlQ");
-        log.info("解密后的数据库连接URL: {}", url);
+        log.debug("解密后的数据库连接URL: {}", url);
     }
 }
