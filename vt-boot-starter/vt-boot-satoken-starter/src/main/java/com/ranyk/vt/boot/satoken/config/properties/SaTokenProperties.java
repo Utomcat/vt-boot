@@ -64,8 +64,12 @@ public class SaTokenProperties {
      */
     private List<String> pathPatterns = List.of("/**");
     /**
-     * 哪些路径不需要进行拦截校验, 默认为 /login (登录接口请求), /static/** (静态资源请求), /favicon.ico (图标请求)
+     * 哪些路径不需要进行拦截校验, 默认为 /login (登录接口请求), /static/** (静态资源请求), /favicon.ico (图标请求), /api/captcha (验证码接口请求)
      */
     private List<String> excludePathPatterns = List.of("/api/login", "/static/**", "/favicon.ico", "/api/captcha");
+    /**
+     * 登录接口 - 用于在登录成功后, 拦截请求, 注册认证信息到请求头中
+     */
+    private String loginPathPatterns = "/api/login";
 
 }

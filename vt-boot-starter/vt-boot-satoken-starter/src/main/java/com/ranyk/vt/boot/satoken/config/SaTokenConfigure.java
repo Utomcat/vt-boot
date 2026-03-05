@@ -47,7 +47,7 @@ public class SaTokenConfigure {
     @Bean
     @Primary
     public SaTokenConfig saTokenConfig() {
-        log.info("SA-TOKEN is enabled. create SaTokenConfig Object");
+        log.debug("SA-TOKEN is enabled. create SaTokenConfig Object");
         return new SaTokenConfig()
                 // token 名称（同时也是 cookie 名称）
                 .setTokenName(saTokenProperties.getTokenName())
