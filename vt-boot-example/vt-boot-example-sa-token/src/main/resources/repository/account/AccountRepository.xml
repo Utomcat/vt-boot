@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ranyk.vt.boot.example.satoken.repository.account.AccountRepository">
+    <!-- 查询账户信息 - 通过数据ID -->
+    <select id="selectOneAccountById" resultType="com.ranyk.vt.boot.example.satoken.domain.account.entity.Account">
+        select id,
+               user_name,
+               tenant_id,
+               status,
+               remark
+        from account_info a
+        where a.id = #{id}
+    </select>
 
+    <!-- 更新账户信息 - 通过数据ID -->
+    <update id="updateOneAccountById">
+        update account_info a
+        <set>
+            <if test="account.userName != null">
+                a.user_name = #{account.userName},
+            </if>
+            <if test="account.password != null">
+                a.password = #{account.password},
+            </if>
+            <if test="account.status != null">
+                a.status = #{account.status},
+            </if>
+            <if test="account.remark != null">
+                a.remark = #{account.remark},
+            </if>
+        </set>
+        <where>
+            a.id = #{account.id}
+        </where>
+    </update>
 </mapper>

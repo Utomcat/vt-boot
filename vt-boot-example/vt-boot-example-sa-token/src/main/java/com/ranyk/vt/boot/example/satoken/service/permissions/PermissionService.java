@@ -1,9 +1,15 @@
 package com.ranyk.vt.boot.example.satoken.service.permissions;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ranyk.vt.boot.base.constant.OperateType;
 import com.ranyk.vt.boot.base.exception.ServiceException;
+import com.ranyk.vt.boot.base.response.PageResponse;
+import com.ranyk.vt.boot.datasource.util.PageUtils;
 import com.ranyk.vt.boot.example.satoken.domain.permissions.dto.PermissionDTO;
 import com.ranyk.vt.boot.example.satoken.domain.permissions.entity.Permission;
 import com.ranyk.vt.boot.example.satoken.mapper.permissions.PermissionMapper;
@@ -11,6 +17,7 @@ import com.ranyk.vt.boot.example.satoken.repository.permissions.PermissionReposi
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +59,149 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
     }
 
     /**
+     * 保存权限信息
+     *
+     * @param permissionDTO 待保存权限数据传输对象, {@link PermissionDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOnePermission(PermissionDTO permissionDTO) {
+        verifyPermissionParams(permissionDTO, OperateType.SAVE);
+        Permission permission = permissionMapper.dtoToEntity(permissionDTO);
+        boolean saveResult = saveOrUpdate(permission);
+        if (!saveResult) {
+            log.error("保存权限信息失败!");
+            throw new ServiceException("保存权限信息失败!");
+        }
+    }
+
+    /**
+     * 删除权限信息
+     *
+     * @param permissionDTO 待删除权限数据传输对象, {@link PermissionDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteOnePermission(PermissionDTO permissionDTO) {
+        verifyPermissionParams(permissionDTO, OperateType.DELETE);
+        boolean deleteResult = removeById(permissionDTO.getId());
+        if (!deleteResult) {
+            log.error("删除权限信息失败!");
+            throw new ServiceException("删除权限信息失败!");
+        }
+    }
+
+    /**
+     * 修改权限信息
+     *
+     * @param permissionDTO 待修改权限数据传输对象, {@link PermissionDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOnePermission(PermissionDTO permissionDTO) {
+        verifyPermissionParams(permissionDTO, OperateType.UPDATE);
+        LambdaQueryWrapper<Permission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Permission::getId, permissionDTO.getId());
+        Permission permission = this.permissionRepository.selectOne(queryWrapper);
+        Optional.ofNullable(permissionDTO.getName()).ifPresent(permission::setName);
+        Optional.ofNullable(permissionDTO.getCode()).ifPresent(permission::setCode);
+        Optional.ofNullable(permissionDTO.getType()).ifPresent(permission::setType);
+        Optional.ofNullable(permissionDTO.getStatus()).ifPresent(permission::setStatus);
+        Optional.ofNullable(permission.getRemark()).ifPresent(permission::setRemark);
+        boolean updateResult = saveOrUpdate(permission);
+        if (!updateResult) {
+            log.error("修改权限信息失败!");
+            throw new ServiceException("修改权限信息失败!");
+        }
+    }
+
+    /**
+     * 根据条件查询权限信息
+     *
+     * @param permissionDTO 待查询权限数据传输对象, {@link PermissionDTO}
+     * @return 查询结果, {@link PageResponse} - {@link PermissionDTO}
+     */
+    public PageResponse<PermissionDTO> queryPermissionByConditions(PermissionDTO permissionDTO) {
+        IPage<Permission> page = PageUtils.buildPage(permissionDTO);
+        LambdaQueryWrapper<Permission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StrUtil.isNotBlank(permissionDTO.getName()), Permission::getName, permissionDTO.getName());
+        queryWrapper.like(StrUtil.isNotBlank(permissionDTO.getCode()), Permission::getCode, permissionDTO.getCode());
+        queryWrapper.eq(Objects.nonNull(permissionDTO.getType()), Permission::getType, permissionDTO.getType());
+        queryWrapper.eq(Objects.nonNull(permissionDTO.getStatus()), Permission::getStatus, permissionDTO.getStatus());
+        queryWrapper.like(StrUtil.isNotBlank(permissionDTO.getRemark()), Permission::getRemark, permissionDTO.getRemark());
+        IPage<Permission> permissionIPage = permissionRepository.selectPage(page, queryWrapper);
+        return PageUtils.buildPageResponse(permissionIPage, permissionMapper.permissionEntityListToPermissionDTOList(permissionIPage.getRecords()));
+    }
+
+    /**
+     * 验证权限信息参数
+     *
+     * @param permissionDTO 权限数据传输对象, {@link PermissionDTO}
+     * @param operateType   操作类型, {@link OperateType}
+     */
+    private void verifyPermissionParams(PermissionDTO permissionDTO, OperateType operateType) {
+        switch (operateType) {
+            case SAVE -> verifySavePermissionParams(permissionDTO);
+            case UPDATE -> verifyUpdatePermissionParams(permissionDTO);
+            case DELETE -> verifyDeletePermissionParams(permissionDTO);
+            default -> throw new ServiceException("不支持的操作类型!");
+        }
+    }
+
+    /**
+     * 验证新增权限参数
+     *
+     * @param permissionDTO 待新增权限数据传输对象, {@link PermissionDTO}, 此处验证的参数有 {@link PermissionDTO#getName()}, {@link PermissionDTO#getCode()}, {@link PermissionDTO#getType()}
+     */
+    private void verifySavePermissionParams(PermissionDTO permissionDTO) {
+        if (StrUtil.isBlank(permissionDTO.getName())) {
+            log.error("新增权限失败，权限名称不能为空!");
+            throw new ServiceException("新增权限失败，权限名称不能为空!");
+        }
+        if (StrUtil.isBlank(permissionDTO.getCode())) {
+            log.error("新增权限失败，权限编码不能为空!");
+            throw new ServiceException("新增权限失败，权限编码不能为空!");
+        }
+        if (Objects.isNull(permissionDTO.getType())) {
+            log.error("新增权限失败，权限类型不能为空!");
+            throw new ServiceException("新增权限失败，权限类型不能为空!");
+        }
+    }
+
+    /**
+     * 验证修改权限参数
+     *
+     * @param permissionDTO 待修改权限数据传输对象, {@link PermissionDTO}, 此处验证的参数有 {@link PermissionDTO#getId()}, {@link PermissionDTO#getName()}, {@link PermissionDTO#getCode()}, {@link PermissionDTO#getType()}
+     */
+    private void verifyUpdatePermissionParams(PermissionDTO permissionDTO) {
+        if (StrUtil.isBlank(permissionDTO.getId())) {
+            log.error("修改权限失败，权限ID不能为空!");
+            throw new ServiceException("修改权限失败，权限ID不能为空!");
+        }
+        if (StrUtil.isBlank(permissionDTO.getName())) {
+            log.error("修改权限失败，权限名称不能为空!");
+            throw new ServiceException("修改权限失败，权限名称不能为空!");
+        }
+        if (StrUtil.isBlank(permissionDTO.getCode())) {
+            log.error("修改权限失败，权限编码不能为空!");
+            throw new ServiceException("修改权限失败，权限编码不能为空!");
+        }
+        if (Objects.isNull(permissionDTO.getType())) {
+            log.error("修改权限失败，权限类型不能为空!");
+            throw new ServiceException("修改权限失败，权限类型不能为空!");
+        }
+    }
+
+    /**
+     * 验证删除权限参数
+     *
+     * @param permissionDTO 待删除权限数据传输对象, {@link PermissionDTO}, 此处验证的参数有 {@link PermissionDTO#getId()} 和 {@link PermissionDTO#getIds()}
+     */
+    private void verifyDeletePermissionParams(PermissionDTO permissionDTO) {
+        if (StrUtil.isBlank(permissionDTO.getId()) && CollectionUtil.isEmpty(permissionDTO.getIds())) {
+            log.error("删除权限失败，权限ID不能为空!");
+            throw new ServiceException("删除权限失败，权限ID不能为空!");
+        }
+    }
+
+    /**
      * 查询权限信息 - 通过权限ID集合
      *
      * @param permissionDTO 权限信息数据传输对象, 当前方法使用 {@link PermissionDTO#getIds()} 属性
@@ -63,7 +213,7 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
         LambdaQueryWrapper<Permission> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(Permission::getId, permissionDTO.getIds());
         List<Permission> permissionList = permissionRepository.selectList(queryWrapper);
-        return permissionMapper.permissionEntityToPermissionDTO(Optional.of(permissionList.stream().filter(Objects::nonNull).collect(Collectors.toList())).orElse(Collections.emptyList()));
+        return permissionMapper.permissionEntityListToPermissionDTOList(Optional.of(permissionList.stream().filter(Objects::nonNull).collect(Collectors.toList())).orElse(Collections.emptyList()));
     }
 
     /**

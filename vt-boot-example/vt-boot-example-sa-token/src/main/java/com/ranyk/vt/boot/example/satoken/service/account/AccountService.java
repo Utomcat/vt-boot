@@ -111,7 +111,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     public void updateOne(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
         validateId(accountDTO.getId(), "修改一个账户信息");
-        Account account = accountRepository.selectById(accountDTO.getId());
+        Account account = accountRepository.selectOneAccountById(accountDTO.getId());
         if (Objects.isNull(account)) {
             throw new ServiceException("登录模块", "account.not.exists", new String[]{accountDTO.getUserName()});
         }
@@ -119,10 +119,12 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
         Optional.ofNullable(accountDTO.getUserName()).filter(StrUtil::isNotBlank).ifPresent(account::setUserName);
         // 当密码存在时再进行密码设置
         Optional.ofNullable(accountDTO.getPassword()).filter(StrUtil::isNotBlank).ifPresent(password -> account.setPassword(SaSecureUtil.md5(password)));
+        // 当状态存在时再进行状态设置
+        Optional.ofNullable(accountDTO.getStatus()).ifPresent(account::setStatus);
         // 当备注存在时再进行备注设置
         Optional.ofNullable(accountDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(account::setRemark);
         // 执行修改操作
-        boolean updateResult = updateById(account);
+        boolean updateResult = accountRepository.updateOneAccountById(account);
         if (!updateResult) {
             log.error("修改账户信息失败!");
             throw new ServiceException("修改账户信息失败!");

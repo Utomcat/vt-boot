@@ -1,9 +1,14 @@
 package com.ranyk.vt.boot.example.satoken.service.role;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ranyk.vt.boot.base.constant.OperateType;
 import com.ranyk.vt.boot.base.exception.ServiceException;
+import com.ranyk.vt.boot.base.response.PageResponse;
+import com.ranyk.vt.boot.datasource.util.PageUtils;
 import com.ranyk.vt.boot.example.satoken.domain.role.dto.RoleDTO;
 import com.ranyk.vt.boot.example.satoken.domain.role.dto.RolePermissionConnectionDTO;
 import com.ranyk.vt.boot.example.satoken.domain.role.entity.Role;
@@ -12,9 +17,11 @@ import com.ranyk.vt.boot.example.satoken.repository.role.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -54,6 +61,139 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
         this.roleRepository = roleRepository;
         this.rolePermissionConnectionService = rolePermissionConnectionService;
         this.roleMapper = roleMapper;
+    }
+
+    /**
+     * 新增一条角色数据
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOneRole(RoleDTO roleDTO) {
+        verifyRoleParams(roleDTO, OperateType.SAVE);
+        Role role = roleMapper.dtoToEntity(roleDTO);
+        boolean saveResult = saveOrUpdate(role);
+        if (!saveResult) {
+            log.error("新增角色信息失败");
+            throw new ServiceException("新增角色信息失败");
+        }
+    }
+
+    /**
+     * 删除一条角色数据
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteOneRole(RoleDTO roleDTO) {
+        verifyRoleParams(roleDTO, OperateType.DELETE);
+        boolean deleteResult = removeById(roleDTO.getId());
+        if (!deleteResult) {
+            log.error("删除角色信息失败");
+            throw new ServiceException("删除角色信息失败");
+        }
+    }
+
+    /**
+     * 修改一条角色数据
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOneRole(RoleDTO roleDTO) {
+        verifyRoleParams(roleDTO, OperateType.UPDATE);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Role::getId, roleDTO.getId());
+        Role role = this.roleRepository.selectOne(queryWrapper);
+        Optional.ofNullable(roleDTO.getName()).ifPresent(role::setName);
+        Optional.ofNullable(roleDTO.getCode()).ifPresent(role::setCode);
+        Optional.ofNullable(roleDTO.getStatus()).ifPresent(role::setStatus);
+        Optional.ofNullable(roleDTO.getRemark()).ifPresent(role::setRemark);
+        boolean updateResult = saveOrUpdate(role);
+        if (!updateResult) {
+            log.error("修改角色信息失败!");
+            throw new ServiceException("修改角色信息失败");
+        }
+    }
+
+    /**
+     * 根据条件查询角色信息
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     * @return {@link PageResponse}角色信息数据传输对象列表 {@link RoleDTO}
+     */
+    public PageResponse<RoleDTO> queryRoleByConditions(RoleDTO roleDTO) {
+        Page<Role> page = PageUtils.buildPage(roleDTO);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StrUtil.isNotBlank(roleDTO.getName()), Role::getName, roleDTO.getName());
+        queryWrapper.like(StrUtil.isNotBlank(roleDTO.getCode()), Role::getCode, roleDTO.getCode());
+        queryWrapper.eq(Objects.nonNull(roleDTO.getStatus()), Role::getStatus, roleDTO.getStatus());
+        queryWrapper.like(StrUtil.isNotBlank(roleDTO.getRemark()), Role::getRemark, roleDTO.getRemark());
+        Page<Role> rolePage = roleRepository.selectPage(page, queryWrapper);
+        return PageUtils.buildPageResponse(rolePage, roleMapper.roleEntityListToRoleDTOList(rolePage.getRecords()));
+    }
+
+    /**
+     * 验证角色信息数据传输对象参数
+     *
+     * @param roleDTO     角色信息数据传输对象 {@link RoleDTO}
+     * @param operateType 操作类型 {@link OperateType}
+     */
+    private void verifyRoleParams(RoleDTO roleDTO, OperateType operateType) {
+        switch (operateType) {
+            case SAVE -> verifySaveRoleParams(roleDTO);
+            case UPDATE -> verifyUpdateRoleParams(roleDTO);
+            case DELETE -> verifyDeleteRoleParams(roleDTO);
+            default -> throw new ServiceException("不支持的操作类型");
+        }
+    }
+
+    /**
+     * 验证角色信息数据传输对象 - 保存操作
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     */
+    private void verifySaveRoleParams(RoleDTO roleDTO) {
+        if (StrUtil.isBlank(roleDTO.getName())) {
+            log.error("新增角色信息 - 角色名称不能为空");
+            throw new ServiceException("新增角色信息 - 角色名称不能为空");
+        }
+        if (StrUtil.isBlank(roleDTO.getCode())) {
+            log.error("新增角色信息 - 角色编码不能为空");
+            throw new ServiceException("新增角色信息 - 角色编码不能为空");
+        }
+    }
+
+    /**
+     * 验证角色信息数据传输对象 - 更新操作
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     */
+    private void verifyUpdateRoleParams(RoleDTO roleDTO) {
+        if (StrUtil.isBlank(roleDTO.getId())) {
+            log.error("更新角色信息 - 角色ID不能为空");
+            throw new ServiceException("更新角色信息 - 角色ID不能为空");
+        }
+        if (StrUtil.isBlank(roleDTO.getName())) {
+            log.error("更新角色信息 - 角色名称不能为空");
+            throw new ServiceException("更新角色信息 - 角色名称不能为空");
+        }
+        if (StrUtil.isBlank(roleDTO.getCode())) {
+            log.error("更新角色信息 - 角色编码不能为空");
+            throw new ServiceException("更新角色信息 - 角色编码不能为空");
+        }
+    }
+
+    /**
+     * 验证角色信息数据传输对象 - 删除操作
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     */
+    private void verifyDeleteRoleParams(RoleDTO roleDTO) {
+        if (StrUtil.isBlank(roleDTO.getId()) && CollUtil.isEmpty(roleDTO.getIds())) {
+            log.error("删除角色信息 - 角色ID或角色ID集合不能为空");
+            throw new ServiceException("删除角色信息 - 角色ID或角色ID集合不能为空");
+        }
     }
 
     /**
@@ -101,5 +241,4 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
             throw new ServiceException("角色ID列表不能为空");
         }
     }
-
 }
