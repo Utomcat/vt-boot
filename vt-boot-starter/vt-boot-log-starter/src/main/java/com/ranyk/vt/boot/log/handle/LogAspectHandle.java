@@ -54,11 +54,11 @@ public class LogAspectHandle {
         // 3. 记录方法开始执行的日志
         String className = joinPoint.getTarget().getClass().getName();
         String methodName = method.getName();
-        log.info("===== 【{}】开始执行 - 类：{}，方法：{} 操作类型: {} =====", operation, className, methodName, logType);
+        log.debug("===== 【{}】开始执行 - 类：{}，方法：{} 操作类型: {} =====", operation, className, methodName, logType);
         // 4. 记录入参（如果开启）
         if (recordParams) {
             Object[] args = joinPoint.getArgs();
-            log.info("【{}】入参：{}", operation, Arrays.toString(args));
+            log.debug("【{}】入参：{}", operation, Arrays.toString(args));
         }
         Object result;
         long startTime = System.currentTimeMillis();
@@ -67,9 +67,9 @@ public class LogAspectHandle {
             result = joinPoint.proceed();
             // 6. 记录执行耗时和出参（如果开启）
             long costTime = System.currentTimeMillis() - startTime;
-            log.info("===== 【{}】执行成功 - 耗时：{}ms =====", operation, costTime);
+            log.debug("===== 【{}】执行成功 - 耗时：{}ms =====", operation, costTime);
             if (recordResult) {
-                log.info("【{}】出参：{}", operation, result);
+                log.debug("【{}】出参：{}", operation, result);
             }
         } catch (Throwable throwable) {
             // 7. 捕获异常并记录
