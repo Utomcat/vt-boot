@@ -3,6 +3,9 @@ package com.ranyk.vt.boot.datasource.config.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * CLASS_NAME: DatasourceConfigurationProperties.java
  *
@@ -19,4 +22,8 @@ public class DatasourceConfigurationProperties {
      * 是否启用租户
      */
     private Boolean isEnableTenant = Boolean.FALSE;
+    /**
+     * 不需要进行自动插入租户ID的表名
+     */
+    private List<String> ignoreTable = new ArrayList<>();
 }

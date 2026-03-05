@@ -1,25 +1,25 @@
-package com.ranyk.vt.boot.datasource.handler;
+package com.ranyk.vt.boot.base.context;
 
 /**
- * CLASS_NAME: TenantContextHandler.java
+ * CLASS_NAME: TenantContext.java
  *
  * @author ranyk
  * @version V1.0
  * @description: 租户上下文监听类
  * @date: 2026-03-03
  */
-public class TenantContextHandler {
+public class TenantContext {
     /**
      * 租户ID 线程存储本地变量
      */
-    private static final ThreadLocal<Long> TENANT_ID = new ThreadLocal<>();
+    private static final ThreadLocal<String> TENANT_ID = new ThreadLocal<>();
 
     /**
      * 设置租户ID
      *
      * @param tenantId 租户ID
      */
-    public static void setTenantId(Long tenantId) {
+    public static void setTenantId(String tenantId) {
         TENANT_ID.set(tenantId);
     }
 
@@ -28,7 +28,7 @@ public class TenantContextHandler {
      *
      * @return 租户ID
      */
-    public static Long getTenantId() {
+    public static String getTenantId() {
         return TENANT_ID.get();
     }
 

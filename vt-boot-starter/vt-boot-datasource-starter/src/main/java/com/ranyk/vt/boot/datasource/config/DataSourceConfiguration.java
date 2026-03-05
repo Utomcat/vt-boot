@@ -1,7 +1,7 @@
 package com.ranyk.vt.boot.datasource.config;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
@@ -13,8 +13,8 @@ import com.ranyk.vt.boot.datasource.handler.DataObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Bean;
  */
 @Slf4j
 @AutoConfiguration
-@AutoConfigureBefore({DataSourceAutoConfiguration.class, MybatisPlusAutoConfiguration.class})
 @EnableConfigurationProperties(value = com.ranyk.vt.boot.datasource.config.properties.DatasourceConfigurationProperties.class)
 public class DataSourceConfiguration {
 
@@ -55,6 +54,18 @@ public class DataSourceConfiguration {
     @Bean
     public DataObjectHandler myMetaobjectHandler() {
         return new DataObjectHandler();
+    }
+
+    /**
+     * 向 Spring Bean 容器中注入 自定义多租户处理器对象 - 该操作是对 MyBatis Plus 的配置
+     *
+     * @return 返回自定义多租户处理器对象 {@link CustomTenantHandler}
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "vt.boot", name = "is-enable-tenant", havingValue = "true")
+    public CustomTenantHandler customTenantHandler() {
+        return new CustomTenantHandler(datasourceConfigurationProperties);
     }
 
     /**
@@ -88,7 +99,8 @@ public class DataSourceConfiguration {
         // 多租户插件 - 插件 TenantLineInnerInterceptor 类在插件依赖 mybatis-plus-jsqlparser 下
         if (datasourceConfigurationProperties.getIsEnableTenant()) {
             TenantLineInnerInterceptor tenantInterceptor = new TenantLineInnerInterceptor();
-            tenantInterceptor.setTenantLineHandler(new CustomTenantHandler());
+            CustomTenantHandler customTenantHandler = SpringUtil.getBean(CustomTenantHandler.class);
+            tenantInterceptor.setTenantLineHandler(customTenantHandler);
             interceptor.addInnerInterceptor(tenantInterceptor);
         }
         //防全表更新与删除插件 - 插件 BlockAttackInnerInterceptor 类在插件依赖 mybatis-plus-jsqlparser 下
