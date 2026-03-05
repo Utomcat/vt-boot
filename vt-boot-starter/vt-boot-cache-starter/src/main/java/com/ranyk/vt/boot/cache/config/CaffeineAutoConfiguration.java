@@ -49,7 +49,7 @@ public class CaffeineAutoConfiguration {
      */
     @Bean("caffeineCache")
     public Cache<@NonNull String, Object> caffeineCache() {
-        log.info("CaffeineCache is enabled. create Caffeine Cache Object");
+        log.debug("CaffeineCache is enabled. create Caffeine Cache Object");
         return Caffeine.newBuilder()
                 // 初始的缓存空间大小
                 .initialCapacity(cacheConfigurationProperties.getCaffeineInitSize())
