@@ -92,7 +92,7 @@ public class AppLogService extends ServiceImpl<AppLogRepository, AppLog> {
         AppLog appLog = BeanUtil.copyProperties(appLogDTO, AppLog.class);
         boolean saveResult = saveOrUpdate(appLog);
         int quotient = 1 / 0;
-        log.info("对数据源一进行异常测试 quotient: {}", quotient);
+        log.debug("对数据源一进行异常测试 quotient: {}", quotient);
         return saveResult;
     }
 
@@ -108,7 +108,7 @@ public class AppLogService extends ServiceImpl<AppLogRepository, AppLog> {
         AppLog appLog = BeanUtil.copyProperties(appLogDTO, AppLog.class);
         boolean saveResult = saveOrUpdate(appLog);
         int quotient = 1 / 0;
-        log.info("对数据源二进行异常测试 quotient: {}", quotient);
+        log.debug("对数据源二进行异常测试 quotient: {}", quotient);
         return saveResult;
     }
 
