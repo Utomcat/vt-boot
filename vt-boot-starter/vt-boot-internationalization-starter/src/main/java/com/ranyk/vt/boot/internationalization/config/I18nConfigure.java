@@ -28,7 +28,7 @@ public class I18nConfigure implements WebMvcConfigurer{
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        log.info("I18nConfigure configure. add LocaleChangeInterceptor");
+        log.debug("I18nConfigure configure. add LocaleChangeInterceptor");
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
         // 请求参数名，如?lang=zh_CN
         interceptor.setParamName("lang");
