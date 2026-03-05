@@ -66,6 +66,7 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
     public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
         log.debug("========== TokenResponseInterceptor.postHandle ==========");
         log.debug("Request URI: {}", request.getRequestURI());
+        log.debug("Request Method: {}", request.getMethod());
         log.debug("Is Login: {}", StpUtil.isLogin());
         // 判断用户是否已登录
         if (StpUtil.isLogin()) {

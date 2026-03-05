@@ -134,6 +134,7 @@ public class TenantWebInterceptor extends SaInterceptor {
     public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
         log.debug("========== TenantWebInterceptor.postHandle ==========");
         log.debug("Request URI: {}", request.getRequestURI());
+        log.debug("Request Method: {}", request.getMethod());
         log.debug("Is Enable Tenant: {}", isEnableTenant);
         log.debug("Is Login: {}", StpUtil.isLogin());
 
