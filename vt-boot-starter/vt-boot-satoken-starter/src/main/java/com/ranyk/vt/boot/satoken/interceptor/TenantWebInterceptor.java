@@ -75,16 +75,17 @@ public class TenantWebInterceptor extends SaInterceptor {
      */
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
+        log.trace("========== TenantWebInterceptor.preHandle started ==========");
         // 从配置文件中获取 vt.boot.is-enable-tenant 配置项
-        log.debug("当前系统中配置的是否启用租户功能: {}", isEnableTenant);
+        log.trace("当前系统中配置的是否启用租户功能: {}", isEnableTenant);
         // 若未启用多租户, 则直接返回 true
         if (!isEnableTenant) {
-            log.debug("多租户功能未启用，跳过租户 ID 检查");
+            log.trace("多租户功能未启用，跳过租户 ID 检查");
             return true;
         }
         // 添加排除路径检查, 若当前请求路径被排除, 则直接返回 true
         if (excludePathPatterns.contains(request.getRequestURI())){
-            log.debug("当前请求 {} 已被排除，跳过租户 ID 检查", request.getRequestURI());
+            log.trace("当前请求 {} 已被排除，跳过租户 ID 检查", request.getRequestURI());
             return true;
         }
         // 定义租户ID
@@ -101,10 +102,12 @@ public class TenantWebInterceptor extends SaInterceptor {
         // 若租户ID不为空, 则将其设置到 TenantContext 中
         if (StrUtil.isNotBlank(tenantId)) {
             TenantContext.setTenantId(tenantId);
+            log.trace("========== TenantWebInterceptor.preHandle completed ==========");
             return true;
         }
         else {
             log.error("请求 {} 未指定租户ID", request.getRequestURI());
+            log.error("========== TenantWebInterceptor.preHandle completed ==========");
             return false;
         }
     }
@@ -132,33 +135,33 @@ public class TenantWebInterceptor extends SaInterceptor {
      */
     @Override
     public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
-        log.debug("========== TenantWebInterceptor.postHandle ==========");
-        log.debug("Request URI: {}", request.getRequestURI());
-        log.debug("Request Method: {}", request.getMethod());
-        log.debug("Is Enable Tenant: {}", isEnableTenant);
-        log.debug("Is Login: {}", StpUtil.isLogin());
+        log.trace("========== TenantWebInterceptor.postHandle started ==========");
+        log.trace("Request URI: {}", request.getRequestURI());
+        log.trace("Request Method: {}", request.getMethod());
+        log.trace("Is Enable Tenant: {}", isEnableTenant);
+        log.trace("Is Login: {}", StpUtil.isLogin());
 
         if (isEnableTenant && StpUtil.isLogin()){
             // 添加租户ID
             Object tenantId = StpUtil.getSession().get(TenantEnum.TENANT_ID.getValue());
-            log.debug("Tenant ID from Session: {}", tenantId);
+            log.trace("Tenant ID from Session: {}", tenantId);
 
             if (Objects.nonNull(tenantId)){
                 String headerKey = TenantEnum.TENANT_ID.getValue();
                 String headerValue = String.valueOf(tenantId);
 
-                log.debug("Setting Header Key: {}", headerKey);
-                log.debug("Setting Header Value: {}", headerValue);
+                log.trace("Setting Header Key: {}", headerKey);
+                log.trace("Setting Header Value: {}", headerValue);
 
                 response.setHeader(TenantEnum.TENANT_ID.getValue(), String.valueOf(tenantId));
-                log.info("User ID - {}✅ 租户 ID 已设置到响应头：{} = {}", StpUtil.getLoginId(), headerKey, headerValue);
+                log.trace("User ID - {}✅ 租户 ID 已设置到响应头：{} = {}", StpUtil.getLoginId(), headerKey, headerValue);
             } else {
                 log.warn("⚠️ Tenant ID is null in session");
             }
         } else {
-            log.debug("Skip setting tenant ID - isEnableTenant: {} or isLogin: {}", isEnableTenant, StpUtil.isLogin());
+            log.trace("Skip setting tenant ID - isEnableTenant: {} or isLogin: {}", isEnableTenant, StpUtil.isLogin());
         }
-        log.debug("====================================================");
+        log.trace("========== TenantWebInterceptor.postHandle completed ==========");
     }
 
     /**
@@ -184,7 +187,9 @@ public class TenantWebInterceptor extends SaInterceptor {
      */
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) {
-        log.debug("请求 {} 处理完成，清除租户 ID", request.getRequestURI());
+        log.trace("========== TenantWebInterceptor.afterCompletion ==========");
+        log.trace("请求 {} 处理完成，清除租户 ID", request.getRequestURI());
         TenantContext.clear();
+        log.trace("========== TenantWebInterceptor.afterCompletion completed ==========");
     }
 }

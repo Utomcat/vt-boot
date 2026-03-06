@@ -64,10 +64,10 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
-        log.debug("========== TokenResponseInterceptor.postHandle ==========");
-        log.debug("Request URI: {}", request.getRequestURI());
-        log.debug("Request Method: {}", request.getMethod());
-        log.debug("Is Login: {}", StpUtil.isLogin());
+        log.trace("========== TokenResponseInterceptor.postHandle ==========");
+        log.trace("Request URI: {}", request.getRequestURI());
+        log.trace("Request Method: {}", request.getMethod());
+        log.trace("Is Login: {}", StpUtil.isLogin());
         // 判断用户是否已登录
         if (StpUtil.isLogin()) {
             String tokenValue = StpUtil.getTokenInfo().getTokenValue();
@@ -76,11 +76,11 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
             log.debug("Token Value: {}", tokenValue);
             // 将 token 添加到响应头中
             response.setHeader(tokenName, tokenValue);
-            log.info("User id {} ✅ Token 已设置到响应头：{} = {}", StpUtil.getLoginId(), tokenName, tokenValue);
+            log.trace("User id {} ✅ Token 已设置到响应头：{} = {}", StpUtil.getLoginId(), tokenName, tokenValue);
         } else {
-            log.debug("User not logged in, skip setting token");
+            log.error("User not logged in, skip setting token");
         }
-        log.debug("====================================================");
+        log.trace("========== TokenResponseInterceptor.postHandle ==========");
     }
 
     /**
@@ -106,6 +106,8 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) {
-        log.debug("TokenResponseInterceptor.afterCompletion completed");
+        log.trace("========== TokenResponseInterceptor.afterCompletion ==========");
+        log.trace("completed");
+        log.trace("========== TokenResponseInterceptor.afterCompletion ==========");
     }
 }
