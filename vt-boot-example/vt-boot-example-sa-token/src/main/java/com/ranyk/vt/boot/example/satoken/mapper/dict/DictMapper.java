@@ -87,8 +87,6 @@ public interface DictMapper {
      * @return 删除字典类型 DTO 删除字典类型 DTO 对象 {@link DictTypeDTO}
      */
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "ids", source = "ids"),
             @Mapping(target = "name", ignore = true),
             @Mapping(target = "code", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
@@ -106,12 +104,10 @@ public interface DictMapper {
     /**
      * 删除字典操作 - 前端传入参数 PO 删除字典
      *
-     * @param deleteDictTypePO 删除字典 PO 删除字典 PO 对象 {@link DeleteDictTypePO}
+     * @param deleteDictPO 删除字典 PO 删除字典 PO 对象 {@link DeleteDictTypePO}
      * @return 删除字典 DTO 删除字典 DTO 对象 {@link DictDTO}
      */
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "ids", source = "ids"),
             @Mapping(target = "name", ignore = true),
             @Mapping(target = "code", ignore = true),
             @Mapping(target = "value", ignore = true),
@@ -135,11 +131,6 @@ public interface DictMapper {
      * @return 修改字典类型 DTO 修改字典类型 DTO 对象 {@link DictTypeDTO}
      */
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "code", source = "code"),
-            @Mapping(target = "remark", source = "remark"),
-            @Mapping(target = "status", source = "status"),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
@@ -158,13 +149,6 @@ public interface DictMapper {
      * @return 修改字典 DTO 修改字典 DTO 对象 {@link DictDTO}
      */
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "dictTypeId", source = "dictTypeId"),
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "code", source = "code"),
-            @Mapping(target = "value", source = "value"),
-            @Mapping(target = "remark", source = "remark"),
-            @Mapping(target = "status", source = "status"),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
@@ -183,11 +167,6 @@ public interface DictMapper {
      * @return 查询字典类型 DTO 查询字典类型 DTO 列表 {@link DictTypeDTO}
      */
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "code", source = "code"),
-            @Mapping(target = "remark", source = "remark"),
-            @Mapping(target = "status", source = "status"),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
@@ -195,7 +174,8 @@ public interface DictMapper {
             @Mapping(target = "createTime", ignore = true),
             @Mapping(target = "updateBy", ignore = true),
             @Mapping(target = "updateTime", ignore = true),
-            @Mapping(target = "ids", ignore = true)
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "id", ignore = true)
     })
     DictTypeDTO queryDictTypePOToDTO(QueryDictTypePO queryDictTypePO);
 
@@ -206,13 +186,7 @@ public interface DictMapper {
      * @return 查询字典 DTO 查询字典 DTO 列表 {@link DictDTO}
      */
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "dictTypeId", source = "dictTypeId"),
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "code", source = "code"),
-            @Mapping(target = "value", source = "value"),
-            @Mapping(target = "remark", source = "remark"),
-            @Mapping(target = "status", source = "status"),
+            @Mapping(target = "id", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),

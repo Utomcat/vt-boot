@@ -1,6 +1,7 @@
 package com.ranyk.vt.boot.example.satoken.api.logout;
 
 import com.ranyk.vt.boot.example.satoken.service.logout.LogoutService;
+import com.ranyk.vt.boot.log.annotations.Log;
 import com.ranyk.vt.boot.web.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class LogoutApi {
      * @return 注销结果
      */
     @GetMapping
+    @Log(operation = "系统注销", type = Log.LogType.LOGOUT)
     public Result<Boolean> logout() {
         logoutService.logout();
         return Result.success(Boolean.TRUE);

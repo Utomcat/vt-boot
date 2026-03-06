@@ -55,6 +55,7 @@ public class ExampleApi {
      * @return 租户 ID 信息
      */
     @GetMapping("/tenant-info")
+    @Log(operation = "测试获取租户 ID", type = Log.LogType.ACCESS)
     public Result<Object> testTenantInfo() {
         // 从 Session 中获取租户 ID
         Object tenantId = StpUtil.getSession().get(TenantEnum.TENANT_ID.getValue());

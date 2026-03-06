@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.satoken.service.dict;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * CLASS_NAME: DictTypeService.java
@@ -71,6 +75,8 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
         }
         // 数据转换
         DictType dictType = dictMapper.dictTypeDTOToEntity(dictTypeDTO);
+        dictType.setCreateBy(StpUtil.getLoginIdAsString());
+        dictType.setUpdateBy(StpUtil.getLoginIdAsString());
         // 保存字典类型
         boolean saveResult = saveOrUpdate(dictType);
         // 判断结果是否成功
@@ -104,16 +110,21 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
     public void updateOneDictType(DictTypeDTO dictTypeDTO) {
         verifyDictTypeParams(dictTypeDTO, OperateType.UPDATE);
         // 判定当前数据库中是否存在字典类型 code, 且 code 不能是当前字典类型的 code
-        LambdaQueryWrapper<DictType> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(DictType::getCode, dictTypeDTO.getCode());
-        Long count = dictTypeRepository.selectCount(queryWrapper);
+        LambdaQueryWrapper<DictType> queryCountWrapper = new LambdaQueryWrapper<>();
+        queryCountWrapper.eq(DictType::getCode, dictTypeDTO.getCode());
+        Long count = dictTypeRepository.selectCount(queryCountWrapper);
         if (count > 0) {
             log.error("更新字典类型时, 字典类型编码 {} 已存在!", dictTypeDTO.getCode());
             throw new ServiceException("更新字典类型时, 字典类型编码 %s 已存在!".formatted(dictTypeDTO.getCode()));
         }
-        DictType dictType = dictMapper.dictTypeDTOToEntity(dictTypeDTO);
+        DictType dictType = dictTypeRepository.selectOneDictTypeById(dictTypeDTO.getId());
+        dictType.setUpdateBy(StpUtil.getLoginIdAsString());
+        Optional.ofNullable(dictTypeDTO.getName()).filter(StrUtil::isNotBlank).ifPresent(dictType::setName);
+        Optional.ofNullable(dictTypeDTO.getCode()).filter(StrUtil::isNotBlank).ifPresent(dictType::setCode);
+        Optional.ofNullable(dictTypeDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(dictType::setRemark);
+        Optional.ofNullable(dictTypeDTO.getStatus()).filter(item -> !Objects.equals(item, dictType.getStatus())).ifPresent(dictType::setStatus);
         // 更新字典类型
-        boolean updateResult = saveOrUpdate(dictType);
+        boolean updateResult = dictTypeRepository.updateOneDictTypeById(dictType);
         if (!updateResult) {
             log.error("更新字典类型失败!");
             throw new ServiceException("更新字典类型失败!");
@@ -176,14 +187,6 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
         if (StrUtil.isBlank(dictTypeDTO.getId())) {
             log.error("修改字典类型失败，数据 ID 不能为空!");
             throw new ServiceException("修改字典类型失败，数据 ID 不能为空!");
-        }
-        if (StrUtil.isBlank(dictTypeDTO.getName())) {
-            log.error("修改字典类型失败，字典类型名不能为空!");
-            throw new ServiceException("修改字典类型失败，字典类型名不能为空!");
-        }
-        if (StrUtil.isBlank(dictTypeDTO.getCode())) {
-            log.error("修改字典类型失败，字典类型编码不能为空!");
-            throw new ServiceException("修改字典类型失败，字典类型编码不能为空!");
         }
     }
 

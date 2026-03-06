@@ -8,29 +8,35 @@
                tenant_id,
                status,
                remark
-        from account_info a
-        where a.id = #{id}
+        from account_info ai
+        where ai.id = #{id}
     </select>
 
     <!-- 更新账户信息 - 通过数据ID -->
     <update id="updateOneAccountById">
-        update account_info a
+        update account_info ai
         <set>
             <if test="account.userName != null">
-                a.user_name = #{account.userName},
+                ai.user_name = #{account.userName},
             </if>
             <if test="account.password != null">
-                a.password = #{account.password},
+                ai.password = #{account.password},
             </if>
             <if test="account.status != null">
-                a.status = #{account.status},
+                ai.status = #{account.status},
             </if>
             <if test="account.remark != null">
-                a.remark = #{account.remark},
+                ai.remark = #{account.remark},
+            </if>
+            <if test="account.updateBy != null">
+                    ai.update_by = #{account.updateBy},
+            </if>
+            <if test="account.updateTime != null">
+                ai.update_time = #{account.updateTime},
             </if>
         </set>
         <where>
-            a.id = #{account.id}
+            ai.id = #{account.id}
         </where>
     </update>
 </mapper>

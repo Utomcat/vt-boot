@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.satoken.service.dict;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -17,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * CLASS_NAME: DictService.java
@@ -60,14 +64,15 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
     public void saveOneDict(DictDTO dictDTO) {
         verifyDictParams(dictDTO, OperateType.SAVE);
         LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Dict::getDictTypeId, dictDTO.getDictTypeId())
-                .eq(Dict::getCode, dictDTO.getCode());
+        queryWrapper.eq(Dict::getDictTypeId, dictDTO.getDictTypeId()).eq(Dict::getCode, dictDTO.getCode());
         Long count = dictRepository.selectCount(queryWrapper);
         if (count > 0) {
             log.error("新增字典数据时, 字典数据 {} - {} - {} 已存在!", dictDTO.getDictTypeId(), dictDTO.getName(), dictDTO.getCode());
             throw new ServiceException("新增字典数据时, 字典数据 %s - %s -%s 已存在!".formatted(dictDTO.getDictTypeId(), dictDTO.getName(), dictDTO.getCode()));
         }
         Dict dict = dictMapper.dictDTOToEntity(dictDTO);
+        dict.setCreateBy(StpUtil.getLoginIdAsString());
+        dict.setUpdateBy(StpUtil.getLoginIdAsString());
         boolean saveResult = saveOrUpdate(dict);
         if (!saveResult) {
             log.error("新增字典数据保存失败!");
@@ -99,15 +104,21 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
     public void updateOneDict(DictDTO dictDTO) {
         verifyDictParams(dictDTO, OperateType.UPDATE);
         LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Dict::getDictTypeId, dictDTO.getDictTypeId())
-                .eq(Dict::getCode, dictDTO.getCode());
+        queryWrapper.eq(Dict::getDictTypeId, dictDTO.getDictTypeId()).eq(Dict::getCode, dictDTO.getCode());
         Long count = dictRepository.selectCount(queryWrapper);
         if (count > 0) {
             log.error("修改字典数据时, 字典数据 {} - {} - {} 已存在!", dictDTO.getDictTypeId(), dictDTO.getName(), dictDTO.getCode());
             throw new ServiceException("修改字典数据时, 字典数据 %s - %s -%s 已存在!".formatted(dictDTO.getDictTypeId(), dictDTO.getName(), dictDTO.getCode()));
         }
-        Dict dict = dictMapper.dictDTOToEntity(dictDTO);
-        boolean updateResult = updateById(dict);
+        Dict dict = dictRepository.selectOneDictById(dictDTO.getId());
+        Optional.ofNullable(dictDTO.getDictTypeId()).filter(StrUtil::isNotBlank).ifPresent(dict::setDictTypeId);
+        Optional.ofNullable(dictDTO.getName()).filter(StrUtil::isNotBlank).ifPresent(dict::setName);
+        Optional.ofNullable(dictDTO.getCode()).filter(StrUtil::isNotBlank).ifPresent(dict::setCode);
+        Optional.ofNullable(dictDTO.getValue()).filter(StrUtil::isNotBlank).ifPresent(dict::setValue);
+        Optional.ofNullable(dictDTO.getStatus()).filter(item -> !Objects.equals(item, dict.getStatus())).ifPresent(dict::setStatus);
+        Optional.ofNullable(dictDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(dict::setRemark);
+        dict.setUpdateBy(StpUtil.getLoginIdAsString());
+        Boolean updateResult = dictRepository.updateOneDictById(dict);
         if (!updateResult) {
             log.error("修改字典数据修改失败!");
             throw new ServiceException("修改字典数据修改失败!");

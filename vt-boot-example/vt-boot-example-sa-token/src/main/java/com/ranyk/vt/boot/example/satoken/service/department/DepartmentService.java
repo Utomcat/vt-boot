@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.satoken.service.department;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -93,17 +95,21 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
     @Transactional(rollbackFor = Exception.class)
     public void updateOneDepartment(DepartmentDTO departmentDTO) {
         verifyDepartmentParams(departmentDTO, OperateType.UPDATE);
-        // 查询指定部门 ID 的信息
-        LambdaQueryWrapper<Department> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Department::getId, departmentDTO.getId());
-        Department department = getOne(queryWrapper);
-        Optional.of(departmentDTO.getName()).ifPresent(department::setName);
-        Optional.of(departmentDTO.getCode()).ifPresent(department::setCode);
-        Optional.of(departmentDTO.getParentId()).ifPresent(department::setParentId);
-        Optional.of(departmentDTO.getParentIds()).ifPresent(department::setParentIds);
-        Optional.of(departmentDTO.getRemark()).ifPresent(department::setRemark);
-        Optional.of(departmentDTO.getStatus()).ifPresent(department::setStatus);
-        boolean updateResult = updateById(department);
+        // 依据指定部门 ID 查询部门信息
+        Department department = this.departmentRepository.selectOneDepartmentById(departmentDTO.getId());
+        if (Objects.isNull(department)){
+            log.error("修改部门信息 - 需要进行部门信息修改数据不存在!");
+            throw new ServiceException("修改部门信息 - 需要进行部门信息修改数据不存在!");
+        }
+        Optional.ofNullable(departmentDTO.getName()).filter(StrUtil::isNotBlank).ifPresent(department::setName);
+        Optional.ofNullable(departmentDTO.getCode()).filter(StrUtil::isNotBlank).ifPresent(department::setCode);
+        Optional.ofNullable(departmentDTO.getParentId()).filter(StrUtil::isNotBlank).ifPresent(department::setParentId);
+        Optional.ofNullable(departmentDTO.getParentIds()).filter(StrUtil::isNotBlank).ifPresent(department::setParentIds);
+        Optional.ofNullable(departmentDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(department::setRemark);
+        Optional.ofNullable(departmentDTO.getStatus()).filter(item -> !Objects.equals(item, department.getStatus())).ifPresent(department::setStatus);
+        department.setUpdateBy(StpUtil.getLoginIdAsString());
+        department.setUpdateTime(LocalDateTime.now());
+        boolean updateResult = this.departmentRepository.updateOneDepartmentById(department);
         if (!updateResult) {
             log.error("修改部门信息 - 修改部门信息失败!");
             throw new ServiceException("修改部门信息 - 修改部门信息失败!");
@@ -170,15 +176,6 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
             log.error("修改部门信息 - 部门ID不能为空!");
             throw new ServiceException("修改部门信息 - 部门ID不能为空!");
         }
-        if (StrUtil.isBlank(departmentDTO.getName())) {
-            log.error("修改部门信息 - 部门名称不能为空!");
-            throw new ServiceException("修改部门信息 - 部门名称不能为空!");
-        }
-        if (StrUtil.isBlank(departmentDTO.getCode())) {
-            log.error("修改部门信息 - 部门编码不能为空!");
-            throw new ServiceException("修改部门信息 - 部门编码不能为空!");
-        }
-
     }
 
     /**

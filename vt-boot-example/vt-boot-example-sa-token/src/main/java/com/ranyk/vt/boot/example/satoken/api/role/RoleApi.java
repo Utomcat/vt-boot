@@ -88,13 +88,13 @@ public class RoleApi {
     }
 
     /**
-     * 查询角色信息
+     * 查询角色信息 - 分页
      *
      * @param queryRolePO 查询角色信息请求参数封装 PO 类, {@link QueryRolePO}
      * @return 查询结果 {@link MultiResult} - 查询结果视图对象 {@link QueryRoleVO}
      */
     @GetMapping
-    @Log(operation = "查询角色信息", type = Log.LogType.SELECT)
+    @Log(operation = "查询角色信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryRoleVO> queryRole(QueryRolePO queryRolePO) {
         PageResponse<RoleDTO> roleDTOPageResponse = roleService.queryRoleByConditions(roleMapper.queryRolePOToRoleDTO(queryRolePO));
         return MultiResult.successMulti(roleMapper.roleDTOListToQueryRoleVOList(roleDTOPageResponse.getData()),

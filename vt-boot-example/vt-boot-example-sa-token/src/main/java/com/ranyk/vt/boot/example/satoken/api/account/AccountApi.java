@@ -49,52 +49,52 @@ public class AccountApi {
     }
 
     /**
-     * 新增账户信息
+     * 新增一个账户信息
      *
      * @param saveAccountPO 账户信息数据封装对象 {@link SaveAccountPO}
      * @return 返回新增账户信息操作结果 {@link Boolean}
      */
     @PostMapping
-    @Log(operation = "新增账户信息", type = Log.LogType.INSERT)
+    @Log(operation = "新增一个账户信息", type = Log.LogType.INSERT)
     public Result<Boolean> saveAccountInfo(@RequestBody SaveAccountPO saveAccountPO) {
         accountService.saveOne(accountMapper.saveRequestPOToDTO(saveAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 删除账户信息
+     * 删除一个账户信息
      *
      * @param deleteAccountPO 账户信息数据封装对象 {@link DeleteAccountPO}
      * @return 删除账户信息操作结果 {@link Boolean}
      */
     @DeleteMapping
-    @Log(operation = "删除账户信息", type = Log.LogType.DELETE)
+    @Log(operation = "删除一个账户信息", type = Log.LogType.DELETE)
     public Result<Boolean> deleteAccountInfo(@RequestBody DeleteAccountPO deleteAccountPO) {
         accountService.deleteOne(accountMapper.deleteRequestPOToDTO(deleteAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 更新账户信息
+     * 更新一个账户信息
      *
      * @param updateAccountPO 账户信息数据封装对象 {@link UpdateAccountPO}
      * @return 更新账户信息操作结果 {@link Boolean}
      */
     @PutMapping
-    @Log(operation = "更新账户信息", type = Log.LogType.UPDATE)
+    @Log(operation = "更新一个账户信息", type = Log.LogType.UPDATE)
     public Result<Boolean> updateAccountInfo(@RequestBody UpdateAccountPO updateAccountPO) {
         accountService.updateOne(accountMapper.updateRequestPOToDTO(updateAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 查询账户信息
+     * 查询账户信息 - 分页
      *
      * @param queryAccountPO 账户信息数据封装对象 {@link QueryAccountPO}
      * @return 查询账户信息操作结果 {@link Boolean}
      */
     @GetMapping
-    @Log(operation = "查询账户信息", type = Log.LogType.SELECT)
+    @Log(operation = "查询账户信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryAccountVO> queryAccountInfo(QueryAccountPO queryAccountPO) {
         PageResponse<AccountDTO> accountDTOPageResponse = accountService.queryAccountByConditions(accountMapper.queryRequestPOToDTO(queryAccountPO));
         return MultiResult.successMulti(accountMapper.accountDTOListToQueryAccountVOList(accountDTOPageResponse.getData()),

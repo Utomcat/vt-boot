@@ -68,7 +68,7 @@ public class PermissionApi {
      * @return 删除结果 {@link Boolean} , true: 删除成功; false: 删除失败;
      */
     @DeleteMapping
-    @Log(operation = "删除权限信息", type = Log.LogType.DELETE)
+    @Log(operation = "删除一条权限信息", type = Log.LogType.DELETE)
     public Result<Boolean> deletePermission(@RequestBody DeletePermissionPO deletePermissionPO) {
         permissionService.deleteOnePermission(permissionMapper.deletePermissionPOToPermissionDTO(deletePermissionPO));
         return Result.success(Boolean.TRUE);
@@ -81,20 +81,20 @@ public class PermissionApi {
      * @return 修改结果 {@link Boolean} , true: 修改成功; false: 修改失败;
      */
     @PutMapping
-    @Log(operation = "修改权限信息", type = Log.LogType.UPDATE)
+    @Log(operation = "修改一条权限信息", type = Log.LogType.UPDATE)
     public Result<Boolean> updatePermission(@RequestBody UpdatePermissionPO updatePermissionPO) {
         permissionService.updateOnePermission(permissionMapper.updatePermissionPOToPermissionDTO(updatePermissionPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 查询权限信息
+     * 查询权限信息 - 分页
      *
      * @param queryPermissionPO 查询权限请求参数封装 PO 类对象 {@link QueryPermissionPO}
      * @return 查询结果 {@link MultiResult} - 权限信息数据转换后的 VO 类对象 {@link QueryPermissionVO}
      */
     @GetMapping
-    @Log(operation = "查询权限信息", type = Log.LogType.SELECT)
+    @Log(operation = "查询权限信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryPermissionVO> queryPermission(QueryPermissionPO queryPermissionPO) {
         PageResponse<PermissionDTO> pageResponse = permissionService.queryPermissionByConditions(permissionMapper.queryPermissionPoToPermissionDTO(queryPermissionPO));
         return MultiResult.successMulti(permissionMapper.permissionDTOListToQueryPermissionVOList(pageResponse.getData()),

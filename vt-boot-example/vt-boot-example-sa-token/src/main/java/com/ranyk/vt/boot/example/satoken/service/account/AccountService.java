@@ -1,10 +1,15 @@
 package com.ranyk.vt.boot.example.satoken.service.account;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ranyk.vt.boot.base.constant.DataStatusEnum;
+import com.ranyk.vt.boot.base.constant.OperateType;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -60,7 +66,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void saveOne(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
-        validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), "新增一个账户信息");
+        verifyAccountParams(accountDTO, OperateType.SAVE);
         // 通过账户名查询账户信息
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         // 查询条件 - 账户名
@@ -69,13 +75,15 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
         Long count = accountRepository.selectCount(queryWrapper);
         // 存在相同账户名的数据
         if (count > 0) {
-            log.error("新增一条账户信息 操作 - 账户名已存在!");
+            log.error("新增一条账户信息操作 - 账户名已存在!");
             throw new ServiceException("user.username.exists");
         }
         // 数据转换 - 账户信息数据传输对象 转换为 数据实体对象
         Account account = accountMapper.dtoToEntity(accountDTO);
         // 密码进行加密处理
         account.setPassword(SaSecureUtil.md5(account.getPassword()));
+        account.setCreateBy(StpUtil.getLoginIdAsString());
+        account.setUpdateBy(StpUtil.getLoginIdAsString());
         // 保存账户信息
         boolean saveResult = saveOrUpdate(account);
         // 判断保存结果是否成功
@@ -93,9 +101,13 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void deleteOne(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
-        validateId(accountDTO.getId(), "删除一个账户信息");
-        Account account = accountMapper.dtoToEntity(accountDTO);
-        boolean deleteResult = removeById(account);
+        verifyAccountParams(accountDTO, OperateType.DELETE);
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Account::getId, accountDTO.getId());
+        Account account = accountRepository.selectOne(queryWrapper);
+        LambdaUpdateWrapper<Account> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(Account::getUpdateBy, StpUtil.getLoginIdAsString()).set(Account::getUpdateTime, LocalDateTime.now()).set(Account::getStatus, DataStatusEnum.DISABLE.getValue()).eq(Account::getId, account.getId());;
+        boolean deleteResult = update(updateWrapper);
         if (!deleteResult) {
             log.error("删除账户信息失败!");
             throw new ServiceException("删除账户信息失败!");
@@ -110,10 +122,10 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void updateOne(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
-        validateId(accountDTO.getId(), "修改一个账户信息");
+        verifyAccountParams(accountDTO, OperateType.UPDATE);
         Account account = accountRepository.selectOneAccountById(accountDTO.getId());
         if (Objects.isNull(account)) {
-            throw new ServiceException("登录模块", "account.not.exists", new String[]{accountDTO.getUserName()});
+            throw new ServiceException("登录模块", "user.not.exists", new String[]{accountDTO.getUserName()});
         }
         // 当用户名存在时再进行用户名设置
         Optional.ofNullable(accountDTO.getUserName()).filter(StrUtil::isNotBlank).ifPresent(account::setUserName);
@@ -123,6 +135,8 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
         Optional.ofNullable(accountDTO.getStatus()).ifPresent(account::setStatus);
         // 当备注存在时再进行备注设置
         Optional.ofNullable(accountDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(account::setRemark);
+        account.setUpdateBy(StpUtil.getLoginIdAsString());
+        account.setUpdateTime(LocalDateTime.now());
         // 执行修改操作
         boolean updateResult = accountRepository.updateOneAccountById(account);
         if (!updateResult) {
@@ -138,13 +152,12 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * @return 分页对象 {@link PageResponse} - 账户信息数据传输对象 {@link AccountDTO}
      */
     public PageResponse<AccountDTO> queryAccountByConditions(AccountDTO accountDTO) {
-        // 验证用户名和密码是否存在值
-        validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), true, true, "查询指定账户信息");
         IPage<Account> page = PageUtils.buildPage(accountDTO);
         // 创建查询条件对象
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
         queryWrapper.like(StrUtil.isNotBlank(accountDTO.getRemark()), Account::getRemark, accountDTO.getRemark());
+        queryWrapper.eq(Objects.nonNull(accountDTO.getStatus()), Account::getStatus, accountDTO.getStatus());
         IPage<Account> accountPage = page(page, queryWrapper);
         return PageUtils.buildPageResponse(accountPage, accountMapper.accountEntityListToDTO(accountPage.getRecords()));
     }
@@ -157,7 +170,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      */
     public AccountDTO queryOneAccountInfo(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
-        validateUserNameAndPassword(accountDTO.getUserName(), accountDTO.getPassword(), "查询指定账户信息");
+        verifyAccountParams(accountDTO, OperateType.QUERY);
         // 查询用户信息
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
@@ -169,46 +182,75 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     }
 
     /**
-     * 验证用户名和密码是否存在值
+     * 验证账户信息参数
      *
-     * @param userName 用户名
-     * @param password 密码
-     * @param args     参数, 第一个参数用于描述验证什么操作, 例如: "登录", "注册" 等
+     * @param accountDTO  账户信息数据传输对象 {@link AccountDTO}
+     * @param operateType 操作类型 {@link OperateType}
      */
-    private void validateUserNameAndPassword(String userName, String password, String... args) {
-        validateUserNameAndPassword(userName, password, false, false, args);
+    private void verifyAccountParams(AccountDTO accountDTO, OperateType operateType) {
+        switch (operateType) {
+            case SAVE -> verifySaveAccountParams(accountDTO);
+            case UPDATE -> verifyUpdateAccountParams(accountDTO);
+            case DELETE -> verifyDeleteAccountParams(accountDTO);
+            case QUERY -> verifyQueryAccountParams(accountDTO);
+            default -> throw new ServiceException("操作类型不存在!");
+        }
+
     }
 
     /**
-     * 验证用户名和密码是否存在值
+     * 验证新增账户信息参数
      *
-     * @param userName       用户名
-     * @param password       密码
-     * @param ignoreUserName 是否忽略用户名验证, true: 忽略用户名验证; false: 不忽略用户名验证(默认);
-     * @param ignorePassword 是否忽略密码验证, true: 忽略密码验证; false: 不忽略密码验证(默认);
-     * @param args           参数, 第一个参数用于描述验证什么操作, 例如: "登录", "注册" 等
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
-    private void validateUserNameAndPassword(String userName, String password, Boolean ignoreUserName, Boolean ignorePassword, String... args) {
-        if (!ignoreUserName && StrUtil.isBlank(userName)) {
-            log.error("{} 操作 - 用户名不能为空!", args[0]);
+    private void verifySaveAccountParams(AccountDTO accountDTO) {
+        if (StrUtil.isBlank(accountDTO.getUserName())) {
+            log.error("新增账户信息 - 用户名不能为空!");
+            throw new ServiceException("新增账户信息 - 用户名不能为空!");
+        }
+        if (StrUtil.isBlank(accountDTO.getPassword())) {
+            log.error("新增账户信息 - 密码不能为空!");
+            throw new ServiceException("新增账户信息 - 密码不能为空!");
+        }
+    }
+
+    /**
+     * 验证删除账户信息参数
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    private void verifyDeleteAccountParams(AccountDTO accountDTO) {
+        if (StrUtil.isBlank(accountDTO.getId()) && CollectionUtil.isEmpty(accountDTO.getIds())) {
+            log.error("删除账户信息 - 账户ID或账户ID列表不能为空!");
+            throw new ServiceException("删除账户信息 - 账户ID或账户ID列表不能为空!");
+        }
+    }
+
+    /**
+     * 验证修改账户信息参数
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    private void verifyUpdateAccountParams(AccountDTO accountDTO) {
+        if (StrUtil.isBlank(accountDTO.getId())) {
+            log.error("修改账户信息 - 账户ID不能为空!");
+            throw new ServiceException("修改账户信息 - 账户ID不能为空!");
+        }
+    }
+
+    /**
+     * 验证查询账户信息参数
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    private void verifyQueryAccountParams(AccountDTO accountDTO) {
+        if (StrUtil.isBlank(accountDTO.getUserName())) {
+            log.error("查询指定账户信息操作 - 用户名不能为空!");
             throw new ServiceException("user.username.not.blank");
         }
-        if (!ignorePassword && StrUtil.isBlank(password)) {
-            log.error("{} 操作 - 密码不能为空!", args[0]);
+        if (StrUtil.isBlank(accountDTO.getPassword())) {
+            log.error("查询指定账户信息操作 - 密码不能为空!");
             throw new ServiceException("user.password.not.blank");
-        }
-    }
-
-    /**
-     * 验证账户ID是否存在值
-     *
-     * @param id   账户ID
-     * @param args 参数, 第1个参数用于描述验证什么操作, 例如: "登录", "注册" 等
-     */
-    private void validateId(String id, String... args) {
-        if (StrUtil.isBlank(id)) {
-            log.error("{} 操作 - 账户ID不能为空!", args[0]);
-            throw new ServiceException(args[0] + " 操作 - 账户ID不能为空!");
         }
     }
 }

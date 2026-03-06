@@ -24,6 +24,10 @@ public class QueryDepartmentVO implements Serializable {
     private static final long serialVersionUID = 6196457353366227800L;
 
     /**
+     * 部门ID
+     */
+    private String id;
+    /**
      * 部门名称
      */
     private String name;

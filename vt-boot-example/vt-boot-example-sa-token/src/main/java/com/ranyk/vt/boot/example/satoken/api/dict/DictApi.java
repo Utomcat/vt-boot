@@ -56,91 +56,91 @@ public class DictApi {
 
     /**
      *
-     * 新增字典类型操作 - 前端传入参数 PO 对象转换为 DTO 对象
+     * 新增一个字典类型操作
      *
      * @param saveDictTypePO 保存字典类型 PO 对象 {@link SaveDictTypePO}
      * @return 响应结果对象 {@link Result} - true: 新增成功; false: 新增失败;
      */
     @PostMapping("/type")
-    @Log(operation = "新增字典类型", type = Log.LogType.INSERT)
+    @Log(operation = "新增一个字典类型操作", type = Log.LogType.INSERT)
     public Result<Boolean> saveDictType(@RequestBody SaveDictTypePO saveDictTypePO) {
         dictTypeService.saveOneDictType(dictMapper.saveDictTypePOToDTO(saveDictTypePO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 新增字典信息操作 - 前端传入参数 PO 对象转换为 DTO 对象
+     * 新增一个字典信息操作
      *
      * @param dictPO 保存字典信息 PO 对象 {@link SaveDictPO}
      * @return 响应结果对象 {@link Result} - true: 新增成功; false: 新增失败;
      */
     @PostMapping
-    @Log(operation = "新增字典信息", type = Log.LogType.INSERT)
+    @Log(operation = "新增一个字典信息操作", type = Log.LogType.INSERT)
     public Result<Boolean> saveDict(@RequestBody SaveDictPO dictPO) {
         dictService.saveOneDict(dictMapper.saveDictPOToDTO(dictPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 删除字典类型操作 - 前端传入参数 PO 删除字典类型
+     * 删除一个字典类型操作
      *
      * @param deleteDictTypePO 删除字典类型 PO 删除字典类型 PO 对象 {@link DeleteDictTypePO}
      * @return 响应结果对象 {@link Result} - true: 删除成功; false: 删除失败;
      */
     @DeleteMapping("/type")
-    @Log(operation = "删除字典类型", type = Log.LogType.DELETE)
+    @Log(operation = "删除一个字典类型操作", type = Log.LogType.DELETE)
     public Result<Boolean> deleteDictType(@RequestBody DeleteDictTypePO deleteDictTypePO) {
         dictTypeService.deleteOnDictType(dictMapper.deleteDictTypePOToDTO(deleteDictTypePO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 删除字典信息操作 - 前端传入参数 PO 删除字典信息
+     * 删除一个字典信息操作
      *
      * @param deleteDictPO 删除字典信息 PO 对象 {@link DeleteDictPO}
      * @return 响应结果对象 {@link Result} - true: 删除成功; false: 删除失败;
      */
     @DeleteMapping
-    @Log(operation = "删除字典信息", type = Log.LogType.DELETE)
+    @Log(operation = "删除一个字典信息操作", type = Log.LogType.DELETE)
     public Result<Boolean> deleteDict(@RequestBody DeleteDictPO deleteDictPO) {
         dictService.deleteOneDict(dictMapper.deleteDictPOToDTO(deleteDictPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 修改字典类型操作 - 前端传入参数 PO 修改字典类型
+     * 修改一个字典类型操作
      *
      * @param updateDictTypePO 修改字典类型 PO 对象 {@link UpdateDictTypePO}
      * @return 响应结果对象 {@link Result} - true: 修改成功; false: 修改失败;
      */
     @PutMapping("/type")
-    @Log(operation = "修改字典类型", type = Log.LogType.UPDATE)
+    @Log(operation = "修改一个字典类型操作", type = Log.LogType.UPDATE)
     public Result<Boolean> updateDictType(@RequestBody UpdateDictTypePO updateDictTypePO) {
         dictTypeService.updateOneDictType(dictMapper.updateDictTypePOToDTO(updateDictTypePO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 修改字典信息操作 - 前端传入参数 PO 修改字典信息
+     * 修改一个字典信息操作
      *
      * @param updateDictPO 修改字典信息 PO 对象 {@link UpdateDictPO}
      * @return 响应结果对象 {@link Result} - true: 修改成功; false: 修改失败;
      */
     @PutMapping
-    @Log(operation = "修改字典信息", type = Log.LogType.UPDATE)
+    @Log(operation = "修改一个字典信息操作", type = Log.LogType.UPDATE)
     public Result<Boolean> updateDict(@RequestBody UpdateDictPO updateDictPO) {
         dictService.updateOneDict(dictMapper.updateDictPOToDTO(updateDictPO));
         return Result.success(Boolean.TRUE);
     }
 
     /**
-     * 查询字典类型操作 - 前端传入参数 PO 查询字典类型信息
+     * 查询字典类型操作  - 分页
      *
      * @param queryDictTypePO 查询字典类型信息 PO 对象 {@link QueryDictTypePO}
      * @return 响应结果对象 {@link MultiResult} - 字典信息列表 {@link DictTypeDTO}
      */
     @GetMapping("/type")
-    @Log(operation = "查询字典类型", type = Log.LogType.SELECT)
+    @Log(operation = "查询字典类型操作  - 分页", type = Log.LogType.SELECT)
     public MultiResult<DictTypeVO> getDictType(QueryDictTypePO queryDictTypePO) {
         PageResponse<DictTypeDTO> dictTypeDTOPageResponse = dictTypeService.queryDictTypeList(dictMapper.queryDictTypePOToDTO(queryDictTypePO));
         return MultiResult.successMulti(dictMapper.dictTypeDTOListToVOList(dictTypeDTOPageResponse.getData()),
@@ -150,13 +150,13 @@ public class DictApi {
     }
 
     /**
-     * 获取字典信息操作 - 前端传入参数 PO 获取字典信息
+     * 获取字典信息操作 - 分页
      *
      * @param queryDictPO 获取字典信息 PO 获取字典信息 PO 对象 {@link QueryDictPO}
      * @return 响应结果对象 {@link MultiResult} - 字典信息列表 {@link DictVO}
      */
     @GetMapping
-    @Log(operation = "查询字典信息", type = Log.LogType.SELECT)
+    @Log(operation = "获取字典信息操作 - 分页", type = Log.LogType.SELECT)
     public MultiResult<DictVO> getDict(QueryDictPO queryDictPO) {
         PageResponse<DictDTO> dictDTOPageResponse = dictService.queryDictList(dictMapper.queryDictPOToDTO(queryDictPO));
         return MultiResult.successMulti(dictMapper.dictDTOListToVOList(dictDTOPageResponse.getData()),

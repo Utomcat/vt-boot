@@ -2,4 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ranyk.vt.boot.example.satoken.repository.department.DepartmentRepository">
 
+    <!-- 根据部门 ID 查询一条部门信息 -->
+    <select id="selectOneDepartmentById" resultType="com.ranyk.vt.boot.example.satoken.domain.department.entity.Department">
+        select id,
+               name,
+               code,
+               parent_id,
+               parent_ids,
+               tenant_id,
+               status,
+               remark
+        from department_info di
+        where di.id = #{id}
+    </select>
+
+    <!-- 根据部门 ID 更新一条部门信息 -->
+    <update id="updateOneDepartmentById">
+        update department_info di
+            <set>
+                <if test="department.name != null">
+                    di.name = #{department.name},
+                </if>
+                <if test="department.code != null">
+                    di.code = #{department.code},
+                </if>
+                <if test="department.parentId != null">
+                    di.parent_id = #{department.parentId},
+                </if>
+                <if test="department.parentIds != null">
+                    di.parent_ids = #{department.parentIds},
+                </if>
+                <if test="department.status != null">
+                    di.status = #{department.status},
+                </if>
+                <if test="department.remark != null">
+                    di.remark = #{department.remark},
+                </if>
+                <if test="department.updateBy != null">
+                    di.update_by = #{department.updateBy},
+                </if>
+                <if test="department.updateTime != null">
+                    di.update_time = #{department.updateTime},
+                </if>
+            </set>
+        <where>
+            <if test="department.id != null">
+                di.id = #{department.id}
+            </if>
+        </where>
+    </update>
 </mapper>

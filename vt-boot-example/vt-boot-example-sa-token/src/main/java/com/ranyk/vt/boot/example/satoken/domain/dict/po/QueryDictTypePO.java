@@ -1,10 +1,9 @@
 package com.ranyk.vt.boot.example.satoken.domain.dict.po;
 
-import com.ranyk.vt.boot.base.domain.po.BasePO;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * CLASS_NAME: QueryDictTypePO.java
@@ -15,12 +14,12 @@ import java.io.Serial;
  * @date: 2026-03-05
  */
 @Data
-@SuperBuilder
+@Builder
+@ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 @AllArgsConstructor
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class QueryDictTypePO  extends BasePO {
+public class QueryDictTypePO implements Serializable {
     @Serial
     private static final long serialVersionUID = 5466790545081056582L;
 
@@ -32,4 +31,12 @@ public class QueryDictTypePO  extends BasePO {
      * 字典类型编码
      */
     private String code;
+    /**
+     * 数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）
+     */
+    private Integer status;
+    /**
+     * 备注, 默认值为空字符串
+     */
+    private String remark;
 }
