@@ -16,6 +16,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>vt-boot-aop-starter</module>
 		<module>vt-boot-async-starter</module>
 		<module>vt-boot-base-starter</module>
 		<module>vt-boot-cache-starter</module>

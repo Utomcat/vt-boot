@@ -11,7 +11,7 @@
 	<artifactId>vt-boot-base-starter</artifactId>
 
 	<name>vt-boot-base-starter</name>
-	<description>vt-boot-base-starter</description>
+	<description>基础模块</description>
 
 	<properties>
 		<java.version>21</java.version>
