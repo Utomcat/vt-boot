@@ -39,7 +39,8 @@ public class UpdateRolePO implements Serializable {
     /**
      * 数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）
      */
-    private Integer status;
+    @Builder.Default
+    private Integer status = 1;
     /**
      * 备注
      */

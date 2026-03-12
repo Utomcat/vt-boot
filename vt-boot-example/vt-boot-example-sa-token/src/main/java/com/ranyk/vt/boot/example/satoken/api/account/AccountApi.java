@@ -57,7 +57,7 @@ public class AccountApi {
     @PostMapping
     @Log(operation = "新增一个账户信息", type = Log.LogType.INSERT)
     public Result<Boolean> saveAccountInfo(@RequestBody SaveAccountPO saveAccountPO) {
-        accountService.saveOne(accountMapper.saveRequestPOToDTO(saveAccountPO));
+        accountService.saveOneAccount(accountMapper.saveRequestPOToDTO(saveAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
@@ -70,7 +70,33 @@ public class AccountApi {
     @DeleteMapping
     @Log(operation = "删除一个账户信息", type = Log.LogType.DELETE)
     public Result<Boolean> deleteAccountInfo(@RequestBody DeleteAccountPO deleteAccountPO) {
-        accountService.deleteOne(accountMapper.deleteRequestPOToDTO(deleteAccountPO));
+        accountService.deleteOneAccount(accountMapper.deleteRequestPOToDTO(deleteAccountPO));
+        return Result.success(Boolean.TRUE);
+    }
+
+    /**
+     * 删除一个账户信息 - 删除方法2
+     *
+     * @param deleteAccountPO 账户信息数据封装对象 {@link DeleteAccountPO}
+     * @return 删除账户信息操作结果 {@link Boolean}
+     */
+    @DeleteMapping("/delete/account/2")
+    @Log(operation = "删除一个账户信息 - 删除方法2", type = Log.LogType.DELETE)
+    public Result<Boolean> deleteAccountInfo2(@RequestBody DeleteAccountPO deleteAccountPO) {
+        accountService.deleteOneAccount2(accountMapper.deleteRequestPOToDTO(deleteAccountPO));
+        return Result.success(Boolean.TRUE);
+    }
+
+    /**
+     * 批量删除账户信息
+     *
+     * @param deleteAccountPO 账户信息数据封装对象 {@link DeleteAccountPO}
+     * @return 批量删除账户信息操作结果 {@link Boolean}
+     */
+    @DeleteMapping("/batch/delete/account")
+    @Log(operation = "批量删除账户信息", type = Log.LogType.DELETE)
+    public Result<Boolean> batchDeleteAccountInfo(@RequestBody DeleteAccountPO deleteAccountPO) {
+        accountService.batchDeleteAccount(accountMapper.deleteRequestPOToDTO(deleteAccountPO));
         return Result.success(Boolean.TRUE);
     }
 
@@ -83,7 +109,7 @@ public class AccountApi {
     @PutMapping
     @Log(operation = "更新一个账户信息", type = Log.LogType.UPDATE)
     public Result<Boolean> updateAccountInfo(@RequestBody UpdateAccountPO updateAccountPO) {
-        accountService.updateOne(accountMapper.updateRequestPOToDTO(updateAccountPO));
+        accountService.updateOneAccount(accountMapper.updateRequestPOToDTO(updateAccountPO));
         return Result.success(Boolean.TRUE);
     }
 

@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.satoken.service.permissions;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +69,8 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
     public void saveOnePermission(PermissionDTO permissionDTO) {
         verifyPermissionParams(permissionDTO, OperateType.SAVE);
         Permission permission = permissionMapper.dtoToEntity(permissionDTO);
+        permission.setCreateBy(StpUtil.getLoginIdAsString());
+        permission.setUpdateBy(StpUtil.getLoginIdAsString());
         boolean saveResult = saveOrUpdate(permission);
         if (!saveResult) {
             log.error("保存权限信息失败!");
@@ -105,6 +109,8 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
         Optional.ofNullable(permissionDTO.getType()).ifPresent(permission::setType);
         Optional.ofNullable(permissionDTO.getStatus()).ifPresent(permission::setStatus);
         Optional.ofNullable(permission.getRemark()).ifPresent(permission::setRemark);
+        permission.setUpdateBy(StpUtil.getLoginIdAsString());
+        permission.setUpdateTime(LocalDateTime.now());
         boolean updateResult = saveOrUpdate(permission);
         if (!updateResult) {
             log.error("修改权限信息失败!");

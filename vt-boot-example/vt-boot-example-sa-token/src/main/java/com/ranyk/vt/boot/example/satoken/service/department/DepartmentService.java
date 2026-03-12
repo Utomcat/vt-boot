@@ -10,6 +10,7 @@ import com.ranyk.vt.boot.base.constant.OperateType;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
+import com.ranyk.vt.boot.example.satoken.domain.department.dto.DepartmentAccountConnectionDTO;
 import com.ranyk.vt.boot.example.satoken.domain.department.dto.DepartmentDTO;
 import com.ranyk.vt.boot.example.satoken.domain.department.entity.Department;
 import com.ranyk.vt.boot.example.satoken.mapper.department.DepartmentMapper;
@@ -43,17 +44,25 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
      * 部门信息数据转换接口对象
      */
     private final DepartmentMapper departmentMapper;
+    /**
+     * 部门账户信息关联关系业务逻辑类对象
+     */
+    private final DepartmentAccountConnectionService departmentAccountConnectionService;
 
     /**
      * 构造函数 - 向 Spring IOC 容器中注入部门信息数据操作接口对象
      *
-     * @param departmentRepository 部门信息数据操作接口对象
-     * @param departmentMapper     部门信息数据转换接口对象
+     * @param departmentRepository               部门信息数据操作接口对象
+     * @param departmentMapper                   部门信息数据转换接口对象
+     * @param departmentAccountConnectionService 部门账户信息关联关系业务逻辑类对象
      */
     @Autowired
-    public DepartmentService(DepartmentRepository departmentRepository, DepartmentMapper departmentMapper) {
+    public DepartmentService(DepartmentRepository departmentRepository,
+                             DepartmentMapper departmentMapper,
+                             DepartmentAccountConnectionService departmentAccountConnectionService) {
         this.departmentRepository = departmentRepository;
         this.departmentMapper = departmentMapper;
+        this.departmentAccountConnectionService = departmentAccountConnectionService;
     }
 
     /**
@@ -65,6 +74,8 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
     public void saveOneDepartment(DepartmentDTO departmentDTO) {
         verifyDepartmentParams(departmentDTO, OperateType.SAVE);
         Department department = departmentMapper.dtoToEntity(departmentDTO);
+        department.setCreateBy(StpUtil.getLoginIdAsString());
+        department.setUpdateBy(StpUtil.getLoginIdAsString());
         boolean saveResult = saveOrUpdate(department);
         if (!saveResult) {
             log.error("保存部门信息 - 保存部门信息失败!");
@@ -79,7 +90,15 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneDepartment(DepartmentDTO departmentDTO) {
+        // 验证当前需要删除的部门信息时是否存在需要删除的部门数据ID
         verifyDepartmentParams(departmentDTO, OperateType.DELETE);
+        // 删除当前关联部门的账户信息
+        Boolean deleteDepartmentAccountConnectionResult = departmentAccountConnectionService.deleteByDepartmentId(DepartmentAccountConnectionDTO.builder().departmentId(departmentDTO.getId()).build());
+        if (!deleteDepartmentAccountConnectionResult){
+            log.error("依据 部门ID 删除所有指定的部门账户信息关联关系失败!");
+            throw new ServiceException("删除部门信息 - 删除部门账户关联信息失败!");
+        }
+        // 执行部门数据的删除操作
         boolean deleteResult = removeById(departmentDTO.getId());
         if (!deleteResult) {
             log.error("删除部门信息 - 删除部门信息失败!");
@@ -97,7 +116,7 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
         verifyDepartmentParams(departmentDTO, OperateType.UPDATE);
         // 依据指定部门 ID 查询部门信息
         Department department = this.departmentRepository.selectOneDepartmentById(departmentDTO.getId());
-        if (Objects.isNull(department)){
+        if (Objects.isNull(department)) {
             log.error("修改部门信息 - 需要进行部门信息修改数据不存在!");
             throw new ServiceException("修改部门信息 - 需要进行部门信息修改数据不存在!");
         }

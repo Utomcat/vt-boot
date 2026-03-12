@@ -8,10 +8,10 @@ import com.ranyk.vt.boot.example.satoken.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.satoken.domain.captcha.dto.CaptchaDTO;
 import com.ranyk.vt.boot.example.satoken.service.account.AccountService;
 import com.ranyk.vt.boot.example.satoken.service.captcha.CaptchaService;
+import com.ranyk.vt.boot.example.satoken.service.login.LonginService;
+import com.ranyk.vt.boot.example.satoken.service.logout.LogoutService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -37,6 +37,36 @@ class VtBootExampleSaTokenApplicationTests {
      */
     @Autowired
     private AccountService accountService;
+    /**
+     * 登录业务逻辑对象
+     */
+    @Autowired
+    private LonginService longinService;
+    /**
+     * 登出业务逻辑对象
+     */
+    @Autowired
+    private LogoutService logoutService;
+
+    /**
+     * 每个测试方法之前执行的方法 - 用户登录
+     */
+    @BeforeEach
+    @DisplayName("每个测试方法之前执行的方法 - 用户登录")
+    void login(){
+        CaptchaDTO captcha = captchaService.captcha();
+        AccountDTO accountDTO = AccountDTO.builder().userName("admin").password("123456").captcha(captcha.getCaptcha()).build();
+        Assertions.assertAll(() -> longinService.login(accountDTO));
+    }
+
+    /**
+     * 每个测试方法之后执行方法 - 用户登出
+     */
+    @AfterEach
+    @DisplayName("每个测试方法之后执行方法 - 用户登出")
+    void logout(){
+        logoutService.logout();
+    }
 
     /**
      * 测试缓存功能 - 使用默认的 Caffeine 缓存
@@ -107,9 +137,7 @@ class VtBootExampleSaTokenApplicationTests {
         AccountDTO userDTO = AccountDTO.builder().userName("admin").password("123456").build();
 
         // 添加账户信息, 期望抛出 ServiceException 异常, 异常信息为: 账户名已存在
-        ServiceException exception = Assertions.assertThrows(ServiceException.class,
-                () -> accountService.saveOne(userDTO),
-                "期望抛出 ServiceException 异常, 异常信息为: 账户名已存在");
+        ServiceException exception = Assertions.assertThrows(ServiceException.class, () -> accountService.saveOneAccount(userDTO), "期望抛出 ServiceException 异常, 异常信息为: 账户名已存在");
 
         // 日志记录
         log.debug("捕获到预期异常：{}", exception.getMessage());
@@ -125,7 +153,7 @@ class VtBootExampleSaTokenApplicationTests {
         AccountDTO userDTO = AccountDTO.builder().userName(RandomUtil.randomNumbers(6)).password("123456").build();
 
         // 添加账户信息
-        Assertions.assertAll(() -> accountService.saveOne(userDTO));
+        Assertions.assertAll(() -> accountService.saveOneAccount(userDTO));
 
         // 查询账户信息
         Assertions.assertTrue(() -> {
@@ -138,9 +166,10 @@ class VtBootExampleSaTokenApplicationTests {
      * 删除账户信息功能测试
      */
     @Test
-    @DisplayName("删除账户信息功能测试 - 删除一条存在于系统内的账户信息")
-    void deleteAccountTest() {
-
+    @DisplayName("删除账户信息功能测试 - 删除一条存在于系统内的账户信息方法2")
+    void deleteAccountTest2() {
+        AccountDTO accountDTO = AccountDTO.builder().id("").build();
+        Assertions.assertAll(() -> accountService.deleteOneAccount2(accountDTO));
     }
 
     /**
@@ -156,7 +185,7 @@ class VtBootExampleSaTokenApplicationTests {
      * 查询账户信息功能测试 - 查询一条存在于系统内的账户 (精确查询)
      */
     @Test
-    @DisplayName("查询账户信息功能测试 - 查询一条存在于系统内的账户 (精确查询)")
+    @DisplayName("查询账户信息功能测试 - 查询一条存在于系统内的账户 (模糊查询)")
     void queryAccountTest() {
         PageResponse<AccountDTO> accountDTOPageResponse = accountService.queryAccountByConditions(AccountDTO.builder().userName("admin").build());
         log.debug("查询结果为: {}", accountDTOPageResponse);

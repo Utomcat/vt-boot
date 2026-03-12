@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
         dictType.setCreateBy(StpUtil.getLoginIdAsString());
         dictType.setUpdateBy(StpUtil.getLoginIdAsString());
         // 保存字典类型
-        boolean saveResult = saveOrUpdate(dictType);
+        boolean saveResult = this.saveOrUpdate(dictType);
         // 判断结果是否成功
         if (!saveResult) {
             log.error("新增字典类型失败!");
@@ -119,6 +120,7 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
         }
         DictType dictType = dictTypeRepository.selectOneDictTypeById(dictTypeDTO.getId());
         dictType.setUpdateBy(StpUtil.getLoginIdAsString());
+        dictType.setUpdateTime(LocalDateTime.now());
         Optional.ofNullable(dictTypeDTO.getName()).filter(StrUtil::isNotBlank).ifPresent(dictType::setName);
         Optional.ofNullable(dictTypeDTO.getCode()).filter(StrUtil::isNotBlank).ifPresent(dictType::setCode);
         Optional.ofNullable(dictTypeDTO.getRemark()).filter(StrUtil::isNotBlank).ifPresent(dictType::setRemark);

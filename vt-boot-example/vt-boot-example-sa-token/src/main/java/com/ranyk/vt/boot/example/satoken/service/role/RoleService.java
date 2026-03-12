@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.satoken.service.role;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -72,7 +74,18 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
     public void saveOneRole(RoleDTO roleDTO) {
         verifyRoleParams(roleDTO, OperateType.SAVE);
         Role role = roleMapper.dtoToEntity(roleDTO);
-        boolean saveResult = saveOrUpdate(role);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Role::getCode, roleDTO.getCode());
+        Long count = this.roleRepository.selectCount(queryWrapper);
+        if (count > 0) {
+            log.error("新增角色信息失败, 角色编码 {} 已存在", roleDTO.getCode());
+            throw new ServiceException("新增角色信息失败, 角色编码 【 %s 】 已存在".formatted(roleDTO.getCode()));
+        }
+        role.setCreateTime(LocalDateTime.now());
+        role.setCreateBy(StpUtil.getLoginIdAsString());
+        role.setUpdateTime(LocalDateTime.now());
+        role.setUpdateBy(StpUtil.getLoginIdAsString());
+        boolean saveResult = this.saveOrUpdate(role);
         if (!saveResult) {
             log.error("新增角色信息失败");
             throw new ServiceException("新增角色信息失败");
@@ -109,7 +122,9 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
         Optional.ofNullable(roleDTO.getCode()).ifPresent(role::setCode);
         Optional.ofNullable(roleDTO.getStatus()).ifPresent(role::setStatus);
         Optional.ofNullable(roleDTO.getRemark()).ifPresent(role::setRemark);
-        boolean updateResult = saveOrUpdate(role);
+        role.setUpdateTime(LocalDateTime.now());
+        role.setUpdateBy(StpUtil.getLoginIdAsString());
+        boolean updateResult = this.saveOrUpdate(role);
         if (!updateResult) {
             log.error("修改角色信息失败!");
             throw new ServiceException("修改角色信息失败");

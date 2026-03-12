@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * CLASS_NAME: DepartmentAccountConnectionDTO.java
@@ -32,4 +33,19 @@ public class DepartmentAccountConnectionDTO extends BaseDTO {
      * 账户ID
      */
     private String accountId;
+
+    // 以下为扩展字段属性
+
+    /**
+     * 部门和账户关联关系的数据 ID List 集合
+     */
+    private List<String> ids;
+    /**
+     * 部门ID List 集合
+     */
+    private List<String> departmentIds;
+    /**
+     * 账户ID List 集合
+     */
+    private List<String> accountIds;
 }

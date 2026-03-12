@@ -23,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * CLASS_NAME: AccountService.java
@@ -64,7 +66,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
     @Transactional(rollbackFor = Exception.class)
-    public void saveOne(AccountDTO accountDTO) {
+    public void saveOneAccount(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
         verifyAccountParams(accountDTO, OperateType.SAVE);
         // 通过账户名查询账户信息
@@ -94,23 +96,61 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     }
 
     /**
-     * 删除账户信息
+     * 删除账户信息 - 用自定义的 SQL 进行逻辑删除用户信息
      *
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
     @Transactional(rollbackFor = Exception.class)
-    public void deleteOne(AccountDTO accountDTO) {
+    public void deleteOneAccount(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
         verifyAccountParams(accountDTO, OperateType.DELETE);
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Account::getId, accountDTO.getId());
         Account account = accountRepository.selectOne(queryWrapper);
         LambdaUpdateWrapper<Account> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(Account::getUpdateBy, StpUtil.getLoginIdAsString()).set(Account::getUpdateTime, LocalDateTime.now()).set(Account::getStatus, DataStatusEnum.DISABLE.getValue()).eq(Account::getId, account.getId());;
+        updateWrapper.set(Account::getUpdateBy, StpUtil.getLoginIdAsString()).set(Account::getUpdateTime, LocalDateTime.now()).set(Account::getStatus, DataStatusEnum.DISABLE.getValue()).eq(Account::getId, account.getId());
         boolean deleteResult = update(updateWrapper);
         if (!deleteResult) {
             log.error("删除账户信息失败!");
             throw new ServiceException("删除账户信息失败!");
+        }
+    }
+
+    /**
+     * 删除账户信息2 - 使用 MyBatis-Plus 的 removeById 方法进行逻辑删除用户信息
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    @Transactional
+    public void deleteOneAccount2(AccountDTO accountDTO){
+        // 验证账户ID是否存在值
+        verifyAccountParams(accountDTO, OperateType.DELETE);
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Account::getId, accountDTO.getId());
+        Account account = this.accountRepository.selectOne(queryWrapper);
+        account.setUpdateBy(StpUtil.getLoginIdAsString());
+        account.setUpdateTime(LocalDateTime.now());
+        boolean deleteResult = this.removeById(account);
+        if (!deleteResult) {
+            log.error("在方法 deleteOneAccount2 中, 删除账户信息失败!");
+            throw new ServiceException("在方法 deleteOneAccount2 中, 删除账户信息失败!");
+        }
+    }
+
+    /**
+     * 批量删除账户信息
+     *
+     * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDeleteAccount(AccountDTO accountDTO) {
+        // 批量删除账户信息 - 验证账户数据主键 ID 集合列表
+        verifyAccountParams(accountDTO, OperateType.DELETE);
+        List<Account> accountList = accountDTO.getIds().stream().map(id -> Account.builder().id(id).updateBy(StpUtil.getLoginIdAsString()).updateTime(LocalDateTime.now()).build()).collect(Collectors.toList());
+        boolean deleteResult = removeByIds(accountList);
+        if (!deleteResult) {
+            log.error("根据账户 ID , 批量删除账户信息失败!");
+            throw new ServiceException("根据账户 ID , 批量删除账户信息失败!");
         }
     }
 
@@ -120,7 +160,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateOne(AccountDTO accountDTO) {
+    public void updateOneAccount(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
         verifyAccountParams(accountDTO, OperateType.UPDATE);
         Account account = accountRepository.selectOneAccountById(accountDTO.getId());
@@ -146,7 +186,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     }
 
     /**
-     * 依据条件查询满足条件的一个账户信息 - 精确匹配
+     * 依据条件查询满足条件的一个账户信息 - 用户名 模糊匹配, 状态 精确匹配, 备注 模糊匹配
      *
      * @param accountDTO 账户信息查询参数封装对象 {@link AccountDTO}
      * @return 分页对象 {@link PageResponse} - 账户信息数据传输对象 {@link AccountDTO}
