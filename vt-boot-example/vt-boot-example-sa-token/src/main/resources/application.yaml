@@ -2,7 +2,7 @@ spring:
   # 应用配置
   application:
     # 应用名称配置
-    name: vt-boot-example-single-datasource
+    name: vt-boot-example-sa-token
   # 模板配置
   thymeleaf:
     # 是否检查模板路径
