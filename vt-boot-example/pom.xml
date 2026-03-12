@@ -19,6 +19,7 @@
         <module>vt-boot-example-sa-token</module>
         <module>vt-boot-example-single-datasource</module>
         <module>vt-boot-example-web</module>
+        <module>vt-boot-example-web-freamwork</module>
     </modules>
 
     <properties>
