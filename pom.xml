@@ -243,6 +243,12 @@
 
 			<dependency>
 				<groupId>com.ranyk</groupId>
+				<artifactId>vt-boot-mq-starter</artifactId>
+				<version>${reversion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ranyk</groupId>
 				<artifactId>vt-boot-internationalization-starter</artifactId>
 				<version>${reversion}</version>
 			</dependency>
