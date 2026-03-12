@@ -43,6 +43,13 @@ public @interface AutoFillField {
     Class<?>[] classes() default {String.class, LocalDateTime.class, String.class, LocalDateTime.class};
 
     /**
+     * 自动填充字段值
+     *
+     * @return 字段值数组, 默认值 0000000001
+     */
+    String[] value() default {};
+
+    /**
      * 租户ID字段名
      *
      * @return 租户ID字段名, 默认为 tenantId

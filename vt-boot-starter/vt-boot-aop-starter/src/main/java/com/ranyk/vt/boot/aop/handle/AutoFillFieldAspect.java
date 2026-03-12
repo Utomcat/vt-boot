@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.aop.handle;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ReflectUtil;
 import com.ranyk.vt.boot.aop.annotations.AutoFillField;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +72,8 @@ public class AutoFillFieldAspect {
         String[] fields = autoFillField.fields();
         // 获取字段类型
         Class<?>[] classes = autoFillField.classes();
+        // 获取字段值
+        String[] value = autoFillField.value();
         // 验证字段名和类型数量是否匹配
         if (fields.length != classes.length) {
             log.warn("字段名数量 ({}) 与字段类型数量 ({}) 不匹配，使用较小值进行填充", fields.length, classes.length);
@@ -80,7 +83,7 @@ public class AutoFillFieldAspect {
         for (int i = 0; i < minLength; i++) {
             String fieldName = fields[i];
             Class<?> fieldType = classes[i];
-            setFieldValue(target, fieldName, fieldType);
+            setFieldValue(target, fieldName, fieldType, value[i]);
         }
         // 如果需要填充租户 ID，则填充租户 ID 字段
         if (autoFillField.isFillTenantId()) {
@@ -95,8 +98,9 @@ public class AutoFillFieldAspect {
      * @param target    目标对象
      * @param fieldName 字段名
      * @param fieldType 字段类型
+     * @param value     字段值
      */
-    private void setFieldValue(Object target, String fieldName, Class<?> fieldType) {
+    private void setFieldValue(Object target, String fieldName, Class<?> fieldType, String value) {
         try {
             // 检查字段是否存在
             Field field = ReflectUtil.getField(target.getClass(), fieldName);
@@ -112,11 +116,16 @@ public class AutoFillFieldAspect {
                 return;
             }
             // 根据字段类型生成默认值
-            Object defaultValue = getDefaultValue(fieldType);
-            if (Objects.nonNull(defaultValue)) {
-                field.set(target, defaultValue);
-                log.debug("自动填充字段：{}.{} = {} (类型：{})", target.getClass().getName(), fieldName, defaultValue, fieldType.getSimpleName());
+            Object fillValue = Convert.convert(fieldType, value);
+            if (Objects.isNull(fillValue)) {
+                fillValue = getDefaultValue(fieldType);
             }
+            if (Objects.nonNull(fillValue)){
+                field.set(target, fillValue);
+                log.debug("自动填充字段：{}.{} = {} (类型：{})", target.getClass().getName(), fieldName, fillValue, fieldType.getSimpleName());
+                return;
+            }
+            log.warn("字段 {}.{} 无填充值，跳过填充", target.getClass().getName(), fieldName);
         } catch (IllegalAccessException e) {
             log.error("设置字段值失败：{}.{}", target.getClass().getName(), fieldName, e);
         } catch (Exception e) {
@@ -127,10 +136,10 @@ public class AutoFillFieldAspect {
     /**
      * 设置租户字段值
      *
-     * @param target       目标对象
-     * @param fieldName    字段名
-     * @param tenantValue  租户值
-     * @param fieldType    字段类型
+     * @param target      目标对象
+     * @param fieldName   字段名
+     * @param tenantValue 租户值
+     * @param fieldType   字段类型
      */
     private void setTenantId(Object target, String fieldName, String tenantValue, Class<?> fieldType) {
         try {
