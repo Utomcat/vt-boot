@@ -1,0 +1,25 @@
+spring:
+  # 应用配置
+  application:
+    # 应用名称配置
+    name: vt-boot-example-web-freamwork
+  # 模板配置
+  thymeleaf:
+    # 是否检查模板路径
+    check-template-location: false
+  # spring 配置配置
+  config:
+    # 导入其他配置文件, 以下导入的配置文件说明:
+    # 1. language.yaml: 语言配置
+    # 2. logback.yaml: 日志配置
+    # 3. sa-token.yaml: Sa-Token 配置
+    # 4. datasource.yaml: 数据源配置
+    # 5. mybatisplus.yaml: MyBatisPlus 配置
+    # 6. cache.yaml: 缓存配置
+    # 7. tenant.yaml: 租户配置
+    import: classpath:language.yaml,classpath:logback.yaml,classpath:sa-token.yaml,classpath:datasource.yaml,classpath:mybatisplus.yaml,classpath:cache.yaml,classpath:tenant.yaml
+
+# 服务配置
+server:
+  # 服务端口
+  port: 9085

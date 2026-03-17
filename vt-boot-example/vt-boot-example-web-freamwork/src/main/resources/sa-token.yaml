@@ -1,0 +1,4 @@
+# Sa-Token 配置
+sa-token:
+  # 是否开启 Sa-Token 功能
+  enable: true
