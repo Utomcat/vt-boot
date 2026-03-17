@@ -47,4 +47,11 @@
         where ai.user_name = #{userName}
           and ai.id != #{id}
     </select>
+
+    <!-- 依据条件 = userName 统计数据的数据数量 -->
+    <select id="selectCountByUserNameEq" resultType="java.lang.Integer">
+        select count(1)
+        from account_info ai
+        where ai.user_name = #{userName}
+    </select>
 </mapper>

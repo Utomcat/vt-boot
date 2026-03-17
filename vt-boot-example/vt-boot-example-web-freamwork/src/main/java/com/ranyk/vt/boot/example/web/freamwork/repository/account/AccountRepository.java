@@ -42,4 +42,12 @@ public interface AccountRepository extends BaseMapper<Account> {
      * @return 符合条件的数据数量
      */
     Integer selectCountByUserNameEqAndIdNotEq(@Param("userName") String userName, @Param("id") String id);
+
+    /**
+     * 依据条件 = userName 统计数据的数据数量
+     *
+     * @param userName 用户名
+     * @return 符合条件的数据数量
+     */
+    Integer selectCountByUserNameEq(@Param("userName") String userName);
 }

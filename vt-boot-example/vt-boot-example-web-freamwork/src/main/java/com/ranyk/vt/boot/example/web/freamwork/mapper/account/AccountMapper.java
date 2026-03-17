@@ -108,13 +108,10 @@ public interface AccountMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "password", ignore = true),
-            @Mapping(target = "status", ignore = true),
             @Mapping(target = "token", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "captcha", ignore = true),
             @Mapping(target = "captchaKey", ignore = true),
-            @Mapping(target = "currentPage", ignore = true),
-            @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "createBy", ignore = true),
             @Mapping(target = "createTime", ignore = true),
             @Mapping(target = "updateBy", ignore = true),

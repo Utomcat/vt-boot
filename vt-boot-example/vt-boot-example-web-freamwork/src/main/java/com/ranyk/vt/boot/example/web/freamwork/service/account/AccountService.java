@@ -94,12 +94,8 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     public void saveOneAccount(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
         verifyAccountParams(accountDTO, OperateType.SAVE);
-        // 通过账户名查询账户信息
-        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
-        // 查询条件 - 账户名
-        queryWrapper.eq(Account::getUserName, accountDTO.getUserName());
-        // 执行查询结果 - 是否存在相同账户名的数据 TODO 此处需要修改一下, 不能使用 selectCount() 方法, 此方法会排除 status != 1 的数据, 本身因该是不能排除掉
-        Long count = accountRepository.selectCount(queryWrapper);
+        // 执行查询结果 - 通过账户名查询是否存在相同账户名的数据
+        Integer count = accountRepository.selectCountByUserNameEq(accountDTO.getUserName());
         // 存在相同账户名的数据
         if (count > 0) {
             log.error("新增一条账户信息操作 - 账户名已存在!");

@@ -3,6 +3,7 @@ package com.ranyk.vt.boot.example.web.freamwork.service.captcha;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ranyk.vt.boot.base.constant.CacheTypeEnum;
+import com.ranyk.vt.boot.base.constant.DefaultValueEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.cache.config.properties.CacheConfigurationProperties;
 import com.ranyk.vt.boot.cache.util.CacheUtils;
@@ -70,7 +71,7 @@ public class CaptchaService {
         }
         log.trace("验证码生成成功, 验证码为 {} !", captcha);
         // 返回验证码
-        return CaptchaDTO.builder().captcha(captcha).build();
+        return CaptchaDTO.builder().captchaKey(DefaultValueEnum.STR_DEFAULT.getValue()).captcha(captcha).build();
     }
 
     /**

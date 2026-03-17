@@ -184,7 +184,7 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
      * @return 部门信息数量
      */
     public Integer queryDepartmentCountById(DepartmentDTO departmentDTO) {
-        if (StrUtil.isBlank(departmentDTO.getCode())) {
+        if (StrUtil.isBlank(departmentDTO.getId())) {
             log.error("查询部门信息 - 部门ID不能为空!");
             throw new ServiceException("查询部门信息 - 部门ID不能为空!");
         }
