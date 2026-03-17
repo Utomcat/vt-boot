@@ -21,6 +21,7 @@
 		<module>vt-boot-base-starter</module>
 		<module>vt-boot-cache-starter</module>
 		<module>vt-boot-datasource-starter</module>
+		<module>vt-boot-file-starter</module>
 		<module>vt-boot-log-starter</module>
 		<module>vt-boot-mq-starter</module>
 		<module>vt-boot-internationalization-starter</module>
