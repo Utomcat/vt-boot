@@ -10,17 +10,29 @@ package com.ranyk.vt.boot.base.constant;
  */
 public enum OperateType {
     /**
-     * 新增
+     * 单条数据新增/保存
      */
     SAVE,
     /**
-     * 修改
+     * 批量保存
+     */
+    BATCH_SAVE,
+    /**
+     * 单条数据删除
+     */
+    DELETE,
+    /**
+     * 批量删除
+     */
+    BATCH_DELETE,
+    /**
+     * 单条数据修改
      */
     UPDATE,
     /**
-     * 删除
+     * 批量修改
      */
-    DELETE,
+    BATCH_UPDATE,
     /**
      * 查询
      */
