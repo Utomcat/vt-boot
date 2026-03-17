@@ -157,6 +157,42 @@ create table sys_dict
 ) engine = InnoDB comment '字典表'
   charset utf8;
 
+drop table if exists user_info;
+create table user_info
+(
+    id          varchar(100)                           not null comment '数据主键' primary key,
+    name        varchar(100)                           not null comment '用户名称',
+    nick_name   varchar(100)                           not null comment '用户昵称',
+    avatar      varchar(500)                           not null comment '用户头像',
+    sex         int          default 1                 not null comment '性别',
+    email       varchar(100) default '-'               not null comment '邮箱',
+    phone       varchar(20)  default '-'               not null comment '手机',
+    status      int          default 1                 not null comment '数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）',
+    tenant_id   varchar(10)  default '0000000001'      not null comment '租户ID',
+    remark      varchar(100) default '-'               not null comment '备注',
+    create_by   varchar(100) default '1'               not null comment '数据创建人',
+    create_time timestamp    default CURRENT_TIMESTAMP not null comment '数据创建时间',
+    update_by   varchar(100) default '1'               not null comment '数据更新人',
+    update_time timestamp    default CURRENT_TIMESTAMP not null comment '数据更新时间'
+) engine = InnoDB comment '用户信息表'
+  charset utf8;
+
+drop table if exists account_user_connection;
+create table account_user_connection
+(
+    id          varchar(100)                           not null comment '数据主键' primary key,
+    account_id  varchar(100)                           not null comment '账户ID',
+    user_id     varchar(100)                           not null comment '用户ID',
+    status      int          default 1                 not null comment '数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）',
+    tenant_id   varchar(10)  default '0000000001'      not null comment '租户ID',
+    remark      varchar(100) default '-'               not null comment '备注',
+    create_by   varchar(100) default '1'               not null comment '数据创建人',
+    create_time timestamp    default CURRENT_TIMESTAMP not null comment '数据创建时间',
+    update_by   varchar(100) default '1'               not null comment '数据更新人',
+    update_time timestamp    default CURRENT_TIMESTAMP not null comment '数据更新时间'
+) engine = InnoDB comment '账户用户信息关联关系表'
+  charset utf8;
+
 drop table if exists app_log;
 create table app_log
 (
