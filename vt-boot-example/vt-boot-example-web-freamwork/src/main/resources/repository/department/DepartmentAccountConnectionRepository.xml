@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.department.DepartmentAccountConnectionRepository">
+    <!-- 根据部门ID批量删除部门账户关联关系数据 -->
+    <delete id="deleteByDepartmentId">
+        delete
+        from department_account_connection dac
+        where dac.department_id = #{departmentId}
+    </delete>
+
+    <!-- 根据部门ID列表批量删除部门账户关联关系数据 -->
+    <delete id="deleteByDepartmentIdIn">
+        delete from department_account_connection dac
+        where dac.department_id in
+        <foreach item="item" index="index" collection="departmentIds" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据部门ID和账户ID删除部门账户关联关系数据 -->
+    <delete id="deleteByDepartmentIdAndAccountId">
+        delete
+        from department_account_connection dac
+        where dac.department_id = #{departmentId}
+          and dac.account_id = #{accountId}
+    </delete>
+
+    <!-- 根据账户ID删除部门账户关联关系数据 -->
+    <delete id="deleteByAccountId">
+        delete
+        from department_account_connection dac
+        where dac.account_id = #{accountId}
+    </delete>
+
+    <!-- 根据账户ID列表批量删除部门账户关联关系数据 -->
+    <delete id="deleteByAccountIdIn">
+        delete from department_account_connection dac
+        where dac.account_id in
+        <foreach item="item" index="index" collection="accountIds" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据ID批量删除部门账户关联关系数据 -->
+    <delete id="deleteByIdEq">
+        delete from department_account_connection dac
+        where dac.id = #{id}
+    </delete>
+
+    <!-- 根据ID列表批量删除部门账户关联关系数据 -->
+    <delete id="deleteByIdIn">
+        delete from department_account_connection dac
+        where dac.id in
+        <foreach item="item" index="index" collection="ids" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

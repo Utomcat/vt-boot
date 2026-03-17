@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.dict.DictRepository">
+
+    <!-- 根据字典值 ID 查询一条字典数据 -->
+    <select id="selectOneDictById" resultType="com.ranyk.vt.boot.example.web.freamwork.domain.dict.entity.Dict">
+        select id,
+               dict_type_id,
+               name,
+               code,
+               value,
+               tenant_id,
+               status,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from sys_dict sd
+        where sd.id = #{id}
+    </select>
+
+    <!-- 根据字典值 ID 更新一条字典数据 -->
+    <update id="updateOneDictById">
+        update sys_dict sd
+            <set>
+                <if test="dict.dictTypeId != null">
+                    sd.dict_type_id = #{dict.dictTypeId},
+                </if>
+                <if test="dict.name != null">
+                    sd.name = #{dict.name},
+                </if>
+                <if test="dict.code != null">
+                    sd.code = #{dict.code},
+                </if>
+                <if test="dict.value != null">
+                    sd.value = #{dict.value},
+                </if>
+                <if test="dict.status != null">
+                    sd.status = #{dict.status},
+                </if>
+                <if test="dict.remark != null">
+                    sd.remark = #{dict.remark},
+                </if>
+                <if test="dict.updateBy != null">
+                    sd.update_by = #{dict.updateBy},
+                </if>
+                <if test="dict.updateTime != null">
+                    sd.update_time = #{dict.updateTime},
+                </if>
+            </set>
+        <where>
+            <if test="dict.id != null">
+                sd.id = #{dict.id}
+            </if>
+        </where>
+    </update>
+</mapper>

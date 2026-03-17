@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.dict.DictTypeRepository">
+    <!-- 根据 ID 查询一条字典类型数据 -->
+    <select id="selectOneDictTypeById" resultType="com.ranyk.vt.boot.example.web.freamwork.domain.dict.entity.DictType">
+        SELECT id,
+               name,
+               code,
+               remark,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               status
+        FROM sys_dict_type
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据 ID 更新一条字典类型数据 -->
+    <update id="updateOneDictTypeById">
+        UPDATE sys_dict_type sdt
+        <set>
+            <if test="dictType.name != null">
+                sdt.name = #{dictType.name},
+            </if>
+            <if test="dictType.code != null">
+                sdt.code = #{dictType.code},
+            </if>
+            <if test="dictType.remark != null">
+                sdt.remark = #{dictType.remark},
+            </if>
+            <if test="dictType.status != null">
+                sdt.status = #{dictType.status},
+            </if>
+            <if test="dictType.updateBy != null">
+                sdt.update_by = #{dictType.updateBy},
+            </if>
+            <if test="dictType.updateTime != null">
+                sdt.update_time = #{dictType.updateTime},
+            </if>
+        </set>
+        <where>
+            sdt.id = #{dictType.id}
+        </where>
+    </update>
+
+    <!-- 依据条件 = name and != id 统计字典类型数据量 -->
+    <select id="selectCountByNameEqAndIdNotEq" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM sys_dict_type sdt
+        WHERE sdt.name = #{name}
+          AND sdt.id != #{id}
+    </select>
+
+    <!-- 依据条件 = code and != id 统计字典类型数据量 -->
+    <select id="selectCountByCodeEqAndIdNotEq" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM sys_dict_type sdt
+        WHERE sdt.code = #{code}
+          AND sdt.id != #{id}
+    </select>
+</mapper>

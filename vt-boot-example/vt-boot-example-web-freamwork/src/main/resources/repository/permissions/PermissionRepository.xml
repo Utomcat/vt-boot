@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.permissions.PermissionRepository">
+
+    <!-- 根据条件 = name and != id 统计权限数量 -->
+    <select id="selectCountByNameEqAndIdNotEq" resultType="java.lang.Integer">
+        select count(1) from permission_info pi where pi.name = #{name} and pi.id != #{id}
+    </select>
+
+    <!-- 根据条件 = code and != id 统计权限数量 -->
+    <select id="selectCountByCodeEqAndIdNotEq" resultType="java.lang.Integer">
+        select count(1) from permission_info pi where pi.code = #{code} and pi.id != #{id}
+    </select>
+
+    <!-- 根据ID 更新权限信息 -->
+    <update id="updateByIdEq">
+        update permission_info pi
+            <set>
+                <if test="permission.name != null">
+                    pi.name = #{permission.name},
+                </if>
+                <if test="permission.code != null">
+                    pi.code = #{permission.code},
+                </if>
+                <if test="permission.type != null">
+                    pi.type = #{permission.type},
+                </if>
+                <if test="permission.status != null">
+                    pi.status = #{permission.status},
+                </if>
+                <if test="permission.remark != null">
+                    pi.remark = #{permission.remark},
+                </if>
+            </set>
+        <where>
+            <if test="permission.id != null">
+                pi.id = #{permission.id}
+            </if>
+        </where>
+    </update>
+</mapper>

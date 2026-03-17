@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.account.AccountRepository">
+    <!-- 查询账户信息 - 通过数据ID -->
+    <select id="selectOneAccountById" resultType="com.ranyk.vt.boot.example.web.freamwork.domain.account.entity.Account">
+        select id,
+               user_name,
+               tenant_id,
+               status,
+               remark
+        from account_info ai
+        where ai.id = #{id}
+    </select>
+
+    <!-- 更新账户信息 - 通过数据ID -->
+    <update id="updateOneAccountById">
+        update account_info ai
+        <set>
+            <if test="account.userName != null">
+                ai.user_name = #{account.userName},
+            </if>
+            <if test="account.password != null">
+                ai.password = #{account.password},
+            </if>
+            <if test="account.status != null">
+                ai.status = #{account.status},
+            </if>
+            <if test="account.remark != null">
+                ai.remark = #{account.remark},
+            </if>
+            <if test="account.updateBy != null">
+                    ai.update_by = #{account.updateBy},
+            </if>
+            <if test="account.updateTime != null">
+                ai.update_time = #{account.updateTime},
+            </if>
+        </set>
+        <where>
+            ai.id = #{account.id}
+        </where>
+    </update>
+
+    <!-- 依据条件 = userName and != id 统计数据的数据数量 -->
+    <select id="selectCountByUserNameEqAndIdNotEq" resultType="java.lang.Integer">
+        select count(1)
+        from account_info ai
+        where ai.user_name = #{userName}
+          and ai.id != #{id}
+    </select>
+</mapper>

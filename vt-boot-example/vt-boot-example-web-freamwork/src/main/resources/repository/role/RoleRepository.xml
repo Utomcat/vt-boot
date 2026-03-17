@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.role.RoleRepository">
+
+    <!-- 依据条件 = name and != id 统计角色数据的数量 -->
+    <select id="selectCountByNameEqAndIdNotEq" resultType="java.lang.Integer">
+        select count(1) from role_info ri where ri.name = #{name} and ri.id != #{id}
+    </select>
+
+    <!-- 依据条件 = code and != id 统计角色数据的数量 -->
+    <select id="selectCountByCodeEqAndIdNotEq" resultType="java.lang.Integer">
+        select count(1) from role_info ri where ri.code = #{code} and ri.id != #{id}
+    </select>
+</mapper>

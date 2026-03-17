@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.account.AccountRoleConnectionRepository">
+
+    <!-- 通过账户ID删除账户角色关联关系数据 -->
+    <delete id="deleteByAccountId">
+        delete from account_role_connection arc where arc.account_id = #{accountId}
+    </delete>
+
+    <!-- 通过账户ID列表批量删除账户角色关联关系数据 -->
+    <delete id="deleteByAccountIdIn">
+        delete from account_role_connection arc where arc.account_id in
+        <foreach collection="accountIds" item="accountId" open="(" close=")" separator=",">
+            #{accountId}
+        </foreach>
+    </delete>
+
+    <!-- 通过ID删除账户角色关联关系数据 -->
+    <delete id="deleteByIdEq">
+        delete from account_role_connection arc where arc.id = #{id}
+    </delete>
+
+    <!-- 通过ID列表批量删除账户角色关联关系数据 -->
+    <delete id="deleteByIdIn">
+        delete from account_role_connection arc where arc.id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
