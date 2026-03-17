@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * CLASS_NAME: BaseDTO.java
@@ -23,10 +24,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString(callSuper=true)
-@SuppressWarnings("unused")
 public class BaseDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 5783833370832885138L;
+
+    // 以下为数据表基本属性字段, 所有数据表都应包含这些字段
 
     /**
      * 主键ID 雪花算法生成
@@ -64,14 +66,24 @@ public class BaseDTO implements Serializable {
      * 更新人 ID, 默认值为 1
      */
     private String updateBy;
+
+    // 以下为扩展属性字段 - 分页属性字段
+
     /**
-     * 当前页码
+     * 分页属性 - 当前页码
      */
     @Builder.Default
     private Integer currentPage = 1;
     /**
-     * 每页显示数量
+     * 分页属性 - 每页显示数量
      */
     @Builder.Default
     private Integer pageSize = 10;
+
+    // 以下为扩展属性字段 - 批量属性字段
+
+     /**
+     * 批量属性字段 - 主键ID 列表
+     */
+    private List<String> ids;
 }
