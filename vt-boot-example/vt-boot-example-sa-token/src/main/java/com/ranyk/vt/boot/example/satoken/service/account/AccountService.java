@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ranyk.vt.boot.base.constant.DataStatusEnum;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -68,7 +68,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void saveOneAccount(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
-        verifyAccountParams(accountDTO, OperateType.SAVE);
+        verifyAccountParams(accountDTO, OperateTypeEnum.SAVE);
         // 通过账户名查询账户信息
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         // 查询条件 - 账户名
@@ -103,7 +103,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneAccount(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
-        verifyAccountParams(accountDTO, OperateType.DELETE);
+        verifyAccountParams(accountDTO, OperateTypeEnum.DELETE);
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Account::getId, accountDTO.getId());
         Account account = accountRepository.selectOne(queryWrapper);
@@ -124,7 +124,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional
     public void deleteOneAccount2(AccountDTO accountDTO){
         // 验证账户ID是否存在值
-        verifyAccountParams(accountDTO, OperateType.DELETE);
+        verifyAccountParams(accountDTO, OperateTypeEnum.DELETE);
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Account::getId, accountDTO.getId());
         Account account = this.accountRepository.selectOne(queryWrapper);
@@ -145,7 +145,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteAccount(AccountDTO accountDTO) {
         // 批量删除账户信息 - 验证账户数据主键 ID 集合列表
-        verifyAccountParams(accountDTO, OperateType.DELETE);
+        verifyAccountParams(accountDTO, OperateTypeEnum.DELETE);
         List<Account> accountList = accountDTO.getIds().stream().map(id -> Account.builder().id(id).updateBy(StpUtil.getLoginIdAsString()).updateTime(LocalDateTime.now()).build()).collect(Collectors.toList());
         boolean deleteResult = removeByIds(accountList);
         if (!deleteResult) {
@@ -162,7 +162,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
     @Transactional(rollbackFor = Exception.class)
     public void updateOneAccount(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
-        verifyAccountParams(accountDTO, OperateType.UPDATE);
+        verifyAccountParams(accountDTO, OperateTypeEnum.UPDATE);
         Account account = accountRepository.selectOneAccountById(accountDTO.getId());
         if (Objects.isNull(account)) {
             throw new ServiceException("登录模块", "user.not.exists", new String[]{accountDTO.getUserName()});
@@ -210,7 +210,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      */
     public AccountDTO queryOneAccountInfo(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
-        verifyAccountParams(accountDTO, OperateType.QUERY);
+        verifyAccountParams(accountDTO, OperateTypeEnum.QUERY);
         // 查询用户信息
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StrUtil.isNotBlank(accountDTO.getUserName()), Account::getUserName, accountDTO.getUserName());
@@ -225,9 +225,9 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * 验证账户信息参数
      *
      * @param accountDTO  账户信息数据传输对象 {@link AccountDTO}
-     * @param operateType 操作类型 {@link OperateType}
+     * @param operateType 操作类型 {@link OperateTypeEnum}
      */
-    private void verifyAccountParams(AccountDTO accountDTO, OperateType operateType) {
+    private void verifyAccountParams(AccountDTO accountDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveAccountParams(accountDTO);
             case UPDATE -> verifyUpdateAccountParams(accountDTO);

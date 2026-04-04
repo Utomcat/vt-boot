@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -72,7 +72,7 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveOneDepartment(DepartmentDTO departmentDTO) {
-        verifyDepartmentParams(departmentDTO, OperateType.SAVE);
+        verifyDepartmentParams(departmentDTO, OperateTypeEnum.SAVE);
         Department department = departmentMapper.dtoToEntity(departmentDTO);
         department.setCreateBy(StpUtil.getLoginIdAsString());
         department.setUpdateBy(StpUtil.getLoginIdAsString());
@@ -91,7 +91,7 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneDepartment(DepartmentDTO departmentDTO) {
         // 验证当前需要删除的部门信息时是否存在需要删除的部门数据ID
-        verifyDepartmentParams(departmentDTO, OperateType.DELETE);
+        verifyDepartmentParams(departmentDTO, OperateTypeEnum.DELETE);
         // 删除当前关联部门的账户信息
         Boolean deleteDepartmentAccountConnectionResult = departmentAccountConnectionService.deleteByDepartmentId(DepartmentAccountConnectionDTO.builder().departmentId(departmentDTO.getId()).build());
         if (!deleteDepartmentAccountConnectionResult){
@@ -113,7 +113,7 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateOneDepartment(DepartmentDTO departmentDTO) {
-        verifyDepartmentParams(departmentDTO, OperateType.UPDATE);
+        verifyDepartmentParams(departmentDTO, OperateTypeEnum.UPDATE);
         // 依据指定部门 ID 查询部门信息
         Department department = this.departmentRepository.selectOneDepartmentById(departmentDTO.getId());
         if (Objects.isNull(department)) {
@@ -158,9 +158,9 @@ public class DepartmentService extends ServiceImpl<DepartmentRepository, Departm
      * 校验部门信息参数
      *
      * @param departmentDTO 部门信息数据传输对象 {@link DepartmentDTO}
-     * @param operateType   操作类型 {@link OperateType}
+     * @param operateType   操作类型 {@link OperateTypeEnum}
      */
-    private void verifyDepartmentParams(DepartmentDTO departmentDTO, OperateType operateType) {
+    private void verifyDepartmentParams(DepartmentDTO departmentDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveDepartmentParams(departmentDTO);
             case UPDATE -> verifyUpdateDepartmentParams(departmentDTO);

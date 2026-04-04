@@ -7,6 +7,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.ranyk.vt.boot.base.exception.UserException;
 import com.ranyk.vt.boot.satoken.config.properties.SaTokenProperties;
 import com.ranyk.vt.boot.satoken.interceptor.TenantWebInterceptor;
+import com.ranyk.vt.boot.satoken.interceptor.TokenRequestInterceptor;
 import com.ranyk.vt.boot.satoken.interceptor.TokenResponseInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
      * @param saTokenProperties SA-TOKEN 配置属性对象
      */
     @Autowired
+    @SuppressWarnings("all")
     public SaTokenInterceptorsConfig(SaTokenProperties saTokenProperties) {
         log.debug("Auto wired SaTokenProperties. Current configuration attribute is : {}", saTokenProperties);
         this.saTokenProperties = saTokenProperties;
@@ -60,6 +62,9 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
+        // 注册 Sa-Token 请求拦截器 - 用于在请求处理前获取对应的请求 Token 中的用户信息
+        log.debug("SA-TOKEN is enabled. register Sa-Token Request Interceptor. register login Successful Request Interceptor.");
+        registry.addInterceptor(new TokenRequestInterceptor());
         log.debug("SA-TOKEN is enabled. register Sa-Token Interceptor. the current configuration attribute is {}", saTokenProperties);
         // 注册 Sa-Token 拦截器并配置鉴权逻辑
         registry.addInterceptor(new SaInterceptor(handle -> {
@@ -71,11 +76,14 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
                             .notMatch(saTokenProperties.getExcludePathPatterns())
                             // 要执行的校验动作，可以写完整的 lambda 表达式
                             .check(r -> {
+                                log.trace("========================= Sa-Token Interceptor. check login status. =========================");
                                 try {
                                     StpUtil.checkLogin();
                                 } catch (NotLoginException e) {
+                                    log.trace("========================= Sa-Token Interceptor. check login status. Check fail. ==========================");
                                     throw new UserException("user.not.login", new Object[]{});
                                 }
+                                log.trace("========================= Sa-Token Interceptor. check login status. Check pass. ==========================");
                             });
                 }))
                 // 拦截所有请求路径
@@ -84,7 +92,7 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
                 .excludePathPatterns(saTokenProperties.getExcludePathPatterns());
         // 注册登录成功响应拦截器 - 用于在请求和响应头中返回 token 值
         log.debug("SA-TOKEN is enabled. register Sa-Token Response Interceptor. register login Successful Response Interceptor.");
-        registry.addInterceptor(new TokenResponseInterceptor(saTokenProperties)).addPathPatterns("/**").excludePathPatterns("/static/**","/favicon.ico");
+        registry.addInterceptor(new TokenResponseInterceptor(saTokenProperties));
         if (isEnableTenant) {
             log.debug("Tenant is enabled. register Global Tenant Interceptor.");
             // 注册 多租户 拦截器 - 用于注册 租户上下文 的 租户ID 同时 用于在请求和响应头中返回租户ID

@@ -3,7 +3,7 @@ package com.ranyk.vt.boot.example.satoken.service.department;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.example.satoken.domain.department.dto.DepartmentAccountConnectionDTO;
 import com.ranyk.vt.boot.example.satoken.domain.department.entity.DepartmentAccountConnection;
@@ -73,9 +73,9 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      * 参数校验 - 验证部门账户信息关联关系数据传输对象的参数是否符合要求, 对单表的增删改数据时进行参数校验
      *
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象 {@link DepartmentAccountConnectionDTO}
-     * @param operateType                    操作类型 {@link OperateType}
+     * @param operateType                    操作类型 {@link OperateTypeEnum}
      */
-    private void verifyDepartmentAccountConnectionParams(DepartmentAccountConnectionDTO departmentAccountConnectionDTO, OperateType operateType) {
+    private void verifyDepartmentAccountConnectionParams(DepartmentAccountConnectionDTO departmentAccountConnectionDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveDepartmentAccountConnectionParams(departmentAccountConnectionDTO);
             case UPDATE -> verifyUpdateDepartmentAccountConnectionParams(departmentAccountConnectionDTO);

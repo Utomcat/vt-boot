@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -62,7 +62,7 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveOneDict(DictDTO dictDTO) {
-        verifyDictParams(dictDTO, OperateType.SAVE);
+        verifyDictParams(dictDTO, OperateTypeEnum.SAVE);
         LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Dict::getDictTypeId, dictDTO.getDictTypeId()).eq(Dict::getCode, dictDTO.getCode());
         Long count = dictRepository.selectCount(queryWrapper);
@@ -87,7 +87,7 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneDict(DictDTO dictDTO) {
-        verifyDictParams(dictDTO, OperateType.DELETE);
+        verifyDictParams(dictDTO, OperateTypeEnum.DELETE);
         boolean removeResult = removeById(dictDTO.getId());
         if (!removeResult) {
             log.error("字典数据删除失败!");
@@ -102,7 +102,7 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateOneDict(DictDTO dictDTO) {
-        verifyDictParams(dictDTO, OperateType.UPDATE);
+        verifyDictParams(dictDTO, OperateTypeEnum.UPDATE);
         LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Dict::getDictTypeId, dictDTO.getDictTypeId()).eq(Dict::getCode, dictDTO.getCode());
         Long count = dictRepository.selectCount(queryWrapper);
@@ -146,9 +146,9 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
      * 验证字典参数
      *
      * @param dictDTO     字典 DTO 对象, {@link DictDTO}
-     * @param operateType 操作类型, {@link OperateType}
+     * @param operateType 操作类型, {@link OperateTypeEnum}
      */
-    private void verifyDictParams(DictDTO dictDTO, OperateType operateType) {
+    private void verifyDictParams(DictDTO dictDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveDictParams(dictDTO);
             case UPDATE -> verifyUpdateDictParams(dictDTO);
