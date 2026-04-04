@@ -27,6 +27,16 @@
 			<artifactId>vt-boot-base-starter</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.ranyk</groupId>
+			<artifactId>vt-boot-mq-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ranyk</groupId>
+			<artifactId>vt-boot-rpc-starter</artifactId>
+		</dependency>
+
 	</dependencies>
 
 </project>
