@@ -48,6 +48,7 @@ public class RabbitMqConfiguration {
      * @return RabbitMQ 默认 消费者 {@link RabbitmqDefaultConsumer} 对象
      */
     @Bean
+    @SuppressWarnings("all")
     public RabbitmqDefaultConsumer rabbitmqDefaultConsumer(IOperationRecordService operationRecordService) {
         log.debug("Init RabbitMQ default consumer.");
         return new RabbitmqDefaultConsumer(operationRecordService);
