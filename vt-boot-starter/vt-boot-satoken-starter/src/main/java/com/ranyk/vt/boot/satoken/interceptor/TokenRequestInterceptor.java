@@ -1,44 +1,48 @@
 package com.ranyk.vt.boot.satoken.interceptor;
 
+import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
-import com.ranyk.vt.boot.satoken.config.properties.SaTokenProperties;
+import com.ranyk.vt.boot.base.context.UserContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * CLASS_NAME: TokenResponseInterceptor.java
+ * CLASS_NAME: TokenRequestInterceptor.java
  *
  * @author ranyk
  * @version V1.0
- * @description: Token 响应拦截器
- * @date: 2026-03-05
+ * @description: Token 请求 Sa-Token 拦截器, 用于获取当前会话中的上下文中的一些固定属性
+ * @date: 2026-04-03
  */
 @Slf4j
 @Component
-public class TokenResponseInterceptor implements HandlerInterceptor {
+public class TokenRequestInterceptor extends SaInterceptor {
 
     /**
-     * SA-TOKEN 配置属性对象
-     */
-    private final SaTokenProperties saTokenProperties;
-
-    /**
-     * 构造函数
+     * 每次请求之前触发的方法
      *
-     * @param saTokenProperties SA-TOKEN 配置属性对象
+     * @param request  当前请求的 {@link HttpServletRequest} 对象
+     * @param response 当前请求的 {@link HttpServletResponse} 对象
+     * @param handler  当前请求的 {@link HandlerMethod} 对象
      */
-    @Autowired
-    public TokenResponseInterceptor(SaTokenProperties saTokenProperties) {
-        this.saTokenProperties = saTokenProperties;
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.trace("========== TokenRequestInterceptor.preHandle ==========");
+        if (StpUtil.isLogin()) {
+            String loginIdAsString = StpUtil.getLoginIdAsString();
+            log.trace("当前登录账户的ID: {}", loginIdAsString);
+            // 将当前登录账户的ID 设置到上下文, 用于后续在其他地方使用当前登录的账户 ID
+            UserContext.setUserId(loginIdAsString);
+        }
+        log.trace("========== TokenRequestInterceptor.preHandle completed ==========");
+        return true;
     }
 
     /**
@@ -61,26 +65,12 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
      *                     execution, for type and/or instance examination
      * @param modelAndView the {@code ModelAndView} that the handler returned
      *                     (can also be {@code null})
+     * @throws Exception in case of errors
      */
     @Override
-    public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
-        log.trace("========== TokenResponseInterceptor.postHandle ==========");
-        log.trace("Request URI: {}", request.getRequestURI());
-        log.trace("Request Method: {}", request.getMethod());
-        log.trace("Is Login: {}", StpUtil.isLogin());
-        // 判断用户是否已登录
-        if (StpUtil.isLogin()) {
-            String tokenValue = StpUtil.getTokenInfo().getTokenValue();
-            String tokenName = saTokenProperties.getTokenName();
-            log.trace("Token Name: {}", tokenName);
-            log.trace("Token Value: {}", tokenValue);
-            // 将 token 添加到响应头中
-            response.setHeader(tokenName, tokenValue);
-            log.trace("User id {} ✅ Token 已设置到响应头：{} = {}", StpUtil.getLoginId(), tokenName, tokenValue);
-        } else {
-            log.error("User not logged in, skip setting token");
-        }
-        log.trace("========== TokenResponseInterceptor.postHandle ==========");
+    public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+        log.trace("========== TokenRequestInterceptor.postHandle ==========");
+        log.trace("========== TokenRequestInterceptor.postHandle completed ==========");
     }
 
     /**
@@ -103,11 +93,14 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
      *                 execution, for type and/or instance examination
      * @param ex       any exception thrown on handler execution, if any; this does not
      *                 include exceptions that have been handled through an exception resolver
+     * @throws Exception in case of errors
      */
     @Override
-    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) {
-        log.trace("========== TokenResponseInterceptor.afterCompletion ==========");
-        log.trace("completed");
-        log.trace("========== TokenResponseInterceptor.afterCompletion ==========");
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) throws Exception {
+        log.trace("========== TokenRequestInterceptor.afterCompletion ==========");
+        log.trace("清除用户 ID 开始");
+        UserContext.clear();
+        log.trace("清除用户 ID 结束");
+        log.trace("========== TokenRequestInterceptor.afterCompletion completed ==========");
     }
 }

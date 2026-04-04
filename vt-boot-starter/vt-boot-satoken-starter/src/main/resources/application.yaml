@@ -21,9 +21,10 @@ sa-token:
   # 哪些路径需要进行拦截校验, 默认为 /** (所有路径)
   path-patterns:
     - /**
-  # 哪些路径不需要进行拦截校验, 默认为 /login (登录接口请求), /static/** (静态资源请求), /favicon.ico (图标请求), /api/captcha (验证码接口请求)
+  # 哪些路径不需要进行拦截校验, 默认为 /api/login (登录接口请求), /static/** (静态资源请求), /favicon.ico (图标请求), /api/captcha (验证码接口请求), /error (错误接口请求)
   exclude-path-patterns:
     - /api/login
     - /static/**
     - /favicon.ico
     - /api/captcha
+    - /error
