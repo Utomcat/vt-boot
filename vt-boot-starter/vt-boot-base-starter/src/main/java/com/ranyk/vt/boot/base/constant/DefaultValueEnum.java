@@ -19,7 +19,7 @@ public enum DefaultValueEnum {
     /**
      * 操作员默认值
      */
-    OPERATOR_DEFAULT("操作员默认值", "1"),
+    OPERATOR_DEFAULT("操作员默认值", "0000000000000000001"),
     /**
      * 数据状态默认值
      */
