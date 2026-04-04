@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -67,7 +67,7 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveOnePermission(PermissionDTO permissionDTO) {
-        verifyPermissionParams(permissionDTO, OperateType.SAVE);
+        verifyPermissionParams(permissionDTO, OperateTypeEnum.SAVE);
         Permission permission = permissionMapper.dtoToEntity(permissionDTO);
         permission.setCreateBy(StpUtil.getLoginIdAsString());
         permission.setUpdateBy(StpUtil.getLoginIdAsString());
@@ -85,7 +85,7 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOnePermission(PermissionDTO permissionDTO) {
-        verifyPermissionParams(permissionDTO, OperateType.DELETE);
+        verifyPermissionParams(permissionDTO, OperateTypeEnum.DELETE);
         boolean deleteResult = removeById(permissionDTO.getId());
         if (!deleteResult) {
             log.error("删除权限信息失败!");
@@ -100,7 +100,7 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateOnePermission(PermissionDTO permissionDTO) {
-        verifyPermissionParams(permissionDTO, OperateType.UPDATE);
+        verifyPermissionParams(permissionDTO, OperateTypeEnum.UPDATE);
         LambdaQueryWrapper<Permission> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Permission::getId, permissionDTO.getId());
         Permission permission = this.permissionRepository.selectOne(queryWrapper);
@@ -140,9 +140,9 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
      * 验证权限信息参数
      *
      * @param permissionDTO 权限数据传输对象, {@link PermissionDTO}
-     * @param operateType   操作类型, {@link OperateType}
+     * @param operateType   操作类型, {@link OperateTypeEnum}
      */
-    private void verifyPermissionParams(PermissionDTO permissionDTO, OperateType operateType) {
+    private void verifyPermissionParams(PermissionDTO permissionDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySavePermissionParams(permissionDTO);
             case UPDATE -> verifyUpdatePermissionParams(permissionDTO);
