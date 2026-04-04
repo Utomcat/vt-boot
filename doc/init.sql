@@ -16,7 +16,7 @@ create table account_info
 
 INSERT INTO account_info (id, user_name, password, tenant_id, status, remark, create_by, create_time, update_by,
                           update_time)
-VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '0000000001', 1, '-', '1', '2026-03-01 18:39:45', '1',
+VALUES ('0000000000000000001', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '0000000001', 1, '-', '1', '2026-03-01 18:39:45', '1',
         '2026-03-01 18:39:45');
 
 drop table if exists department_info;
@@ -176,6 +176,12 @@ create table user_info
     update_time timestamp    default CURRENT_TIMESTAMP not null comment '数据更新时间'
 ) engine = InnoDB comment '用户信息表'
   charset utf8;
+INSERT INTO user_info (id, name, nick_name, avatar, sex, email, phone, status, tenant_id, remark, create_by,
+                       create_time, update_by, update_time)
+VALUES ('2040242542824079361', '超级管理员', '超级管理员', 'https://avatars.githubusercontent.com/u/8223568', 3,
+        'ggqryd.l7m@126.com', '067 9277 7798', 1, '0000000001', '这是系统的超级管理员用户信息', '0000000000000000001',
+        '2026-04-04 09:29:09', '0000000000000000001', '2026-04-04 09:29:09');
+
 
 drop table if exists account_user_connection;
 create table account_user_connection
@@ -192,6 +198,10 @@ create table account_user_connection
     update_time timestamp    default CURRENT_TIMESTAMP not null comment '数据更新时间'
 ) engine = InnoDB comment '账户用户信息关联关系表'
   charset utf8;
+INSERT INTO account_user_connection (id, account_id, user_id, status, tenant_id, remark, create_by, create_time,
+                                     update_by, update_time)
+VALUES ('2040242730464657409', '0000000000000000001', '2040242542824079361', 1, '0000000001', '-',
+        '0000000000000000001', '2026-04-04 09:29:09', '0000000000000000001', '2026-04-04 09:29:09');
 
 drop table if exists operation_log_info;
 create table operation_log_info
