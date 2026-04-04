@@ -33,7 +33,9 @@ public interface AppLogMapper {
      */
     @Mappings(value = {
             @Mapping(target = "currentPage", ignore = true),
-            @Mapping(target = "pageSize", ignore = true)
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "tenantId", ignore = true)
     })
     AppLogDTO savePOToDTO(SaveAppLogPO appLogPO);
 
@@ -47,7 +49,9 @@ public interface AppLogMapper {
             @Mapping(target = "columnOne", ignore = true),
             @Mapping(target = "columnTwo", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
-            @Mapping(target = "pageSize", ignore = true)
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "tenantId", ignore = true)
     })
     AppLogDTO deletePOToDTO(DeleteAppLogPO deleteAppLogPO);
 
@@ -59,7 +63,9 @@ public interface AppLogMapper {
      */
     @Mappings(value = {
             @Mapping(target = "currentPage", ignore = true),
-            @Mapping(target = "pageSize", ignore = true)
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "tenantId", ignore = true)
     })
     AppLogDTO updatePOToDTO(UpdateAppLogPO updateAppLogPO);
 
@@ -69,6 +75,10 @@ public interface AppLogMapper {
      * @param queryAppLogPO 业务日志数据查询对象 {@link QueryAppLogPO}
      * @return 业务日志数据传输对象 {@link AppLogDTO}
      */
+    @Mappings({
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "tenantId", ignore = true)
+    })
     AppLogDTO queryPOToDTO(QueryAppLogPO queryAppLogPO);
 
     /**
