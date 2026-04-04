@@ -1,14 +1,14 @@
 package com.ranyk.vt.boot.base.constant;
 
 /**
- * CLASS_NAME: ResponseCode.java
+ * CLASS_NAME: ResponseCodeEnum.java
  *
  * @author ranyk
  * @version V1.0
  * @description: 响应 code 枚举类
  * @date: 2026-02-08
  */
-public enum ResponseCode {
+public enum ResponseCodeEnum {
     /**
      * 成功
      */

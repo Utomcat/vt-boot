@@ -5,6 +5,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.ranyk.vt.boot.base.constant.DefaultValueEnum.*;
+
 /**
  * CLASS_NAME: AutoFillFieldEnum.java
  *
@@ -26,23 +28,23 @@ public enum AutoFillFieldEnum {
     /**
      * 创建人 ID
      */
-    CREATE_BY("createBy", "创建人 ID", "1"),
+    CREATE_BY("createBy", "创建人 ID", OPERATOR_DEFAULT.getValue()),
     /**
      * 更新人 ID
      */
-    UPDATE_BY("updateBy", "更新人 ID", "1"),
+    UPDATE_BY("updateBy", "更新人 ID", OPERATOR_DEFAULT.getValue()),
     /**
      * 备注
      */
-    REMARK("remark", "备注", "-"),
+    REMARK("remark", "备注", STR_DEFAULT.getValue()),
     /**
      * 数据状态
      */
-    STATUS("status", "数据状态", 1),
+    STATUS("status", "数据状态", Integer.parseInt(STATUS_DEFAULT.getValue())),
     /**
      * 租户 ID
      */
-    TENANT_ID("tenantId", "租户 ID", "0000000001");
+    TENANT_ID("tenantId", "租户 ID", TENANT_ID_DEFAULT.getValue());
 
     /**
      * 字段名

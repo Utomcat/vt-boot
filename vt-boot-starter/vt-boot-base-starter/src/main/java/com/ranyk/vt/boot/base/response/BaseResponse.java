@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.base.response;
 
+import com.ranyk.vt.boot.base.constant.ResponseCodeEnum;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -35,13 +36,16 @@ public class BaseResponse<T> implements Serializable {
     /**
      * 响应结果
      */
-    private Boolean success;
+    @Builder.Default
+    private Boolean success = Boolean.TRUE;
     /**
      * 响应码
      */
-    private String code;
+    @Builder.Default
+    private String code = ResponseCodeEnum.SUCCESS.name();
     /**
      * 响应信息
      */
-    private String msg;
+    @Builder.Default
+    private String msg = ResponseCodeEnum.SUCCESS.name();
 }

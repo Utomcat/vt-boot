@@ -1,14 +1,14 @@
 package com.ranyk.vt.boot.base.constant;
 
 /**
- * CLASS_NAME: OperateType.java
+ * CLASS_NAME: OperateTypeEnum.java
  *
  * @author ranyk
  * @version V1.0
  * @description: 操作类型枚举
  * @date: 2026-03-05
  */
-public enum OperateType {
+public enum OperateTypeEnum {
     /**
      * 单条数据新增/保存
      */

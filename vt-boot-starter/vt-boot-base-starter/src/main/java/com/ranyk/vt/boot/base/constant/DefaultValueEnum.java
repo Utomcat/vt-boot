@@ -16,6 +16,22 @@ public enum DefaultValueEnum {
      * 字符串默认值
      */
     STR_DEFAULT("字符串默认值", "-"),
+    /**
+     * 操作员默认值
+     */
+    OPERATOR_DEFAULT("操作员默认值", "1"),
+    /**
+     * 数据状态默认值
+     */
+    STATUS_DEFAULT("数据状态默认值", String.valueOf(DataStatusEnum.NORMAL.getValue())),
+    /**
+     * 租户 ID 默认值
+     */
+    TENANT_ID_DEFAULT("租户 ID 默认值", "0000000001"),
+    /**
+     * 性别默认值
+     */
+    SEX_DEFAULT("性别默认值", "3"),
     ;
 
     /**
