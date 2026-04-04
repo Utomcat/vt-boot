@@ -33,7 +33,7 @@ public class TokenRequestInterceptor extends SaInterceptor {
      * @param handler  当前请求的 {@link HandlerMethod} 对象
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.trace("========== TokenRequestInterceptor.preHandle ==========");
         if (StpUtil.isLogin()) {
             String loginIdAsString = StpUtil.getLoginIdAsString();
@@ -65,10 +65,9 @@ public class TokenRequestInterceptor extends SaInterceptor {
      *                     execution, for type and/or instance examination
      * @param modelAndView the {@code ModelAndView} that the handler returned
      *                     (can also be {@code null})
-     * @throws Exception in case of errors
      */
     @Override
-    public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+    public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable ModelAndView modelAndView) {
         log.trace("========== TokenRequestInterceptor.postHandle ==========");
         log.trace("========== TokenRequestInterceptor.postHandle completed ==========");
     }
@@ -93,10 +92,9 @@ public class TokenRequestInterceptor extends SaInterceptor {
      *                 execution, for type and/or instance examination
      * @param ex       any exception thrown on handler execution, if any; this does not
      *                 include exceptions that have been handled through an exception resolver
-     * @throws Exception in case of errors
      */
     @Override
-    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) throws Exception {
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) {
         log.trace("========== TokenRequestInterceptor.afterCompletion ==========");
         log.trace("清除用户 ID 开始");
         UserContext.clear();
