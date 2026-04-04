@@ -1,6 +1,6 @@
 package com.ranyk.vt.boot.web.vo;
 
-import com.ranyk.vt.boot.base.constant.ResponseCode;
+import com.ranyk.vt.boot.base.constant.ResponseCodeEnum;
 import com.ranyk.vt.boot.base.response.SingleResponse;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -78,8 +78,8 @@ public class Result<T> implements Serializable{
     public static <T> Result<T> success(T data) {
         Result<T> result = new Result<>();
         result.setSuccess(Boolean.TRUE);
-        result.setCode(ResponseCode.SUCCESS.name());
-        result.setMsg(ResponseCode.SUCCESS.name());
+        result.setCode(ResponseCodeEnum.SUCCESS.name());
+        result.setMsg(ResponseCodeEnum.SUCCESS.name());
         result.setData(data);
         return result;
     }

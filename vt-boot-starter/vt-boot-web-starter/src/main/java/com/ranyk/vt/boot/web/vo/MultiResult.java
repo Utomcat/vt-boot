@@ -1,6 +1,6 @@
 package com.ranyk.vt.boot.web.vo;
 
-import com.ranyk.vt.boot.base.constant.ResponseCode;
+import com.ranyk.vt.boot.base.constant.ResponseCodeEnum;
 import com.ranyk.vt.boot.base.response.MultipleResponse;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import lombok.*;
@@ -90,7 +90,7 @@ public class MultiResult<T> extends Result<List<T>> {
      * @return 多结果返回对象 {@link MultiResult}
      */
     public static <T> MultiResult<T> successMulti(List<T> data, long total, int page, int size) {
-        return new MultiResult<>(Boolean.TRUE, ResponseCode.SUCCESS.name(), ResponseCode.SUCCESS.name(), data, total, page, size);
+        return new MultiResult<>(Boolean.TRUE, ResponseCodeEnum.SUCCESS.name(), ResponseCodeEnum.SUCCESS.name(), data, total, page, size);
     }
 
     /**
