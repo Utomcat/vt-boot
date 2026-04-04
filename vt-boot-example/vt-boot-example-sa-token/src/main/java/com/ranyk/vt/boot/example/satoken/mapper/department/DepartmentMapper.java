@@ -135,6 +135,19 @@ public interface DepartmentMapper {
     /**
      * 部门信息实体对象转换为数据传输对象
      *
+     * @param department 部门信息实体对象 {@link Department}
+     * @return 部门信息数据传输对象 DTO {@link DepartmentDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    DepartmentDTO departmentToDepartmentDTO(Department department);
+
+    /**
+     * 部门信息实体对象转换为数据传输对象
+     *
      * @param departments 部门信息实体对象List 集合 - {@link Department}
      * @return 部门信息数据传输对象 DTO {@link DepartmentDTO}
      */

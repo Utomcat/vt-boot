@@ -172,6 +172,21 @@ public interface AccountMapper {
     LoginAccountVO dtoToLoginAccountVO(AccountDTO accountDTO);
 
     /**
+     * 数据实体对象转换成数据传输对象
+     *
+     * @param accountRoleConnection 数据实体对象 {@link AccountRoleConnection}
+     * @return 账户信息数据传输对象 {@link AccountRoleConnectionDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "accountIds", ignore = true),
+            @Mapping(target = "roleIds", ignore = true),
+    })
+    AccountRoleConnectionDTO accountRoleConnectionToAccountRoleConnectionDTO(AccountRoleConnection accountRoleConnection);
+
+    /**
      * 数据实体对象 List 集合转换成 数据传输对象 List 集合
      *
      * @param accountRoleConnections 数据实体对象 {@link AccountRoleConnection} 的 List 集合

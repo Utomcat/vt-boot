@@ -199,6 +199,19 @@ public interface DictMapper {
     DictDTO queryDictPOToDTO(QueryDictPO queryDictPO);
 
     /**
+     * 字典类型实体转换成字典类型 DTO
+     *
+     * @param dictType 字典类型实体 {@link DictType}
+     * @return 字典类型 DTO {@link DictTypeDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    DictTypeDTO dictTypeToDictTypeDTO(DictType dictType);
+
+    /**
      * 字典类型实体列表转换成字典类型 DTO 列表
      *
      * @param dictTypeList 字典类型实体列表 {@link DictType}
@@ -213,6 +226,19 @@ public interface DictMapper {
      * @return 字典类型 VO 列表 {@link DictTypeVO}
      */
     List<DictTypeVO> dictTypeDTOListToVOList(List<DictTypeDTO> dictTypeList);
+
+    /**
+     * 字典实体转换成字典 DTO
+     *
+     * @param dict 字典实体 {@link Dict}
+     * @return 字典 DTO {@link DictDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    DictDTO dictToDictDTO(Dict dict);
 
     /**
      * 字典实体列表转换成字典 DTO 列表

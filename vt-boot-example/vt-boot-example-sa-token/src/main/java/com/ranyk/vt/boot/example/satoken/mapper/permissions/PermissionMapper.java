@@ -112,6 +112,20 @@ public interface PermissionMapper {
 
     /**
      *
+     * 将 权限实体对象 转换为 角色查询权限数据传输对象
+     *
+     * @param permission 角色查询权限数据传输对象 {@link Permission}
+     * @return 角色查询权限数据传输对象 {@link QueryPermissionVO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    PermissionDTO permissionToPermissionDTO(Permission permission);
+
+    /**
+     *
      * 将 权限实体对象 List 集合 转换为 权限数据传输对象 List 集合
      *
      * @param permissions 权限实体对象 {@link Permission} List 集合
