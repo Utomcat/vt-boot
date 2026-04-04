@@ -75,6 +75,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象 {@link DepartmentAccountConnectionDTO}
      * @param operateType                    操作类型 {@link OperateTypeEnum}
      */
+    @SuppressWarnings("unused")
     private void verifyDepartmentAccountConnectionParams(DepartmentAccountConnectionDTO departmentAccountConnectionDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveDepartmentAccountConnectionParams(departmentAccountConnectionDTO);
