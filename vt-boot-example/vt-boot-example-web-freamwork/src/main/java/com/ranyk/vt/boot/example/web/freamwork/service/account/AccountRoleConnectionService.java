@@ -58,6 +58,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      *
      * @param accountRoleConnectionDTO 账户角色关联关系保存参数封装对象 {@link AccountRoleConnectionDTO}
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public void saveOneAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         // 参数校验 - 保存账户角色关联关系参数校验
@@ -85,6 +86,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      *
      * @param accountRoleConnectionDTO 账户角色关联关系删除参数封装对象 {@link AccountRoleConnectionDTO}
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateTypeEnum.DELETE);
@@ -107,6 +109,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      *
      * @param accountRoleConnectionDTO 账户角色关联关系删除参数封装对象集合 {@link AccountRoleConnectionDTO}
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateTypeEnum.BATCH_DELETE);

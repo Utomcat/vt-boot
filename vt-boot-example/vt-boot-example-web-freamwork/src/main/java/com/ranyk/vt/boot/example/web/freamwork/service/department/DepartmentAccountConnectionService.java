@@ -80,6 +80,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      *
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象, 主要使用 {@link DepartmentAccountConnectionDTO#getId()} 属性
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneDepartmentAccountConnection(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
         verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateTypeEnum.DELETE);
@@ -95,6 +96,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      *
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象, 主要使用 {@link DepartmentAccountConnectionDTO#getIds()} 属性
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteDepartmentAccountConnection(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
         verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateTypeEnum.BATCH_DELETE);
@@ -132,6 +134,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象, 主要使用 {@link DepartmentAccountConnectionDTO#getDepartmentIds()} 属性
      * @return 新增结果, true: 新增成功, false: 新增失败;
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteByDepartmentIds(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
         if (CollectionUtil.isEmpty(departmentAccountConnectionDTO.getDepartmentIds())) {
@@ -153,6 +156,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象, 主要使用 {@link DepartmentAccountConnectionDTO#getDepartmentId()} 和 {@link DepartmentAccountConnectionDTO#getAccountId()} 属性
      * @return 新增结果, true: 新增成功, false: 新增失败;
      */
+    @SuppressWarnings("unused")
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteByDepartmentIdAndAccountId(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
         if (StrUtil.isBlank(departmentAccountConnectionDTO.getDepartmentId()) || StrUtil.isBlank(departmentAccountConnectionDTO.getAccountId())) {

@@ -19,6 +19,7 @@ import java.io.Serial;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper=true)
+@SuppressWarnings("unused")
 @EqualsAndHashCode(callSuper = true)
 public class OperationLogDTO extends BaseDTO {
     @Serial
