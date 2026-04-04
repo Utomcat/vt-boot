@@ -23,6 +23,55 @@
             <artifactId>vt-boot-base-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-rpc-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- disruptor 内存队列 -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 集成 activemq 消息队列依赖-->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+            <scope>compile</scope>
+        </dependency>-->
+
+        <!-- Spring Boot 集成 RabbitMQ 消息队列依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Spring Boot 集成 RocketMQ 消息队列依赖-->
+        <!--<dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <scope>compile</scope>
+        </dependency>-->
+
+        <!-- Spring Boot 集成 Kafka 消息队列依赖 (自动集成) -->
+        <!--<dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>-->
+
     </dependencies>
 
 
