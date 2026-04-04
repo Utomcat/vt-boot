@@ -114,6 +114,19 @@ public interface AppLogMapper {
     List<AppLogDTO> savePOListToDTOList(List<SaveAppLogPO> appLogPOList);
 
     /**
+     * {@link AppLog} 持久化对象转 {@link AppLogDTO} 业务日志数据传输对象
+     *
+     * @param appLog 业务日志数据持久化对象 {@link AppLog}
+     * @return 业务日志数据传输对象 {@link AppLogDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    AppLogDTO appLogToAppLogDTO(AppLog appLog);
+
+    /**
      * {@link AppLog} List 集合转 {@link AppLogDTO} List 集合
      *
      * @param appLogList 业务日志数据持久化对象 {@link AppLog} List 集合
