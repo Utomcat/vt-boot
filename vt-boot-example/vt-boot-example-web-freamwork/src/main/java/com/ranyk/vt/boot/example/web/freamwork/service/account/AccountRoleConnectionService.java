@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountRoleConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.entity.AccountRoleConnection;
@@ -61,7 +61,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
     @Transactional(rollbackFor = Exception.class)
     public void saveOneAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         // 参数校验 - 保存账户角色关联关系参数校验
-        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateType.SAVE);
+        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateTypeEnum.SAVE);
         LambdaQueryWrapper<AccountRoleConnection> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountRoleConnection::getAccountId, accountRoleConnectionDTO.getAccountId());
         queryWrapper.eq(AccountRoleConnection::getRoleId, accountRoleConnectionDTO.getRoleId());
@@ -87,7 +87,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
-        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateType.DELETE);
+        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateTypeEnum.DELETE);
         LambdaQueryWrapper<AccountRoleConnection> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AccountRoleConnection::getId, accountRoleConnectionDTO.getId());
         Long count = this.accountRoleConnectionRepository.selectCount(queryWrapper);
@@ -109,7 +109,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      */
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
-        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateType.BATCH_DELETE);
+        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateTypeEnum.BATCH_DELETE);
         Boolean deleteResult =this.accountRoleConnectionRepository.deleteByIdIn(accountRoleConnectionDTO.getIds());
         if (!deleteResult){
             log.error("批量删除账户角色关联关系处, 账户角色关联关系批量删除失败!");
@@ -182,9 +182,9 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      * 验证账户角色关联关系参数
      *
      * @param accountRoleConnectionDTO 账户角色关联关系参数封装对象 {@link AccountRoleConnectionDTO}
-     * @param operateType              操作类型 {@link OperateType}
+     * @param operateType              操作类型 {@link OperateTypeEnum}
      */
-    private void verifyAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO, OperateType operateType) {
+    private void verifyAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO, OperateTypeEnum operateType) {
         switch (operateType){
             case SAVE -> verifySaveAccountRoleConnectionParams(accountRoleConnectionDTO);
             case DELETE -> verifyDeleteAccountRoleConnectionParams(accountRoleConnectionDTO);

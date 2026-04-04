@@ -2,4 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.user.UserRepository">
 
+    <!-- 查询用户信息 - 通过数据ID -->
+    <select id="selectOneUserById" resultType="com.ranyk.vt.boot.example.web.freamwork.domain.user.entity.User">
+        select id,
+               name,
+               nick_name,
+               avatar,
+               sex,
+               email,
+               phone,
+               status,
+               tenant_id,
+               remark
+        from user_info ui
+        where ui.id = #{id}
+    </select>
+
+    <!-- 根据用户名称和账户名称模糊查询账户用户关联关系信息 -->
+    <select id="selectByUserNameLikeAndAccountNameLike" resultType="com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountUserConnectionDTO">
+        select  auc.id as id,
+                auc.user_id as userId,
+                ui.name as userName,
+                auc.account_id as accountId,
+                ai.user_name as accountName
+        from    account_info ai,
+                user_info ui,
+                account_user_connection auc
+        <where>
+            ai.id = auc.account_id
+            and ui.id = auc.user_id
+            <if test="userName != null and userName != ''">
+                and ui.name like concat('%', #{userName}, '%')
+            </if>
+            <if test="accountName != null and accountName != ''">
+                and ai.name like concat('%', #{accountName}, '%')
+            </if>
+        </where>
+    </select>
 </mapper>

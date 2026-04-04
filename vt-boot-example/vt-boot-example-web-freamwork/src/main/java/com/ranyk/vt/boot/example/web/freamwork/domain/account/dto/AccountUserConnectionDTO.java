@@ -32,4 +32,15 @@ public class AccountUserConnectionDTO extends BaseDTO {
      * 用户ID
      */
     private String userId;
+
+    // 以下为扩展属性字段
+
+    /**
+     * 用户名称
+     */
+    private String  userName;
+    /**
+     * 账户名称
+     */
+    private String  accountName;
 }

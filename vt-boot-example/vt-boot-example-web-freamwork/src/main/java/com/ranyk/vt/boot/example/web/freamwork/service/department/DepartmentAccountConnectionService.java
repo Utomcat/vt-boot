@@ -6,7 +6,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.example.web.freamwork.domain.department.dto.DepartmentAccountConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.department.entity.DepartmentAccountConnection;
@@ -57,7 +57,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveOneDepartmentAccountConnection(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
-        verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateType.SAVE);
+        verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateTypeEnum.SAVE);
         LambdaQueryWrapper<DepartmentAccountConnection> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.and(wrapper -> wrapper.eq(DepartmentAccountConnection::getDepartmentId, departmentAccountConnectionDTO.getDepartmentId()).eq(DepartmentAccountConnection::getAccountId, departmentAccountConnectionDTO.getAccountId()));
         Long count = this.departmentAccountConnectionRepository.selectCount(queryWrapper);
@@ -82,7 +82,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneDepartmentAccountConnection(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
-        verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateType.DELETE);
+        verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateTypeEnum.DELETE);
         Boolean deleteResult = this.departmentAccountConnectionRepository.deleteByIdEq(departmentAccountConnectionDTO.getId());
         if (!deleteResult) {
             log.error("删除部门账户信息关联关系 - 依据数据ID,删除单条部门账户信息关联关系失败!");
@@ -97,7 +97,7 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      */
     @Transactional(rollbackFor = Exception.class)
     public void batchDeleteDepartmentAccountConnection(DepartmentAccountConnectionDTO departmentAccountConnectionDTO) {
-        verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateType.BATCH_DELETE);
+        verifyDepartmentAccountConnectionParams(departmentAccountConnectionDTO, OperateTypeEnum.BATCH_DELETE);
         Boolean deleteResult = this.departmentAccountConnectionRepository.deleteByIdIn(departmentAccountConnectionDTO.getIds());
         if (!deleteResult) {
             log.error("批量删除部门账户信息关联关系 - 依据部门ID List 集合批量删除部门账户关联关系数据失败!");
@@ -213,9 +213,9 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
      * 部门账户信息关联关系参数校验
      *
      * @param departmentAccountConnectionDTO 部门账户信息关联关系数据传输对象 {@link DepartmentAccountConnectionDTO}
-     * @param operateType                    操作类型 {@link OperateType}
+     * @param operateType                    操作类型 {@link OperateTypeEnum}
      */
-    private void verifyDepartmentAccountConnectionParams(DepartmentAccountConnectionDTO departmentAccountConnectionDTO, OperateType operateType) {
+    private void verifyDepartmentAccountConnectionParams(DepartmentAccountConnectionDTO departmentAccountConnectionDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveDepartmentAccountConnectionParams(departmentAccountConnectionDTO);
             case DELETE -> verifyDeleteDepartmentAccountConnectionParams(departmentAccountConnectionDTO);

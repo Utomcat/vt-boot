@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.account.AccountUserRepository">
 
+    <!-- 根据账户ID 和 用户ID 删除一条账户用户关联关系信息 -->
+    <delete id="deleteOneByAccountIdEqAndUserIdEq">
+        delete from account_user_connection
+        where account_id = #{accountId}
+          and user_id = #{userId}
+    </delete>
+
+    <!-- 根据ID 删除一条账户用户关联关系信息, 物理删除数据 -->
+    <delete id="deleteOneById">
+        delete from account_user_connection where id = #{id}
+    </delete>
 </mapper>

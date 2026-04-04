@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VtBootExampleWebFreamworkApplication {
+public class VtBootExampleWebFrameworkApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VtBootExampleWebFreamworkApplication.class, args);
+        SpringApplication.run(VtBootExampleWebFrameworkApplication.class, args);
     }
 
 }

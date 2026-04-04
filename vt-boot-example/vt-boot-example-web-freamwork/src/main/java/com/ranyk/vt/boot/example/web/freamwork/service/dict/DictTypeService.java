@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -64,7 +64,7 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
     @Transactional(rollbackFor = Exception.class)
     public void saveOneDictType(DictTypeDTO dictTypeDTO) {
         // 校验字典类型名、字典类型编码是否存在值
-        verifyDictTypeParams(dictTypeDTO, OperateType.SAVE);
+        verifyDictTypeParams(dictTypeDTO, OperateTypeEnum.SAVE);
         // 判定当前数据库中是否存在字典类型 code
         LambdaQueryWrapper<DictType> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(DictType::getCode, dictTypeDTO.getCode());
@@ -93,7 +93,7 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOnDictType(DictTypeDTO dictTypeDTO) {
-        verifyDictTypeParams(dictTypeDTO, OperateType.DELETE);
+        verifyDictTypeParams(dictTypeDTO, OperateTypeEnum.DELETE);
         boolean deleteResult = removeById(dictTypeDTO.getId());
         if (!deleteResult) {
             log.error("删除字典类型失败!");
@@ -108,7 +108,7 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateOneDictType(DictTypeDTO dictTypeDTO) {
-        verifyDictTypeParams(dictTypeDTO, OperateType.UPDATE);
+        verifyDictTypeParams(dictTypeDTO, OperateTypeEnum.UPDATE);
         // 判定当前数据库中是否存在字典类型 code, 且 code 不能是当前字典类型的 code
         LambdaQueryWrapper<DictType> queryCountWrapper = new LambdaQueryWrapper<>();
         queryCountWrapper.eq(DictType::getCode, dictTypeDTO.getCode());
@@ -165,9 +165,9 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
      * 字典类型参数校验
      *
      * @param dictTypeDTO 字典类型 DTO 对象, {@link DictTypeDTO}
-     * @param operateType 操作类型, {@link OperateType}
+     * @param operateType 操作类型, {@link OperateTypeEnum}
      */
-    private void verifyDictTypeParams(DictTypeDTO dictTypeDTO, OperateType operateType) {
+    private void verifyDictTypeParams(DictTypeDTO dictTypeDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveDictTypeParams(dictTypeDTO);
             case DELETE -> verifyDeleteDictTypeParams(dictTypeDTO);

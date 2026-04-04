@@ -47,4 +47,19 @@ public class UserDTO extends BaseDTO {
      * 手机
      */
     private String phone;
+
+    // 以下为扩展字段属性
+
+    /**
+     * 账户ID
+     */
+    private String accountId;
+    /**
+     * 账户名称
+     */
+    private String accountName;
+    /**
+     * 账户用户关联关系数据ID
+     */
+    private String accountUserConnectionId;
 }

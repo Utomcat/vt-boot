@@ -39,7 +39,7 @@ public class User extends BaseEntity {
      */
     private String avatar;
     /**
-     * 性别
+     * 性别: 1-男, 2-女, 3-未知;
      */
     private Integer sex;
     /**

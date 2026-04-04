@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ranyk.vt.boot.base.constant.OperateType;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
@@ -71,7 +71,7 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveOneRole(RoleDTO roleDTO) {
-        verifyRoleParams(roleDTO, OperateType.SAVE);
+        verifyRoleParams(roleDTO, OperateTypeEnum.SAVE);
         Role role = roleMapper.roleDTOToRoleEntity(roleDTO);
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Role::getCode, roleDTO.getCode());
@@ -96,7 +96,7 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteOneRole(RoleDTO roleDTO) {
-        verifyRoleParams(roleDTO, OperateType.DELETE);
+        verifyRoleParams(roleDTO, OperateTypeEnum.DELETE);
         Role role = roleMapper.roleDTOToRoleEntity(roleDTO);
         role.setUpdateBy(StpUtil.getLoginIdAsString());
         boolean deleteResult = removeById(role);
@@ -113,7 +113,7 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void updateOneRole(RoleDTO roleDTO) {
-        verifyRoleParams(roleDTO, OperateType.UPDATE);
+        verifyRoleParams(roleDTO, OperateTypeEnum.UPDATE);
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Role::getId, roleDTO.getId());
         Role role = this.roleRepository.selectOne(queryWrapper);
@@ -164,9 +164,9 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      * 验证角色信息数据传输对象参数
      *
      * @param roleDTO     角色信息数据传输对象 {@link RoleDTO}
-     * @param operateType 操作类型 {@link OperateType}
+     * @param operateType 操作类型 {@link OperateTypeEnum}
      */
-    private void verifyRoleParams(RoleDTO roleDTO, OperateType operateType) {
+    private void verifyRoleParams(RoleDTO roleDTO, OperateTypeEnum operateType) {
         switch (operateType) {
             case SAVE -> verifySaveRoleParams(roleDTO);
             case UPDATE -> verifyUpdateRoleParams(roleDTO);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.operationRecord.OperationRecordRepository">
+
+    <!-- 插入一条操作记录 -->
+    <insert id="insertOneOperationRecord">
+        insert into #{tableName} (id, name, type, param, operator, create_by, update_by)
+        values(#{operationLog.id}, #{operationLog.name}, #{operationLog.type}, #{operationLog.param}, #{operationLog.operator}, #{operationLog.createBy}, #{operationLog.updateBy})
+    </insert>
+</mapper>

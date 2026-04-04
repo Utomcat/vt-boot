@@ -3,8 +3,10 @@ package com.ranyk.vt.boot.example.web.freamwork.mapper.account;
 
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountRoleConnectionDTO;
+import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountUserConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.entity.Account;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.entity.AccountRoleConnection;
+import com.ranyk.vt.boot.example.web.freamwork.domain.account.entity.AccountUserConnection;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.po.*;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.vo.LoginAccountVO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.vo.QueryAccountVO;
@@ -216,4 +218,27 @@ public interface AccountMapper {
      * @return 账户角色关联关系数据传输对象 列表 {@link AccountRoleConnectionDTO}
      */
     List<AccountRoleConnectionDTO> accountRoleConnectionListToAccountRoleConnectionDTOList(List<AccountRoleConnection> accountRoleConnectionList);
+
+    /**
+     * 将 账户用户关联关系数据传输 DTO 对象 转换为 账户用户关联关系数据实体类 对象
+     *
+     * @param accountUserConnectionDTO 账户用户关联关系数据传输 DTO 对象, {@link AccountUserConnectionDTO}
+     * @return 账户用户关联关系数据实体类 对象, {@link AccountUserConnection}
+     */
+    AccountUserConnection accountUserConnectionDTOToAccountUserConnection(AccountUserConnectionDTO accountUserConnectionDTO);
+
+    /**
+     * 将 账户用户关联关系数据实体类 转换为 账户用户关联关系数据传输 DTO 对象
+     *
+     * @param accountUserConnection 账户用户关联关系数据实体类 {@link AccountUserConnection}
+     * @return 账户用户关联关系数据传输 DTO 对象 {@link AccountUserConnectionDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "accountName", ignore = true),
+            @Mapping(target = "userName", ignore = true),
+    })
+    AccountUserConnectionDTO accountUserConnectionToAccountUserConnectionDTO(AccountUserConnection accountUserConnection);
 }
