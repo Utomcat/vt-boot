@@ -47,10 +47,9 @@ public class DisruptorDefaultMqMessageHandler implements EventHandler<BaseMessag
      * @param event      published to the {@link RingBuffer}
      * @param sequence   of the event being processed
      * @param endOfBatch flag to indicate if this is the last event in a batch from the {@link RingBuffer}
-     * @throws Exception if the EventHandler would like the exception handled further up the chain.
      */
     @Override
-    public void onEvent(BaseMessageDTO event, long sequence, boolean endOfBatch) throws Exception {
+    public void onEvent(BaseMessageDTO event, long sequence, boolean endOfBatch) {
         log.debug("DisruptorDefaultMqMessageHandler onEvent Method Start Invoked.");
         log.debug("消息队列中的消息消费中, 当前传入的消息事件序列号为: {}, 消息对象为: {}, 当前处理的消息是否为消息队列的最后一个消息: {}", sequence, event, endOfBatch);
         disruptorMqMessageHandlerFactory.execute(event);
