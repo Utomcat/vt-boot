@@ -193,6 +193,24 @@ create table account_user_connection
 ) engine = InnoDB comment '账户用户信息关联关系表'
   charset utf8;
 
+drop table if exists operation_log_info;
+create table operation_log_info
+(
+    id          varchar(100)                           not null comment '数据主键' primary key,
+    name        varchar(100)                           not null comment '操作名',
+    type        varchar(100)                           not null comment '操作类型',
+    param       varchar(1000)                          not null comment '操作参数',
+    operator    varchar(100)                           not null comment '操作人',
+    status      int          default 1                 not null comment '数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）',
+    tenant_id   varchar(10)  default '0000000001'      not null comment '租户ID',
+    remark      varchar(100) default '-'               not null comment '备注',
+    create_by   varchar(100) default '1'               not null comment '数据创建人',
+    create_time timestamp    default CURRENT_TIMESTAMP not null comment '数据创建时间',
+    update_by   varchar(100) default '1'               not null comment '数据更新人',
+    update_time timestamp    default CURRENT_TIMESTAMP not null comment '数据更新时间'
+) engine = InnoDB comment '操作日志记录表'
+  charset utf8;
+
 drop table if exists app_log;
 create table app_log
 (
@@ -205,7 +223,7 @@ create table app_log
     create_time timestamp    default CURRENT_TIMESTAMP not null comment '创建时间',
     update_by   varchar(80)  default '1'               not null comment '更新人',
     update_time timestamp    default CURRENT_TIMESTAMP not null comment '更新时间'
-) engine = InnoDB comment '日志记录表'
+) engine = InnoDB comment '测试日志记录表'
   charset utf8;
 
 drop table if exists app_service_table;
