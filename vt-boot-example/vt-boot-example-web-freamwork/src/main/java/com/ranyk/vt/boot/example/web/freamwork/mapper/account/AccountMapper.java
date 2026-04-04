@@ -212,6 +212,22 @@ public interface AccountMapper {
     AccountRoleConnection accountRoleConnectionDTOToAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO);
 
     /**
+     * 将 账户角色关联关系数据实体类 转换为 账户角色关联关系数据传输对象
+     *
+     * @param accountRoleConnection 账户角色关联关系数据实体类 {@link AccountRoleConnection}
+     * @return 账户角色关联关系数据传输对象 {@link AccountRoleConnectionDTO}
+     */
+    @Mappings({
+
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "accountIds", ignore = true),
+            @Mapping(target = "roleIds", ignore = true),
+    })
+    AccountRoleConnectionDTO accountRoleConnectionToAccountRoleConnectionDTO(AccountRoleConnection accountRoleConnection);
+
+    /**
      * 将 账户角色关联关系数据实体类 列表转换为 账户角色关联关系数据传输对象 列表
      *
      * @param accountRoleConnectionList 账户角色关联关系数据实体类 列表 {@link AccountRoleConnection}

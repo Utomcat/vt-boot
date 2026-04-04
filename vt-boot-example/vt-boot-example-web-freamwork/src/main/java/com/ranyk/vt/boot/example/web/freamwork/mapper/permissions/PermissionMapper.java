@@ -110,6 +110,20 @@ public interface PermissionMapper {
     Permission permissionDTOToPermission(PermissionDTO permissionDTO);
 
     /**
+     * 权限数据实体对象 转换成 权限数据传输对象
+     *
+     * @param permission 待转换权限数据实体对象, {@link Permission}
+     * @return 转换后的权限数据传输对象, {@link PermissionDTO}
+     */
+    @Mappings({
+
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true),
+    })
+    PermissionDTO permissionToPermissionDTO(Permission permission);
+
+    /**
      * 权限数据实体对象 列表转换成 权限数据传输对象 列表
      *
      * @param permissionList 待转换权限数据实体对象列表, {@link Permission}

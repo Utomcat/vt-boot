@@ -187,6 +187,20 @@ public interface DictMapper {
     Dict dictDTOToDict(DictDTO dictDTO);
 
     /**
+     * 将 Dict 实体类转换为 DictDTO
+     *
+     * @param dict 字典实体类对象 {@link Dict}
+     * @return 字典DTO对象 {@link DictDTO}
+     */
+    @Mappings({
+
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    DictDTO dictToDictDTO(Dict dict);
+
+    /**
      * 将 Dict 列表转换为 DictDTO 列表
      *
      * @param dictList 字典列表
@@ -201,6 +215,20 @@ public interface DictMapper {
      * @return 字典类型实体类对象 {@link DictType}
      */
     DictType dictTypeDTOToDictType(DictTypeDTO dictTypeDTO);
+
+    /**
+     * 将 DictType 实体类转换为 DictTypeDTO
+     *
+     * @param dictType 字典类型实体类对象 {@link DictType}
+     * @return 字典类型DTO对象 {@link DictTypeDTO}
+     */
+    @Mappings({
+
+            @Mapping(target = "currentPage",ignore = true),
+            @Mapping(target = "pageSize",ignore = true),
+            @Mapping(target = "ids",ignore = true)
+    })
+    DictTypeDTO dictTypeToDictTypeDTO(DictType dictType);
 
     /**
      * 将 DictType 列表转换为 DictTypeDTO 列表

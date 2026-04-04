@@ -113,6 +113,20 @@ public interface RoleMapper {
     /**
      * 角色信息数据转换方法 - 数据实体对象 转换为 数据传输对象
      *
+     * @param role 角色信息数据实体对象 {@link Role}
+     * @return 角色信息数据传输对象 {@link RoleDTO}
+     */
+    @Mappings({
+
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true)
+    })
+    RoleDTO roleToRoleDTO(Role role);
+
+    /**
+     * 角色信息数据转换方法 - 数据实体对象 转换为 数据传输对象
+     *
      * @param roleList 角色信息数据实体对象 {@link Role}
      * @return 角色信息数据传输对象 {@link RoleDTO}
      */
@@ -125,6 +139,21 @@ public interface RoleMapper {
      * @return 查询角色信息数据视图 VO 集合 {@link QueryRoleVO}
      */
     List<QueryRoleVO> roleDTOListToQueryRoleVOList(List<RoleDTO> roleDTOList);
+
+    /**
+     * 角色权限关联关系数据实体对象 转换成 角色权限关联关系数据传输对象
+     *
+     * @param rolePermissionConnection 角色权限关联关系数据实体对象 {@link RolePermissionConnection}
+     * @return 角色权限关联关系数据传输对象 {@link RolePermissionConnectionDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "roleIds", ignore = true),
+            @Mapping(target = "permissionIds", ignore = true),
+    })
+    RolePermissionConnectionDTO rolePermissionConnectionToRolePermissionConnectionDTO(RolePermissionConnection rolePermissionConnection);
 
     /**
      * 角色权限关联关系数据实体对象 列表 转换成 角色权限关联关系数据传输对象 列表

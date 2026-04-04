@@ -132,6 +132,19 @@ public interface DepartmentMapper {
     DepartmentAccountConnection departmentAccountDTOToDepartmentAccountConnection(DepartmentAccountConnectionDTO departmentAccountConnectionDTO);
 
     /**
+     * 将 部门数据实体类 转换为 部门数据传输对象
+     *
+     * @param department 部门数据实体类 {@link Department}
+     * @return 部门数据传输对象 {@link DepartmentDTO}
+     */
+    @Mappings({
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+    })
+    DepartmentDTO departmentToDepartmentDTO(Department department);
+
+    /**
      * 将 部门数据实体类 列表转换为 部门数据传输对象 列表
      *
      * @param departmentList 部门数据实体类 {@link  Department} 列表
