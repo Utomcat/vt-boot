@@ -58,7 +58,6 @@ public interface AccountMapper {
      */
 
     @Mappings({
-            @Mapping(target = "id", ignore = true),
             @Mapping(target = "userName", ignore = true),
             @Mapping(target = "password", ignore = true),
             @Mapping(target = "status", ignore = true),
@@ -84,9 +83,7 @@ public interface AccountMapper {
      * @return 账户数据传输对象 {@link AccountDTO}
      */
     @Mappings({
-            @Mapping(target = "id", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
-            @Mapping(target = "status", ignore = true),
             @Mapping(target = "token", ignore = true),
             @Mapping(target = "captcha", ignore = true),
             @Mapping(target = "captchaKey", ignore = true),
@@ -218,7 +215,6 @@ public interface AccountMapper {
      * @return 账户角色关联关系数据传输对象 {@link AccountRoleConnectionDTO}
      */
     @Mappings({
-
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "ids", ignore = true),
