@@ -1,3 +1,23 @@
+drop table if exists tenant_info;
+create table tenant_info
+(
+    id          varchar(80)                            not null comment '数据主键' primary key,
+    name        varchar(80)                            not null comment '租户名称',
+    code        varchar(80)                            not null comment '租户编号',
+    tenant_id   varchar(10)  default '0000000001'      not null comment '租户ID',
+    status      int          default 1                 not null comment '数据状态（-2: 其他非正常状态; -1: 删除/停用/无效; 0: 待启用; 1: 正常/有效/其他正常状态;）',
+    remark      varchar(500) default '-'               null comment '备注',
+    create_by   varchar(80)  default '1'               not null comment '数据创建人ID',
+    create_time timestamp    default CURRENT_TIMESTAMP not null comment '数据创建时间',
+    update_by   varchar(80)  default '1'               not null comment '数据更新人',
+    update_time timestamp    default CURRENT_TIMESTAMP not null comment '数据更新时间'
+) engine = InnoDB comment '租户信息表'
+  charset utf8;
+
+INSERT INTO tenant_info (id, name, code, status, remark, create_by, update_by)
+VALUES ('2040985303637278720', '默认租户', '0000000001', 1, '系统默认的租户数据', '1', '1');
+
+
 drop table if exists account_info;
 create table account_info
 (
