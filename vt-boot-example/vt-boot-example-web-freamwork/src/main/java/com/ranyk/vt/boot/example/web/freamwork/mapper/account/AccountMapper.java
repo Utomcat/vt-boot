@@ -35,7 +35,6 @@ public interface AccountMapper {
      */
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "status", ignore = true),
             @Mapping(target = "token", ignore = true),
             @Mapping(target = "captchaKey", ignore = true),

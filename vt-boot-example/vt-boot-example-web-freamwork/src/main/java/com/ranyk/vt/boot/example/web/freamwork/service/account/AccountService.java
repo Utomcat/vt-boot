@@ -122,7 +122,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
             throw new ServiceException("新增账户信息失败!");
         }
         // 新增账户部门关联信息
-        departmentAccountConnectionService.saveOneDepartmentAccountConnection(DepartmentAccountConnectionDTO.builder().departmentId(accountDTO.getDepartmentId()).accountId(account.getId()).build());
+        departmentAccountConnectionService.saveOneDepartmentAccountConnection(DepartmentAccountConnectionDTO.builder().departmentId(accountDTO.getDepartmentId()).accountId(account.getId()).tenantId(account.getTenantId()).build());
     }
 
     /**

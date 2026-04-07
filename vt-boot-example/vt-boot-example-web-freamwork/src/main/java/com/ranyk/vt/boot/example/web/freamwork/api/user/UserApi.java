@@ -83,7 +83,7 @@ public class UserApi {
     }
 
     /**
-     * 查询用户信息
+     * 查询用户信息 - 分页
      *
      * @param queryUserPO 查询用户信息请求数据封装 PO 类, {@link QueryUserPO}
      * @return 用户信息查询结果视图 VO 列表 {@link QueryUserVO}
@@ -142,7 +142,7 @@ public class UserApi {
     }
 
     /**
-     * 查询账户用户关系
+     * 查询账户用户关系 - 分页
      *
      * @param queryAccountUserConnectionPO 查询账户用户关系请求数据封装 PO 类, {@link QueryAccountUserConnectionPO}
      * @return 账户用户关系查询结果视图 VO 列表 {@link QueryAccountUserConnectionVO}

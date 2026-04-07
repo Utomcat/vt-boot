@@ -1,7 +1,7 @@
 package com.ranyk.vt.boot.example.web.freamwork.domain.account.po;
 
 import jakarta.annotation.Nonnull;
-import lombok.*;
+import lombok.Builder;
 
 import java.io.Serializable;
 
@@ -16,9 +16,11 @@ import java.io.Serializable;
  *     <li>password: 密码, 不能为空</li>
  *     <li>remark: 账户备注</li>
  *     <li>departmentId: 部门ID</li>
+ *     <li>tenantId: 租户ID, 如果未指定则使用默认的租户ID</li>
  * </ul>
  * @date: 2026-03-12
  */
 @Builder
-public record SaveAccountPO(@Nonnull String userName, @Nonnull String password, String remark, String departmentId) implements Serializable {
+public record SaveAccountPO(@Nonnull String userName, @Nonnull String password, String remark, String departmentId, String tenantId) implements Serializable {
+    
 }

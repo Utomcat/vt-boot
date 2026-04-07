@@ -115,7 +115,7 @@ public class DictApi {
      */
     @PutMapping("/type")
     @Log(operation = "修改一个字典类型操作", type = Log.LogType.UPDATE)
-    public Result<Boolean> updateDictType(@RequestBody com.ranyk.vt.boot.example.web.freamwork.domain.dict.po.UpdateDictTypePO updateDictTypePO) {
+    public Result<Boolean> updateDictType(@RequestBody UpdateDictTypePO updateDictTypePO) {
         dictTypeService.updateOneDictType(dictMapper.updateDictTypePOToDTO(updateDictTypePO));
         return Result.success(Boolean.TRUE);
     }
@@ -128,7 +128,7 @@ public class DictApi {
      */
     @PutMapping
     @Log(operation = "修改一个字典信息操作", type = Log.LogType.UPDATE)
-    public Result<Boolean> updateDict(@RequestBody com.ranyk.vt.boot.example.web.freamwork.domain.dict.po.UpdateDictPO updateDictPO) {
+    public Result<Boolean> updateDict(@RequestBody UpdateDictPO updateDictPO) {
         dictService.updateOneDict(dictMapper.updateDictPOToDTO(updateDictPO));
         return Result.success(Boolean.TRUE);
     }
@@ -141,7 +141,7 @@ public class DictApi {
      */
     @GetMapping("/type")
     @Log(operation = "查询字典类型操作  - 分页", type = Log.LogType.SELECT)
-    public MultiResult<DictTypeVO> getDictType(com.ranyk.vt.boot.example.web.freamwork.domain.dict.po.QueryDictTypePO queryDictTypePO) {
+    public MultiResult<DictTypeVO> getDictType(QueryDictTypePO queryDictTypePO) {
         PageResponse<DictTypeDTO> dictTypeDTOPageResponse = dictTypeService.queryDictTypeList(dictMapper.queryDictTypePOToDTO(queryDictTypePO));
         return MultiResult.successMulti(dictMapper.dictTypeDTOListToVOList(dictTypeDTOPageResponse.getData()),
                 Long.parseLong(String.valueOf(dictTypeDTOPageResponse.getTotal())),
@@ -157,7 +157,7 @@ public class DictApi {
      */
     @GetMapping
     @Log(operation = "获取字典信息操作 - 分页", type = Log.LogType.SELECT)
-    public MultiResult<DictVO> getDict(com.ranyk.vt.boot.example.web.freamwork.domain.dict.po.QueryDictPO queryDictPO) {
+    public MultiResult<DictVO> getDict(QueryDictPO queryDictPO) {
         PageResponse<DictDTO> dictDTOPageResponse = dictService.queryDictList(dictMapper.queryDictPOToDTO(queryDictPO));
         return MultiResult.successMulti(dictMapper.dictDTOListToVOList(dictDTOPageResponse.getData()),
                 Long.parseLong(String.valueOf(dictDTOPageResponse.getTotal())),
