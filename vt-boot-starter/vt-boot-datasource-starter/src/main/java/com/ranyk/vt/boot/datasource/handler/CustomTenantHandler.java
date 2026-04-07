@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -74,7 +75,7 @@ public class CustomTenantHandler implements TenantLineHandler {
      */
     @Override
     public boolean ignoreTable(String tableName) {
-        return datasourceConfigurationProperties.getIgnoreTable().contains(tableName);
+        return datasourceConfigurationProperties.getIgnoreTable().contains(tableName) || Objects.equals(TenantContext.getTenantId(), AutoFillFieldEnum.TENANT_ID.getDefaultValue());
     }
 
     /**
