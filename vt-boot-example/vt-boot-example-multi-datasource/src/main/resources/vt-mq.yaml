@@ -1,0 +1,46 @@
+vt:
+  boot:
+    mq:
+      # 是否开启 disruptor 消息队列
+      is-enable-disruptor: false
+      # 是否开启 rabbitmq 队列 - 当启用 rabbitmq 时，请确保当前环境已存在 RabbitMQ 服务, 且已配置好下面的 RabbitMQ 相关的属性配置
+      is-enable-rabbitmq: false
+      # Rabbitmq 允许进行反序列化的类列表
+      rabbitmq-allowed-list-patterns:
+        - java.util.*
+        - java.lang.*
+        - sun.reflect.annotation.*
+        - com.ranyk.vt.boot.base.domain.*
+        - com.ranyk.vt.boot.base.constant.*
+        - com.ranyk.vt.boot.mq.domain.dto.*
+        - com.ranyk.vt.boot.log.annotations.*
+        - com.ranyk.vt.boot.example.web.freamwork.domain.*
+      # Rabbitmq 默认的消息转换器, 当前系统内存在的消息转换器为 simpleMessageConverter 和 jackson2JsonMessageConverter 两种, 通过如下配置属性配置默认使用那个转换器
+      rabbitmq-default-message-converter: simpleMessageConverter
+
+spring:
+  # RabbitMQ 配置
+  rabbitmq:
+    # 是否开启 RabbitMQ
+    enabled: false
+    # RabbitMQ 主机地址
+    host: localhost
+    # RabbitMQ 端口
+    port: 5672
+    # RabbitMQ 用户名
+    username: root
+    # RabbitMQ 密码
+    password: root
+    # 虚拟主机（默认 /）
+    virtual-host: /
+    # 连接池配置（可选，生产环境建议开启）
+    listener:
+      simple:
+        # auto: 自动确认消息; manual: 手动确认消息; none: 不确认消息;
+        acknowledge-mode: manual
+        # 最小消费者数量
+        concurrency: 5
+        # 最大消费者数量
+        max-concurrency: 10
+        # 每次拉取消息数
+        prefetch: 1
