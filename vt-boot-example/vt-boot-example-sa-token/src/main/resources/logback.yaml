@@ -6,3 +6,8 @@ logging:
   # logback-test.xml: 测试环境的日志输出配置文件
   # logback-prod.xml: 生产环境的日志输出配置文件
   config: classpath:logback-local.xml
+
+vt:
+  boot:
+    log:
+      operation-record-enabled: false
