@@ -7,6 +7,7 @@ import com.ranyk.vt.boot.log.strategy.OperationRecordStrategy;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@ConditionalOnBean(IOperationRecordService.class)
 public class SyncOperationRecordSave implements OperationRecordStrategy {
 
     /**

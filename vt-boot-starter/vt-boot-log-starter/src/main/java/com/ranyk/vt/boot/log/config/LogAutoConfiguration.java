@@ -8,6 +8,7 @@ import com.ranyk.vt.boot.log.strategy.impl.SyncOperationRecordSave;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
@@ -45,6 +46,7 @@ public class LogAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBooleanProperty(prefix = "vt.boot.log", name = "operation-record-enabled", matchIfMissing = true)
     public OperationRecordAspectHandle operationRecordAspectHandle(OperationRecordStrategyFactory operationRecordStrategyFactory) {
         log.debug("Log Stater Injected Successful. Register OperationRecord Annotation Aspect Handle.");
         return new OperationRecordAspectHandle(operationRecordStrategyFactory);
@@ -58,6 +60,7 @@ public class LogAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @DependsOn(value = {"syncOperationRecordSave", "asyncOperationRecordSave"})
+    @ConditionalOnBooleanProperty(prefix = "vt.boot.log", name = "operation-record-enabled", matchIfMissing = true)
     public OperationRecordStrategyFactory operationRecordStrategyFactory(SyncOperationRecordSave syncOperationRecordSave, AsyncOperationRecordSave asyncOperationRecordSave) {
         log.debug("Log Stater Injected Successful. Register Operation Record Strategy Factory.");
         // 手动注入策略实现类（也可通过 List<OperationRecordStrategy> 自动注入，需确保策略类被扫描）
@@ -71,6 +74,7 @@ public class LogAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBooleanProperty(prefix = "vt.boot.log", name = "operation-record-enabled", matchIfMissing = true)
     public SyncOperationRecordSave syncOperationRecordSave(IOperationRecordService operationRecordService) {
         log.debug("Log Stater Injected Successful. Register Sync Operation Record Save Strategy.");
         return new SyncOperationRecordSave(operationRecordService);
@@ -83,6 +87,7 @@ public class LogAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBooleanProperty(prefix = "vt.boot.log", name = "operation-record-enabled", matchIfMissing = true)
     public AsyncOperationRecordSave asyncOperationRecordSave() {
         log.debug("Log Stater Injected Successful. Register Async Operation Record Save Strategy.");
         return new AsyncOperationRecordSave();
