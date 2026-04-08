@@ -10,7 +10,16 @@ import java.lang.annotation.*;
  *
  * @author ranyk
  * @version V1.0
- * @description: 操作记录注解, 使用该注解意味着需要记录操作日志
+ * @description: 操作记录注解, 使用该注解意味着需要记录操作日志, 字段说明: <br/>
+ * <ul>
+ *     <li>desc: 操作描述 （必填）</li>
+ *     <li>module: 操作模块, 默认: operation_log_info</li>
+ *     <li>type: 操作类型, 默认 {@link OperateTypeEnum#SAVE}, 具体内容参见 {@link OperateTypeEnum}</li>
+ *     <li>recordParams: 是否记录入参 （可选）, 默认: true</li>
+ *     <li>isSaveOperationRecord: 是否保存操作记录到数据库 （可选）, 默认: false</li>
+ *     <li>saveOperationRecordMethod: 保存操作记录方法 （可选）, 默认: {@link SaveMethod#SYNC}, 具体内容参见 {@link SaveMethod}</li>
+ *     <li>asyncMethod: 异步保存操作记录方法 （可选）, 默认: {@link MqTypeEnum#DISRUPTOR}, 具体内容参见 {@link MqTypeEnum}</li>
+ * </ul>
  * @date: 2026-03-24
  */
 // 生成文档时包含该注解
