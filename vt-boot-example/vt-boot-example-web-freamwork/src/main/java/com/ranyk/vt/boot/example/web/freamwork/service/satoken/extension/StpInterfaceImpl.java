@@ -1,6 +1,9 @@
 package com.ranyk.vt.boot.example.web.freamwork.service.satoken.extension;
 
 import cn.dev33.satoken.stp.StpInterface;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONUtil;
+import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountRoleConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.dto.PermissionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RoleDTO;
@@ -72,6 +75,10 @@ public class StpInterfaceImpl implements StpInterface {
         List<RoleDTO> roleDTOS = queryRoleByAccountId(loginId.toString());
         // 获取角色信息集合中所有的权限关联关系
         List<RolePermissionConnectionDTO> rolePermissionConnectionDTOS = roleService.queryRolePermissionConnectionByRoleIds(RoleDTO.builder().ids(roleDTOS.stream().map(RoleDTO::getId).collect(Collectors.toList())).build());
+        if (CollUtil.isEmpty(rolePermissionConnectionDTOS)) {
+            log.error("角色 {} 未关联权限, 无法查询权限信息!", JSONUtil.toJsonStr(roleDTOS.stream().map(RoleDTO::getId).collect(Collectors.toList())));
+            throw new ServiceException("角色 %s 未关联权限, 无法查询权限信息!".formatted(JSONUtil.toJsonStr(roleDTOS.stream().map(RoleDTO::getId).collect(Collectors.toList()))));
+        }
         // 获取权限关联关系集合中所有的权限信息
         List<PermissionDTO> permissionDTOS = permissionService.queryPermissionByPermissionIds(PermissionDTO.builder().ids(rolePermissionConnectionDTOS.stream().map(RolePermissionConnectionDTO::getPermissionId).filter(Objects::nonNull).collect(Collectors.toList())).build());
         // 返回权限码集合 过滤 null 权限码
@@ -102,6 +109,10 @@ public class StpInterfaceImpl implements StpInterface {
     private List<RoleDTO> queryRoleByAccountId(String accountId) {
         // 查询指定 账号id 所拥有的 账户角色信息关联关系
         List<AccountRoleConnectionDTO> accountRoleConnectionDTOS = accountRoleConnectionService.queryAccountRoleConnectionByAccountId(AccountRoleConnectionDTO.builder().accountId(accountId).build());
+        if (CollUtil.isEmpty(accountRoleConnectionDTOS)) {
+            log.error("账户 {} 未关联角色, 无法查询角色信息!", accountId);
+            throw new ServiceException("账户 %s 未关联角色, 无法查询角色信息!".formatted(accountId));
+        }
         // 查询所有的角色信息
         List<RoleDTO> roleDTOS = roleService.queryRoleByRoleIds(RoleDTO.builder().ids(accountRoleConnectionDTOS.stream().map(AccountRoleConnectionDTO::getRoleId).collect(Collectors.toList())).build());
         // 返回角色信息集合 过滤 null 角色信息
