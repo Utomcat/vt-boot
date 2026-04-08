@@ -8,6 +8,7 @@ import com.ranyk.vt.boot.mq.util.MessageUtils;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@ConditionalOnBean(IOperationRecordService.class)
 public class LogDisruptorMqMessageHandlerStrategyImpl implements DisruptorMqMessageHandlerStrategy {
 
     /**

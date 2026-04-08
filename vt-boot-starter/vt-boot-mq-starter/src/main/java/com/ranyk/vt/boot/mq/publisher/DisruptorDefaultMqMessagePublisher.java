@@ -4,6 +4,7 @@ import com.lmax.disruptor.EventTranslatorTwoArg;
 import com.lmax.disruptor.RingBuffer;
 import com.ranyk.vt.boot.mq.domain.dto.BaseMessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @date: 2026-03-24
  */
 @Component
+@ConditionalOnBean(RingBuffer.class)
 public class DisruptorDefaultMqMessagePublisher {
 
     /**
