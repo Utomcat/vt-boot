@@ -3,8 +3,8 @@ spring:
     name: vt-boot-example-web
   thymeleaf:
     check-template-location: false
-  profiles:
-    active: local
+  config:
+    import: classpath:logback.yaml
 
 server:
   port: 9081
