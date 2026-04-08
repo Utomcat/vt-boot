@@ -35,7 +35,7 @@ public class GlobalWebExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(ServiceException.class)
-    public Result<String> exceptionHandler(ServiceException serviceException) {
+    public Result<String> serviceExceptionHandler(ServiceException serviceException) {
         log.error("Current ServiceException occurred => {} ", serviceException.getMessage(), serviceException);
         return Result.<String>builder()
                 .success(Boolean.FALSE)
@@ -54,7 +54,7 @@ public class GlobalWebExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(UserException.class)
-    public Result<String> exceptionHandler(UserException userException) {
+    public Result<String> userExceptionHandler(UserException userException) {
         log.error("Current UserException occurred => {}", userException.getMessage(), userException);
         return Result.<String>builder()
                 .success(Boolean.FALSE)
@@ -74,7 +74,7 @@ public class GlobalWebExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(DataSourceException.class)
-    public Result<String> exceptionHandler(DataSourceException dataSourceException) {
+    public Result<String> dataSourceExceptionHandler(DataSourceException dataSourceException) {
         log.error("Current DataSourceException occurred => {} ", dataSourceException.getMessage(), dataSourceException);
         return Result.<String>builder()
                 .success(Boolean.FALSE)
