@@ -3,8 +3,9 @@ spring:
     name: vt-boot-example-multi-datasource
   thymeleaf:
     check-template-location: false
-  profiles:
-    active: local
+  config:
+    import: classpath:datasource.yaml,classpath:mybatisplus.yaml,classpath:logback.yaml,classpath:vt-mq.yaml
+
 
 server:
   port: 9083
