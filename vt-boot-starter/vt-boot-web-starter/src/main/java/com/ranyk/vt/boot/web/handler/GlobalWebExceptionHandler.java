@@ -25,6 +25,24 @@ import java.util.Objects;
 @ControllerAdvice
 public class GlobalWebExceptionHandler {
 
+    /**
+     * 全局异常处理器
+     *
+     * @param exception 异常对象
+     * @return 封装的通用结果对象 {@link Result} 对象
+     */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(Exception.class)
+    public Result<String>  exceptionHandler(Exception exception){
+        log.error("Current Exception occurred => {} ", exception.getMessage(), exception);
+        return Result.<String>builder()
+                .success(Boolean.FALSE)
+                .code(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()))
+                .msg(exception.getMessage())
+                .data(exception.getMessage())
+                .build();
+    }
 
     /**
      * 自定义业务异常处理器
