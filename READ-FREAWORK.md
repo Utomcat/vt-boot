@@ -102,3 +102,4 @@
 5. mybatisplus.yaml: MyBatisPlus 配置, <font color="red">**注意: 该文件是需要进行修改的, 属性: `mybatis-plus.type-aliases-package` 必须修改为当前业务系统中所使用的实体类包名,必须配置所有的实体类的全路径包名,多个包名之间用逗号隔开** </font>
 6. sa-token.yaml: Sa-Token 配置 
 7. tenant.yaml: 租户配置
+8. vt-mq.yaml: MQ 消息队列配置
