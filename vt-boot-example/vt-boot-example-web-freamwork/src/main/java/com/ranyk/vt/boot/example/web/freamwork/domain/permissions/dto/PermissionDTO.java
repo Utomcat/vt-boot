@@ -38,4 +38,9 @@ public class PermissionDTO extends BaseDTO {
 
     // 以下为扩展属性
 
+    /**
+     * 账号ID
+     */
+    private String accountId;
+
 }

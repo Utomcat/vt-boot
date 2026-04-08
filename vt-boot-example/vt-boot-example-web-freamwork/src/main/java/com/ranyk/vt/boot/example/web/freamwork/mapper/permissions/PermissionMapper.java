@@ -2,10 +2,8 @@ package com.ranyk.vt.boot.example.web.freamwork.mapper.permissions;
 
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.dto.PermissionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.entity.Permission;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.DeletePermissionPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.QueryPermissionPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.SavePermissionPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.UpdatePermissionPO;
+import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.*;
+import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.vo.QueryAccountPermissionVO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.vo.QueryPermissionVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,6 +39,7 @@ public interface PermissionMapper {
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "accountId", ignore = true),
     })
     PermissionDTO savePermissionPOToPermissionDTO(SavePermissionPO savePermissionPO);
 
@@ -63,6 +62,7 @@ public interface PermissionMapper {
             @Mapping(target = "updateTime", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "accountId", ignore = true),
     })
     PermissionDTO deletePermissionPOToPermissionDTO(DeletePermissionPO deletePermissionPO);
 
@@ -81,6 +81,7 @@ public interface PermissionMapper {
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "accountId", ignore = true),
     })
     PermissionDTO updatePermissionPOToPermissionDTO(UpdatePermissionPO updatePermissionPO);
 
@@ -98,6 +99,7 @@ public interface PermissionMapper {
             @Mapping(target = "updateBy", ignore = true),
             @Mapping(target = "updateTime", ignore = true),
             @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "accountId", ignore = true),
     })
     PermissionDTO queryPermissionPoToPermissionDTO(QueryPermissionPO queryPermissionPO);
 
@@ -116,7 +118,7 @@ public interface PermissionMapper {
      * @return 转换后的权限数据传输对象, {@link PermissionDTO}
      */
     @Mappings({
-
+            @Mapping(target = "accountId", ignore = true),
             @Mapping(target = "currentPage",ignore = true),
             @Mapping(target = "pageSize",ignore = true),
             @Mapping(target = "ids",ignore = true),
@@ -138,5 +140,37 @@ public interface PermissionMapper {
      * @return 转换后的权限数据查询结果 VO 视图对象列表, {@link QueryPermissionVO}
      */
     List<QueryPermissionVO> permissionDTOListToQueryPermissionVOList(List<PermissionDTO> permissionDTOList);
+
+    /**
+     * 将 {@link QueryPermissionByAccountIdPO} 转换为 {@link PermissionDTO} 对象
+     *
+     * @param queryPermissionByAccountIdPO {@link QueryPermissionByAccountIdPO} 对象
+     * @return {@link PermissionDTO} 对象
+     */
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "code", ignore = true),
+            @Mapping(target = "name", ignore = true),
+            @Mapping(target = "type", ignore = true),
+            @Mapping(target = "remark", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+    })
+    PermissionDTO queryPermissionByAccountIdPOToPermissionDTO(QueryPermissionByAccountIdPO queryPermissionByAccountIdPO);
+
+    /**
+     * 将 {@link PermissionDTO} 列表转换为 {@link QueryAccountPermissionVO} 列表
+     *
+     * @param permissionDTOList {@link PermissionDTO} 列表
+     * @return {@link QueryAccountPermissionVO} 列表
+     */
+    List<QueryAccountPermissionVO> permissionDTOListToQueryAccountPermissionVOList(List<PermissionDTO> permissionDTOList);
 
 }

@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ranyk.vt.boot.example.web.freamwork.repository.role.RolePermissionConnectionRepository">
 
+    <!-- 通过角色ID列表批量删除角色权限关联关系数据 -->
+    <delete id="deleteByRoleIdIn">
+        delete from role_permission_connection rpc where rpc.role_id in
+            <foreach item="roleId" collection="roleIds" index="index" open="(" close=")" separator=",">
+                #{roleId}
+            </foreach>
+    </delete>
 </mapper>

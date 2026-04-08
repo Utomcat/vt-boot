@@ -11,6 +11,7 @@ import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountRoleCon
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.entity.AccountRoleConnection;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.account.AccountMapper;
 import com.ranyk.vt.boot.example.web.freamwork.repository.account.AccountRoleConnectionRepository;
+import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,41 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
     }
 
     /**
+     * 批量保存账户角色关联关系 - 批量保存账户角色关联关系数据
+     *
+     * @param accountRoleConnectionDTO 账户角色关联关系批量保存参数封装对象 {@link AccountRoleConnectionDTO}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "批量保存账户角色关联关系", type = OperateTypeEnum.BATCH_SAVE, isSaveOperationRecord = true)
+    public void batchSaveAccountRoleConnection(AccountRoleConnectionDTO accountRoleConnectionDTO) {
+        // 参数校验 - 批量保存账户角色关联关系参数校验
+        verifyAccountRoleConnectionParams(accountRoleConnectionDTO, OperateTypeEnum.BATCH_SAVE);
+        // 根据 账户 ID List 集合删除对应的账户角色已关联的账户角色关联关系数据
+        this.accountRoleConnectionRepository.deleteByAccountIdIn(accountRoleConnectionDTO.getAccountIds());
+        // 绑定账户角色关联关系时, 角色 ID 不能为空, 为空时不能进行账户角色关联关系数据保存业务逻辑
+        if (CollUtil.isNotEmpty(accountRoleConnectionDTO.getRoleIds())) {
+            // 数据转换, 将 accountIds 和 roleIds 转换为 AccountRoleConnectionDTO 对象集合
+            List<AccountRoleConnectionDTO> accountRoleConnectionDTOS = accountRoleConnectionDTO.buildAccountRoleConnectionDTOList();
+            if (CollUtil.isNotEmpty(accountRoleConnectionDTOS)) {
+                // 数据转换, 将 AccountRoleConnectionDTO 集合转换为 AccountRoleConnection 集合
+                List<AccountRoleConnection> accountRoleConnectionList = accountMapper.accountRoleConnectionDTOListToAccountRoleConnectionList(accountRoleConnectionDTOS);
+                // 设置对应的创建人、更新人信息
+                accountRoleConnectionList.forEach(accountRoleConnection -> {
+                    accountRoleConnection.setCreateBy(StpUtil.getLoginIdAsString());
+                    accountRoleConnection.setUpdateBy(StpUtil.getLoginIdAsString());
+                });
+                // 批量保存账户角色关联关系数据
+                boolean saveResult = this.saveOrUpdateBatch(accountRoleConnectionList);
+                // 保存结果判断, 保存失败时抛出异常
+                if (!saveResult){
+                    log.error("批量保存账户角色关联关系失败!");
+                    throw new ServiceException("批量保存账户角色关联关系失败!");
+                }
+            }
+        }
+    }
+
+    /**
      * 删除账户角色关联关系 - 删除单条账户角色关联关系数据
      *
      * @param accountRoleConnectionDTO 账户角色关联关系删除参数封装对象 {@link AccountRoleConnectionDTO}
@@ -128,15 +164,24 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      */
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteByAccountId(AccountRoleConnectionDTO accountRoleConnectionDTO) {
+        // 校验通过账户 ID 删除 账户角色关联关系数据时, 账户ID 是否存在
         if (StrUtil.isBlank(accountRoleConnectionDTO.getAccountId())){
             log.error("删除账户角色关联关系失败, 需要删除的账户 ID 不能为空!");
             throw new ServiceException("删除账户角色关联关系失败, 需要删除的账户 ID 不能为空!");
         }
-        Boolean deleteResult = this.accountRoleConnectionRepository.deleteByAccountId(accountRoleConnectionDTO.getAccountId());
-        if (!deleteResult){
-            log.error("删除账户角色关联关系失败, 账户 ID: {}", accountRoleConnectionDTO.getAccountId());
-            throw new ServiceException("删除账户角色关联关系失败, 账户 ID: %s".formatted(accountRoleConnectionDTO.getAccountId()));
+        // 查询是否存在需要删除的数据
+        Integer count = this.accountRoleConnectionRepository.selectCountByAccountId(accountRoleConnectionDTO.getAccountId());
+        // 存在删除数据, 执行删除操作
+        if (count > 0) {
+            // 执行依据账户ID删除账户角色关联关系数据操作
+            Boolean deleteResult = this.accountRoleConnectionRepository.deleteByAccountId(accountRoleConnectionDTO.getAccountId());
+            // 判定删除结果是否成功
+            if (!deleteResult){
+                log.error("删除账户角色关联关系失败, 账户 ID: {}", accountRoleConnectionDTO.getAccountId());
+                throw new ServiceException("删除账户角色关联关系失败, 账户 ID: %s".formatted(accountRoleConnectionDTO.getAccountId()));
+            }
         }
+        // 返回删除结果
         return Boolean.TRUE;
     }
 
@@ -148,15 +193,24 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
      */
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteByAccountIds(AccountRoleConnectionDTO accountRoleConnectionDTO) {
+        // 校验通过账户 ID 批量删除账户角色关联关系数据时, 账户ID 集合是否存在
         if (CollUtil.isEmpty(accountRoleConnectionDTO.getAccountIds())){
             log.error("批量删除账户角色关联关系失败, 需要删除的账户 ID 集合不能为空!");
             throw new ServiceException("批量删除账户角色关联关系失败, 需要删除的账户 ID 集合不能为空!");
         }
-        Boolean deleteResult = this.accountRoleConnectionRepository.deleteByAccountIdIn(accountRoleConnectionDTO.getAccountIds());
-        if (!deleteResult){
-            log.error("批量删除账户角色关联关系失败, 账户 ID 集合: {}", accountRoleConnectionDTO.getAccountIds());
-            throw new ServiceException("批量删除账户角色关联关系失败, 账户 ID 集合: %s".formatted(accountRoleConnectionDTO.getAccountIds()));
+        // 查询是否存在需要删除的数据
+        Integer count = this.accountRoleConnectionRepository.selectCountByAccountIdIn(accountRoleConnectionDTO.getAccountIds());
+        // 存在删除数据, 执行删除操作
+        if (count > 0) {
+            // 执行依据账户ID列表批量删除账户角色关联关系数据操作
+            Boolean deleteResult = this.accountRoleConnectionRepository.deleteByAccountIdIn(accountRoleConnectionDTO.getAccountIds());
+            // 判定删除结果是否成功
+            if (!deleteResult){
+                log.error("批量删除账户角色关联关系失败, 账户 ID 集合: {}", accountRoleConnectionDTO.getAccountIds());
+                throw new ServiceException("批量删除账户角色关联关系失败, 账户 ID 集合: %s".formatted(accountRoleConnectionDTO.getAccountIds()));
+            }
         }
+        // 返回删除结果 - 成功
         return Boolean.TRUE;
     }
 
@@ -190,6 +244,7 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
     private void verifyAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO, OperateTypeEnum operateType) {
         switch (operateType){
             case SAVE -> verifySaveAccountRoleConnectionParams(accountRoleConnectionDTO);
+            case BATCH_SAVE -> verifyBatchSaveAccountRoleConnectionParams(accountRoleConnectionDTO);
             case DELETE -> verifyDeleteAccountRoleConnectionParams(accountRoleConnectionDTO);
             case BATCH_DELETE -> verifyBatchDeleteAccountRoleConnectionParams(accountRoleConnectionDTO);
             case UPDATE -> verifyUpdateAccountRoleConnectionParams(accountRoleConnectionDTO);
@@ -199,6 +254,8 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
 
     /**
      * 验证账户角色关联关系参数 - 保存账户角色关联关系参数校验
+     *
+     * @param accountRoleConnectionDTO 账户角色关联关系参数封装对象 {@link AccountRoleConnectionDTO} , 当前方法只使用了 {@link AccountRoleConnectionDTO#getAccountId()} 和 {@link AccountRoleConnectionDTO#getRoleId()} 属性
      */
     private void verifySaveAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         // 参数校验 - 账户ID 不能为空
@@ -214,10 +271,25 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
     }
 
     /**
+     * 验证账户角色关联关系参数 - 批量保存账户角色关联关系参数校验
+     *
+     * @param accountRoleConnectionDTO 账户角色关联关系参数封装对象 {@link AccountRoleConnectionDTO} , 当前方法只使用了 {@link AccountRoleConnectionDTO#getAccountIds()} 和 {@link AccountRoleConnectionDTO#getRoleIds()} 集合属性
+     */
+    private void verifyBatchSaveAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO) {
+        // 批量保存账户角色关联关系参数校验 - 账户ID 集合不能为空
+        if ( CollUtil.isEmpty(accountRoleConnectionDTO.getAccountIds())) {
+            log.error("批量保存账户角色关联信息失败, 传入的需要绑定的账户 ID 集合不能为空!");
+            throw new ServiceException("批量保存账户角色关联信息失败, 传入的需要绑定的账户 ID 集合不能为空!");
+        }
+    }
+
+    /**
      * 验证账户角色关联关系参数 - 删除单条账户角色关联关系参数校验
+     *
+     * @param accountRoleConnectionDTO 账户角色关联关系参数封装对象 {@link AccountRoleConnectionDTO} , 当前方法只使用了 {@link AccountRoleConnectionDTO#getId()} 属性
      */
     private void verifyDeleteAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO) {
-        if (StrUtil.isBlank(accountRoleConnectionDTO.getId()) && CollUtil.isEmpty(accountRoleConnectionDTO.getIds())) {
+        if (StrUtil.isBlank(accountRoleConnectionDTO.getId())) {
             log.error("删除账户角色关联关系参数校验失败, 需要删除的账户角色关联关系 ID 不能为空!");
             throw new ServiceException("删除账户角色关联关系参数校验失败, 需要删除的账户角色关联关系 ID 不能为空!");
         }
@@ -225,6 +297,8 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
 
     /**
      * 验证账户角色关联关系参数 - 批量删除账户角色关联关系参数校验
+     *
+     * @param accountRoleConnectionDTO 账户角色关联关系参数封装对象 {@link AccountRoleConnectionDTO} , 当前方法只使用了 {@link AccountRoleConnectionDTO#getIds()} 集合属性
      */
     private void verifyBatchDeleteAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         // 参数校验 - 账户角色关联关系 ID 集合不能为空
@@ -236,6 +310,8 @@ public class AccountRoleConnectionService extends ServiceImpl<AccountRoleConnect
 
     /**
      * 验证账户角色关联关系参数 - 更新账户角色关联关系参数校验
+     *
+     * @param accountRoleConnectionDTO 账户角色关联关系参数封装对象 {@link AccountRoleConnectionDTO} , 当前方法只使用了 {@link AccountRoleConnectionDTO#getId()} 属性
      */
     private void verifyUpdateAccountRoleConnectionParams(AccountRoleConnectionDTO accountRoleConnectionDTO) {
         // 参数校验 - 账户角色关联关系 ID 不能为空

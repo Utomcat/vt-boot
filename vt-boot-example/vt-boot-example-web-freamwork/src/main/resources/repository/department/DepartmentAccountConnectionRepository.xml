@@ -55,4 +55,21 @@
             #{item}
         </foreach>
     </delete>
+
+    <!-- 根据账户ID查询部门账户关联关系数据数量 -->
+    <select id="selectCountByAccountId" resultType="java.lang.Integer">
+        select count(1)
+        from department_account_connection dac
+        where dac.account_id = #{accountId}
+    </select>
+
+    <!-- 根据账户ID列表批量查询部门账户关联关系数据数量 -->
+    <select id="selectCountByAccountIdIn" resultType="java.lang.Integer">
+        select count(1)
+        from department_account_connection dac
+        where dac.account_id in
+        <foreach item="item" index="index" collection="accountIds" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

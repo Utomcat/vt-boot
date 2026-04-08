@@ -27,4 +27,17 @@
             #{id}
         </foreach>
     </delete>
+
+    <!-- 通过账户ID查询账户角色关联关系数据数量 -->
+    <select id="selectCountByAccountId" resultType="java.lang.Integer">
+        select count(1) from account_role_connection arc where arc.account_id = #{accountId}
+    </select>
+
+    <!-- 通过账户ID列表批量查询账户角色关联关系数据数量 -->
+    <select id="selectCountByAccountIdIn" resultType="java.lang.Integer">
+        select count(1) from account_role_connection arc where arc.account_id in
+        <foreach collection="accountIds" item="accountId" open="(" close=")" separator=",">
+            #{accountId}
+        </foreach>
+    </select>
 </mapper>

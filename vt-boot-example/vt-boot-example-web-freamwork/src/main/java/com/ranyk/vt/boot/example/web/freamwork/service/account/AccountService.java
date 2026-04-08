@@ -20,6 +20,7 @@ import com.ranyk.vt.boot.example.web.freamwork.mapper.account.AccountMapper;
 import com.ranyk.vt.boot.example.web.freamwork.repository.account.AccountRepository;
 import com.ranyk.vt.boot.example.web.freamwork.service.department.DepartmentAccountConnectionService;
 import com.ranyk.vt.boot.example.web.freamwork.service.department.DepartmentService;
+import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
     @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "新增账户信息", type = OperateTypeEnum.SAVE, isSaveOperationRecord = true)
     public void saveOneAccount(AccountDTO accountDTO) {
         // 验证用户名和密码是否存在值
         verifyAccountParams(accountDTO, OperateTypeEnum.SAVE);
@@ -130,7 +132,8 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      *
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "删除账户信息", type = OperateTypeEnum.DELETE, isSaveOperationRecord = true)
     public void deleteOneAccount(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
         verifyAccountParams(accountDTO, OperateTypeEnum.DELETE);
@@ -170,6 +173,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
     @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "批量删除账户信息", type = OperateTypeEnum.BATCH_DELETE, isSaveOperationRecord = true)
     public void batchDeleteAccount(AccountDTO accountDTO) {
         // 批量删除账户信息 - 验证账户数据主键 ID 集合列表
         verifyAccountParams(accountDTO, OperateTypeEnum.BATCH_DELETE);
@@ -202,6 +206,7 @@ public class AccountService extends ServiceImpl<AccountRepository, Account> {
      * @param accountDTO 账户信息数据传输对象 {@link AccountDTO}
      */
     @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "修改账户信息", type = OperateTypeEnum.UPDATE, isSaveOperationRecord = true)
     public void updateOneAccount(AccountDTO accountDTO) {
         // 验证账户ID是否存在值
         verifyAccountParams(accountDTO, OperateTypeEnum.UPDATE);

@@ -42,4 +42,8 @@ public class DictDTO extends BaseDTO {
 
     // 以下为扩展字段
 
+    /**
+     * 字典类型编码
+     */
+    private String dictTypeCode;
 }

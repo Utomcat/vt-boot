@@ -59,7 +59,7 @@ public class SyncOperationRecordSave implements OperationRecordStrategy {
     public void execute(Map<String, Object> paramMap, OperationRecord operationRecord) {
         log.debug("Start Execute Sync Operation Record Save Logic execute.");
         if (operationRecord.isSaveOperationRecord()) {
-            Boolean saveResult = operationRecordService.saveOneOperationRecord(operationRecord.desc(), operationRecord.type().toString(), JSONUtil.toJsonStr(paramMap), UserContext.getUserId(), operationRecord.module());
+            Boolean saveResult = operationRecordService.saveOneOperationRecord(operationRecord.desc(), operationRecord.type().name(), JSONUtil.toJsonStr(paramMap), UserContext.getUserId(), operationRecord.module());
             if (!saveResult){
                 log.error("同步保存操作日志记录失败, 使用文本记录模式记录日志!");
             }

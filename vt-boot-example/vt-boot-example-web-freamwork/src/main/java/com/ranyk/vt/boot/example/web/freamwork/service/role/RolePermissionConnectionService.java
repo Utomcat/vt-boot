@@ -1,16 +1,20 @@
 package com.ranyk.vt.boot.example.web.freamwork.service.role;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RolePermissionConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.entity.RolePermissionConnection;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.role.RoleMapper;
 import com.ranyk.vt.boot.example.web.freamwork.repository.role.RolePermissionConnectionRepository;
+import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +54,33 @@ public class RolePermissionConnectionService extends ServiceImpl<RolePermissionC
     public RolePermissionConnectionService(RolePermissionConnectionRepository rolePermissionConnectionRepository, RoleMapper roleMapper) {
         this.rolePermissionConnectionRepository = rolePermissionConnectionRepository;
         this.roleMapper = roleMapper;
+    }
+
+    /**
+     * 批量保存角色权限关联关系数据
+     *
+     * @param rolePermissionConnectionDTO 角色权限关联关系数据传输对象, 当前方法使用 {@link RolePermissionConnectionDTO#getRoleIds()} 、{@link RolePermissionConnectionDTO#getPermissionIds()} 属性
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "批量保存角色权限关联关系数据", type = OperateTypeEnum.BATCH_SAVE, isSaveOperationRecord = true)
+    public void batchSaveRolePermissionConnection(RolePermissionConnectionDTO rolePermissionConnectionDTO) {
+        validateRoleIds(rolePermissionConnectionDTO.getRoleIds());
+        this.rolePermissionConnectionRepository.deleteByRoleIdIn(rolePermissionConnectionDTO.getRoleIds());
+        if (CollUtil.isNotEmpty(rolePermissionConnectionDTO.getPermissionIds())) {
+            List<RolePermissionConnectionDTO> rolePermissionConnectionDTOS = rolePermissionConnectionDTO.buildRolePermissionConnectionDTOList();
+            if (CollUtil.isNotEmpty(rolePermissionConnectionDTOS)) {
+                List<RolePermissionConnection> rolePermissionConnectionList = roleMapper.rolePermissionConnectionDTOListToRolePermissionConnectionList(rolePermissionConnectionDTOS);
+                rolePermissionConnectionList.forEach(rolePermissionConnection -> {
+                    rolePermissionConnection.setCreateBy(StpUtil.getLoginIdAsString());
+                    rolePermissionConnection.setUpdateBy(StpUtil.getLoginIdAsString());
+                });
+                boolean saveOrUpdateResult = this.saveOrUpdateBatch(rolePermissionConnectionList);
+                if (!saveOrUpdateResult) {
+                    log.error("批量保存角色权限关联关系数据失败!");
+                    throw new ServiceException("批量保存角色权限关联关系数据失败!");
+                }
+            }
+        }
     }
 
     /**

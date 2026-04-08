@@ -51,4 +51,20 @@ public interface AccountRoleConnectionRepository extends BaseMapper<AccountRoleC
      * @return 删除结果, true: 删除成功; false: 删除失败;
      */
     Boolean deleteByIdIn(@Param("ids") List<String> ids);
+
+    /**
+     * 通过账户ID查询账户角色关联关系数据数量
+     *
+     * @param accountId 账户ID
+     * @return 账户角色关联关系数据数量
+     */
+    Integer selectCountByAccountId(@Param("accountId") String accountId);
+
+    /**
+     * 通过账户ID列表批量查询账户角色关联关系数据数量
+     *
+     * @param accountIds 账户ID列表
+     * @return 账户角色关联关系数据数量
+     */
+    Integer selectCountByAccountIdIn(@Param("accountIds") List<String> accountIds);
 }

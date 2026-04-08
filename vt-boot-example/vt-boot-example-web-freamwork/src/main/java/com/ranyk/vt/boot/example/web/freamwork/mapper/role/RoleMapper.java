@@ -1,13 +1,12 @@
 package com.ranyk.vt.boot.example.web.freamwork.mapper.role;
 
+import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RoleDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RolePermissionConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.entity.Role;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.entity.RolePermissionConnection;
-import com.ranyk.vt.boot.example.web.freamwork.domain.role.po.DeleteRolePO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.role.po.QueryRolePO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.role.po.SaveRolePO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.role.po.UpdateRolePO;
+import com.ranyk.vt.boot.example.web.freamwork.domain.role.po.*;
+import com.ranyk.vt.boot.example.web.freamwork.domain.role.vo.QueryAccountRoleVO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.vo.QueryRoleVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,6 +32,7 @@ public interface RoleMapper {
      * @return 角色信息数据传输 DTO 对象 {@link RoleDTO}
      */
     @Mappings({
+            @Mapping(target = "accountId", ignore = true),
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "status", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
@@ -53,6 +53,7 @@ public interface RoleMapper {
      * @return 角色信息数据传输 DTO 对象 {@link RoleDTO}
      */
     @Mappings({
+            @Mapping(target = "accountId", ignore = true),
             @Mapping(target = "name", ignore = true),
             @Mapping(target = "code", ignore = true),
             @Mapping(target = "remark", ignore = true),
@@ -74,6 +75,7 @@ public interface RoleMapper {
      * @return 角色信息数据传输 DTO 对象 {@link RoleDTO}
      */
     @Mappings({
+            @Mapping(target = "accountId", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "createBy", ignore = true),
             @Mapping(target = "createTime", ignore = true),
@@ -93,6 +95,7 @@ public interface RoleMapper {
      */
     @Mappings({
             @Mapping(target = "id", ignore = true),
+            @Mapping(target = "accountId", ignore = true),
             @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "createBy", ignore = true),
             @Mapping(target = "createTime", ignore = true),
@@ -117,7 +120,7 @@ public interface RoleMapper {
      * @return 角色信息数据传输对象 {@link RoleDTO}
      */
     @Mappings({
-
+            @Mapping(target = "accountId", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "ids", ignore = true)
@@ -162,4 +165,66 @@ public interface RoleMapper {
      * @return 角色权限关联关系数据传输对象 列表 {@link RolePermissionConnectionDTO}
      */
     List<RolePermissionConnectionDTO> rolePermissionConnectionListToRolePermissionConnectionDTOList(List<RolePermissionConnection> rolePermissionConnectionList);
+
+    /**
+     * 将 角色权限关联关系数据封装 PO 对象 转换成 角色权限关联关系数据传输 DTO 对象
+     *
+     * @param roleBundledPermissionPO 新增角色权限关联关系数据封装 PO 对象 {@link RoleBundledPermissionPO}
+     * @return 角色权限关联关系数据传输 DTO 对象 {@link RolePermissionConnectionDTO}
+     */
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "roleId", ignore = true),
+            @Mapping(target = "permissionId", ignore = true),
+            @Mapping(target = "remark",ignore = true),
+            @Mapping(target = "status",ignore = true),
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+    })
+    RolePermissionConnectionDTO roleBundledPermissionPOToRolePermissionConnectionDTO(RoleBundledPermissionPO roleBundledPermissionPO);
+
+    /**
+     * 角色权限关联关系数据转换方法 - 数据传输对象 列表 转换为 数据实体对象 列表
+     *
+     * @param rolePermissionConnectionDTOS 角色权限关联关系数据传输对象 列表 {@link RolePermissionConnectionDTO}
+     * @return 角色权限关联关系数据实体对象 列表 {@link RolePermissionConnection}
+     */
+    List<RolePermissionConnection> rolePermissionConnectionDTOListToRolePermissionConnectionList(List<RolePermissionConnectionDTO> rolePermissionConnectionDTOS);
+
+    /**
+     * 将 通过账户ID查询角色信息 PO 类对象 转换为 账户信息数据传输 DTO 类对象
+     *
+     * @param queryRoleByAccountIdPO {@link QueryRoleByAccountIdPO}
+     * @return 账户信息数据传输 DTO 类对象 {@link AccountDTO}
+     */
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "code", ignore = true),
+            @Mapping(target = "name", ignore = true),
+            @Mapping(target = "remark", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+    })
+    RoleDTO queryRoleByAccountIdPOToRoleDTO(QueryRoleByAccountIdPO queryRoleByAccountIdPO);
+
+    /**
+     * 将 {@link RoleDTO} 列表 转换为 {@link QueryAccountRoleVO} 列表
+     *
+     * @param roleDTOList 角色信息传输对象 列表 {@link RoleDTO}
+     * @return 查询账户角色信息数据视图 VO 列表 {@link QueryAccountRoleVO}
+     */
+    List<QueryAccountRoleVO> roleDTOListToQueryAccountRoleVOList(List<RoleDTO> roleDTOList);
 }

@@ -1,13 +1,12 @@
 package com.ranyk.vt.boot.example.web.freamwork.api.account;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountDTO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.account.po.DeleteAccountPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.account.po.QueryAccountPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.account.po.SaveAccountPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.account.po.UpdateAccountPO;
+import com.ranyk.vt.boot.example.web.freamwork.domain.account.po.*;
 import com.ranyk.vt.boot.example.web.freamwork.domain.account.vo.QueryAccountVO;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.account.AccountMapper;
+import com.ranyk.vt.boot.example.web.freamwork.service.account.AccountRoleConnectionService;
 import com.ranyk.vt.boot.example.web.freamwork.service.account.AccountService;
 import com.ranyk.vt.boot.log.annotations.Log;
 import com.ranyk.vt.boot.web.vo.MultiResult;
@@ -32,6 +31,10 @@ public class AccountApi {
      */
     private final AccountService accountService;
     /**
+     * 账户角色关联业务逻辑类对象
+     */
+    private final AccountRoleConnectionService accountRoleConnectionService;
+    /**
      * 账户信息数据对象转换映射接口对象
      */
     private final AccountMapper accountMapper;
@@ -39,12 +42,14 @@ public class AccountApi {
     /**
      * 构造函数 - 向 Spring IOC 容器中注入账户信息业务逻辑类对象
      *
-     * @param accountService 账户信息业务逻辑类对象 {@link AccountService}
-     * @param accountMapper  账户信息数据对象转换映射接口对象 {@link AccountMapper}
+     * @param accountService               账户信息业务逻辑类对象 {@link AccountService}
+     * @param accountRoleConnectionService 账户角色关联业务逻辑类对象 {@link AccountRoleConnectionService}
+     * @param accountMapper                账户信息数据对象转换映射接口对象 {@link AccountMapper}
      */
     @Autowired
-    public AccountApi(AccountService accountService, AccountMapper accountMapper) {
+    public AccountApi(AccountService accountService, AccountRoleConnectionService accountRoleConnectionService, AccountMapper accountMapper) {
         this.accountService = accountService;
+        this.accountRoleConnectionService = accountRoleConnectionService;
         this.accountMapper = accountMapper;
     }
 
@@ -55,6 +60,7 @@ public class AccountApi {
      * @return 返回新增账户信息操作结果 {@link Boolean}
      */
     @PostMapping
+    @SaCheckPermission(value = {"add:account"})
     @Log(operation = "新增一个账户信息", type = Log.LogType.INSERT)
     public Result<Boolean> saveAccountInfo(@RequestBody SaveAccountPO saveAccountPO) {
         accountService.saveOneAccount(accountMapper.saveAccountPOToAccountDTO(saveAccountPO));
@@ -68,6 +74,7 @@ public class AccountApi {
      * @return 删除账户信息操作结果 {@link Boolean}
      */
     @DeleteMapping
+    @SaCheckPermission(value = {"delete:account"})
     @Log(operation = "删除一个账户信息", type = Log.LogType.DELETE)
     public Result<Boolean> deleteAccountInfo(@RequestBody DeleteAccountPO deleteAccountPO) {
         accountService.deleteOneAccount(accountMapper.deleteAccountPOToAccountDTO(deleteAccountPO));
@@ -81,6 +88,7 @@ public class AccountApi {
      * @return 批量删除账户信息操作结果 {@link Boolean}
      */
     @DeleteMapping("/batch/delete/account")
+    @SaCheckPermission(value = {"delete:account"})
     @Log(operation = "批量删除账户信息", type = Log.LogType.DELETE)
     public Result<Boolean> batchDeleteAccountInfo(@RequestBody DeleteAccountPO deleteAccountPO) {
         accountService.batchDeleteAccount(accountMapper.deleteAccountPOToAccountDTO(deleteAccountPO));
@@ -94,6 +102,7 @@ public class AccountApi {
      * @return 更新账户信息操作结果 {@link Boolean}
      */
     @PutMapping
+    @SaCheckPermission(value = {"update:account"})
     @Log(operation = "更新一个账户信息", type = Log.LogType.UPDATE)
     public Result<Boolean> updateAccountInfo(@RequestBody UpdateAccountPO updateAccountPO) {
         accountService.updateOneAccount(accountMapper.updateAccountPOToAccountDTO(updateAccountPO));
@@ -107,6 +116,7 @@ public class AccountApi {
      * @return 查询账户信息操作结果 {@link Boolean}
      */
     @GetMapping
+    @SaCheckPermission(value = {"query:account"})
     @Log(operation = "查询账户信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryAccountVO> queryAccountInfo(QueryAccountPO queryAccountPO) {
         PageResponse<AccountDTO> accountDTOPageResponse = accountService.queryAccountByConditions(accountMapper.queryAccountPOToAccountDTO(queryAccountPO));
@@ -116,5 +126,17 @@ public class AccountApi {
                 accountDTOPageResponse.getPageSize());
     }
 
-
+    /**
+     * 为账户绑定/解绑角色
+     *
+     * @param bundledRolePO 账户信息数据封装对象 {@link AccountBundledRolePO}
+     * @return 绑定角色操作结果 {@link Boolean}
+     */
+    @PostMapping("/bundled/role")
+    @SaCheckPermission(value = {"bundled:account:role"})
+    @Log(operation = "为账户绑定/解绑角色", type = Log.LogType.INSERT)
+    public Result<Boolean> bundledRole(@RequestBody AccountBundledRolePO bundledRolePO) {
+        accountRoleConnectionService.batchSaveAccountRoleConnection(accountMapper.accountBundledRolePOToAccountRoleConnectionDTO(bundledRolePO));
+        return Result.success(Boolean.TRUE);
+    }
 }

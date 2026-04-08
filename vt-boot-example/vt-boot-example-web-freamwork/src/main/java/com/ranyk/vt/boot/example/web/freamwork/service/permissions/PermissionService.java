@@ -11,10 +11,14 @@ import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
+import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountRoleConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.dto.PermissionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.entity.Permission;
+import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RolePermissionConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.permissions.PermissionMapper;
 import com.ranyk.vt.boot.example.web.freamwork.repository.permissions.PermissionRepository;
+import com.ranyk.vt.boot.example.web.freamwork.service.account.AccountRoleConnectionService;
+import com.ranyk.vt.boot.example.web.freamwork.service.role.RolePermissionConnectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,17 +50,32 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
      * 权限信息数据转换接口对象
      */
     private final PermissionMapper permissionMapper;
+    /**
+     * 账户角色关联信息业务逻辑类对象
+     */
+    private final AccountRoleConnectionService accountRoleConnectionService;
+    /**
+     * 角色权限关联信息业务逻辑类对象
+     */
+    private final RolePermissionConnectionService rolePermissionConnectionService;
 
     /**
      * 构造函数 - 向 Spring IOC 容器中注入权限信息数据操作接口对象
      *
-     * @param permissionRepository 权限信息数据操作接口对象
-     * @param permissionMapper     权限信息数据转换接口对象
+     * @param permissionRepository            权限信息数据操作接口对象
+     * @param permissionMapper                权限信息数据转换接口对象
+     * @param accountRoleConnectionService    账户角色关联信息业务逻辑类对象
+     * @param rolePermissionConnectionService 角色权限关联信息业务逻辑类对象
      */
     @Autowired
-    public PermissionService(PermissionRepository permissionRepository, PermissionMapper permissionMapper) {
+    public PermissionService(PermissionRepository permissionRepository,
+                             PermissionMapper permissionMapper,
+                             AccountRoleConnectionService accountRoleConnectionService,
+                             RolePermissionConnectionService rolePermissionConnectionService) {
         this.permissionRepository = permissionRepository;
         this.permissionMapper = permissionMapper;
+        this.accountRoleConnectionService = accountRoleConnectionService;
+        this.rolePermissionConnectionService = rolePermissionConnectionService;
     }
 
     /**
@@ -112,7 +131,7 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
         LambdaQueryWrapper<Permission> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Permission::getId, permissionDTO.getId());
         Permission permission = this.permissionRepository.selectOne(queryWrapper);
-        if (StrUtil.isNotBlank(permission.getName())){
+        if (StrUtil.isNotBlank(permission.getName())) {
             Integer count = this.permissionRepository.selectCountByNameEqAndIdNotEq(permissionDTO.getName(), permission.getId());
             if (count > 0) {
                 log.error("修改权限信息处 - 权限名称已存在!");
@@ -120,7 +139,7 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
             }
             permission.setName(permissionDTO.getName());
         }
-        if (StrUtil.isNotBlank(permission.getCode())){
+        if (StrUtil.isNotBlank(permission.getCode())) {
             Integer count = this.permissionRepository.selectCountByCodeEqAndIdNotEq(permissionDTO.getCode(), permission.getId());
             if (count > 0) {
                 log.error("修改权限信息处 - 权限编码已存在!");
@@ -155,6 +174,27 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
         queryWrapper.like(StrUtil.isNotBlank(permissionDTO.getRemark()), Permission::getRemark, permissionDTO.getRemark());
         IPage<Permission> permissionIPage = permissionRepository.selectPage(page, queryWrapper);
         return PageUtils.buildPageResponse(permissionIPage, permissionMapper.permissionListToPermissionDTOList(permissionIPage.getRecords()));
+    }
+
+    /**
+     * 根据账户ID查询账户拥有的权限信息
+     *
+     * @param permissionDTO 待查询权限数据传输对象, {@link PermissionDTO}
+     * @return 查询结果, {@link List} - {@link PermissionDTO}
+     */
+    public List<PermissionDTO> queryPermissionByAccountId(PermissionDTO permissionDTO) {
+        List<AccountRoleConnectionDTO> accountRoleConnectionDTOList = accountRoleConnectionService.queryAccountRoleConnectionByAccountId(AccountRoleConnectionDTO.builder().accountId(permissionDTO.getAccountId()).build());
+        List<String> roleIds = accountRoleConnectionDTOList.stream().map(AccountRoleConnectionDTO::getRoleId).toList();
+        if (CollUtil.isEmpty(roleIds)) {
+            return Collections.emptyList();
+        }
+        List<RolePermissionConnectionDTO> rolePermissionConnectionDTOList = rolePermissionConnectionService.queryRolePermissionConnectionByRoleIds(RolePermissionConnectionDTO.builder().roleIds(roleIds).build());
+        List<String> permissionIds = rolePermissionConnectionDTOList.stream().map(RolePermissionConnectionDTO::getPermissionId).toList();
+        if (CollUtil.isEmpty(permissionIds)) {
+            return Collections.emptyList();
+        }
+        List<Permission> permissionList = this.permissionRepository.selectByIds(permissionIds);
+        return permissionMapper.permissionListToPermissionDTOList(permissionList);
     }
 
     /**
@@ -255,5 +295,4 @@ public class PermissionService extends ServiceImpl<PermissionRepository, Permiss
             throw new ServiceException("权限ID 列表不能为空!");
         }
     }
-
 }

@@ -7,6 +7,7 @@ import com.ranyk.vt.boot.example.web.freamwork.domain.dict.entity.DictType;
 import com.ranyk.vt.boot.example.web.freamwork.domain.dict.po.*;
 import com.ranyk.vt.boot.example.web.freamwork.domain.dict.vo.DictTypeVO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.dict.vo.DictVO;
+import com.ranyk.vt.boot.example.web.freamwork.domain.dict.vo.QueryDictVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -53,7 +54,7 @@ public interface DictMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "status", ignore = true),
-            @Mapping(target = "tenantId", ignore = true ),
+            @Mapping(target = "tenantId", ignore = true),
             @Mapping(target = "createBy", ignore = true),
             @Mapping(target = "createTime", ignore = true),
             @Mapping(target = "updateBy", ignore = true),
@@ -61,6 +62,7 @@ public interface DictMapper {
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "dictTypeCode", ignore = true),
     })
     DictDTO saveDictPOToDTO(SaveDictPO saveDictPO);
 
@@ -105,6 +107,7 @@ public interface DictMapper {
             @Mapping(target = "updateTime", ignore = true),
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "dictTypeCode", ignore = true),
     })
     DictDTO deleteDictPOToDTO(DeleteDictPO deleteDictPO);
 
@@ -141,6 +144,7 @@ public interface DictMapper {
             @Mapping(target = "currentPage", ignore = true),
             @Mapping(target = "pageSize", ignore = true),
             @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "dictTypeCode", ignore = true),
     })
     DictDTO updateDictPOToDTO(UpdateDictPO updateDictPO);
 
@@ -175,8 +179,35 @@ public interface DictMapper {
             @Mapping(target = "updateTime", ignore = true),
             @Mapping(target = "ids", ignore = true),
             @Mapping(target = "id", ignore = true),
+            @Mapping(target = "dictTypeCode", ignore = true),
     })
     DictDTO queryDictPOToDTO(QueryDictPO queryDictPO);
+
+    /**
+     * 将 QueryDictByTypeCodePO 转换为 DictDTO
+     *
+     * @param queryDictByTypeCodePO 字典查询PO对象 {@link QueryDictByTypeCodePO}
+     * @return 字典DTO对象 {@link DictDTO}
+     */
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "name", ignore = true),
+            @Mapping(target = "code", ignore = true),
+            @Mapping(target = "value", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "remark", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "dictTypeCode", source = "code"),
+            @Mapping(target = "ids", ignore = true),
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "dictTypeId", ignore = true),
+    })
+    DictDTO queryDictByTypeCodePOToDictDTO(QueryDictByTypeCodePO queryDictByTypeCodePO);
 
     /**
      * 将 DictDTO 转换为 Dict 实体类
@@ -196,7 +227,8 @@ public interface DictMapper {
 
             @Mapping(target = "currentPage",ignore = true),
             @Mapping(target = "pageSize",ignore = true),
-            @Mapping(target = "ids",ignore = true)
+            @Mapping(target = "ids",ignore = true),
+            @Mapping(target = "dictTypeCode", ignore = true),
     })
     DictDTO dictToDictDTO(Dict dict);
 
@@ -254,4 +286,19 @@ public interface DictMapper {
      */
     List<DictVO> dictDTOListToVOList(List<DictDTO> dictDTOList);
 
+    /**
+     * 将 DictDTO 转换为 QueryDictVO
+     *
+     * @param dictDTO 字典DTO对象 {@link DictDTO}
+     * @return 字典VO对象 {@link QueryDictVO}
+     */
+    QueryDictVO dictDTOToQueryDictVO(DictDTO dictDTO);
+
+    /**
+     * 将 DictDTO 列表转换为 QueryDictVO 列表
+     *
+     * @param dictDTOList 字典DTO列表 {@link DictDTO}
+     * @return 字典VO列表 {@link QueryDictVO}
+     */
+    List<QueryDictVO> dictDTOToQueryDictVO(List<DictDTO> dictDTOList);
 }

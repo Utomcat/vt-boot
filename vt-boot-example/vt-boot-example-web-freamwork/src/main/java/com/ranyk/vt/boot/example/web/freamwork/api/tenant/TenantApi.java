@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.web.freamwork.api.tenant;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.example.web.freamwork.domain.tenant.dto.TenantDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.tenant.po.DeleteTenantPO;
@@ -55,6 +56,7 @@ public class TenantApi {
      * @return 新增结果 {@link Boolean} , true: 新增成功; false: 新增失败;
      */
     @PostMapping
+    @SaCheckRole(value = {"super:admin"})
     @Log(operation = "新增一个租户", type = Log.LogType.INSERT)
     public Result<Boolean> saveTenant(@RequestBody SaveTenantPO saveTenantPO) {
         tenantService.saveOneTenant(tenantMapper.saveTenantPOToTenantDTO(saveTenantPO));
@@ -68,6 +70,7 @@ public class TenantApi {
      * @return 删除结果 {@link Boolean} , true: 删除成功; false: 删除失败;
      */
     @DeleteMapping
+    @SaCheckRole(value = {"super:admin"})
     @Log(operation = "删除一个租户", type = Log.LogType.DELETE)
     public Result<Boolean> deleteTenant(@RequestBody DeleteTenantPO deleteTenantPO) {
         tenantService.deleteOneTenant(tenantMapper.deleteTenantPOToTenantDTO(deleteTenantPO));
@@ -81,6 +84,7 @@ public class TenantApi {
      * @return 更新结果 {@link Boolean} , true: 更新成功; false: 更新失败;
      */
     @PutMapping
+    @SaCheckRole(value = {"super:admin"})
     @Log(operation = "更新一个租户", type = Log.LogType.UPDATE)
     public Result<Boolean> updateTenant(@RequestBody UpdateTenantPO updateTenantPO) {
         tenantService.updateOneTenant(tenantMapper.updateTenantPOToTenantDTO(updateTenantPO));
@@ -94,6 +98,7 @@ public class TenantApi {
      * @return 查询结果 {@link MultiResult} - 查询结果视图对象 {@link QueryTenantVO}
      */
     @GetMapping
+    @SaCheckRole(value = {"super:admin"})
     @Log(operation = "查询租户信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryTenantVO> queryTenant(QueryTenantPO queryTenantPO) {
         PageResponse<TenantDTO> tenantDTOPageResponse = tenantService.queryTenantByConditions(tenantMapper.queryTenantPOToTenantDTO(queryTenantPO));

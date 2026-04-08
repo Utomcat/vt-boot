@@ -12,6 +12,7 @@ import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
 import com.ranyk.vt.boot.example.web.freamwork.domain.dict.dto.DictDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.dict.entity.Dict;
+import com.ranyk.vt.boot.example.web.freamwork.domain.dict.entity.DictType;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.dict.DictMapper;
 import com.ranyk.vt.boot.example.web.freamwork.repository.dict.DictRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,17 +44,23 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
      * 字典数据访问层接口对象
      */
     private final DictMapper dictMapper;
+    /**
+     * 字典类型业务逻辑类对象
+     */
+    private final DictTypeService dictTypeService;
 
     /**
      * 构造函数 - 向 Spring IOC 容器中注入字典数据访问层接口对象
      *
-     * @param dictRepository 字典数据访问层接口对象
-     * @param dictMapper     字典数据访问层接口对象
+     * @param dictRepository  字典数据访问层接口对象
+     * @param dictMapper      字典数据访问层接口对象
+     * @param dictTypeService 字典类型业务逻辑类对象
      */
     @Autowired
-    public DictService(DictRepository dictRepository, DictMapper dictMapper) {
+    public DictService(DictRepository dictRepository, DictMapper dictMapper, DictTypeService dictTypeService) {
         this.dictRepository = dictRepository;
         this.dictMapper = dictMapper;
+        this.dictTypeService = dictTypeService;
     }
 
     /**
@@ -142,6 +150,26 @@ public class DictService extends ServiceImpl<DictRepository, Dict> {
         queryWrapper.like(StrUtil.isNotBlank(dictDTO.getValue()), Dict::getValue, dictDTO.getValue());
         IPage<Dict> dictPage = page(page, queryWrapper);
         return PageUtils.buildPageResponse(dictPage, dictMapper.dictListToDictDTOList(dictPage.getRecords()));
+    }
+
+    /**
+     * 通过字典类型 CODE 查询字典数据列表
+     *
+     * @param dictDTO 字典 DTO 对象, {@link DictDTO}, 此处主要使用 {@link DictDTO#getDictTypeCode()} 属性
+     * @return 字典数据列表 - {@link List} - {@link DictDTO}
+     */
+    public List<DictDTO> queryDictByTypeCode(DictDTO dictDTO) {
+        LambdaQueryWrapper<DictType> dictTypeQueryWrapper = new LambdaQueryWrapper<>();
+        dictTypeQueryWrapper.eq(DictType::getCode, dictDTO.getDictTypeCode());
+        DictType dictType = dictTypeService.getOne(dictTypeQueryWrapper);
+        if (Objects.isNull(dictType) || StrUtil.isBlank(dictType.getId())) {
+            log.error("通过字典类型 CODE {} 查询对应的字典数据失败, 未能获取到对应的字典类型数据!", dictDTO.getDictTypeCode());
+            throw new ServiceException("通过字典类型 CODE %s 查询对应的字典数据失败, 未能获取到对应的字典类型数据!".formatted(dictDTO.getDictTypeCode()));
+        }
+        LambdaQueryWrapper<Dict> dictQueryWrapper = new LambdaQueryWrapper<>();
+        dictQueryWrapper.eq(Dict::getDictTypeId, dictType.getId());
+        List<Dict> dictList = this.dictRepository.selectList(dictQueryWrapper);
+        return dictMapper.dictListToDictDTOList(dictList);
     }
 
     /**

@@ -185,11 +185,19 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
             log.error("删除部门账户信息关联关系 - 依据账户ID, 删除部门账户信息关联关系时, 账户ID 为空!");
             throw new ServiceException("删除部门账户信息关联关系 - 依据账户ID, 删除部门账户信息关联关系时, 账户ID 为空!");
         }
-        Boolean deleteResult = departmentAccountConnectionRepository.deleteByAccountId(departmentAccountConnectionDTO.getAccountId());
-        if (!deleteResult) {
-            log.error("删除部门账户信息关联关系 - 依据账户ID, 删除部门账户信息关联关系时, 删除失败!");
-            throw new ServiceException("删除部门账户信息关联关系 - 依据账户ID, 删除部门账户信息关联关系时, 删除失败!");
+        // 查询是否存在需要删除的数据
+        Integer count = departmentAccountConnectionRepository.selectCountByAccountId(departmentAccountConnectionDTO.getAccountId());
+        // 存在删除数据, 执行删除操作
+        if (count > 0) {
+            // 删除部门账户信息关联关系 - 依据账户ID 删除部门账户关联关系数据
+            Boolean deleteResult = departmentAccountConnectionRepository.deleteByAccountId(departmentAccountConnectionDTO.getAccountId());
+            // 删除失败, 抛出异常
+            if (!deleteResult) {
+                log.error("删除部门账户信息关联关系 - 依据账户ID, 删除部门账户信息关联关系时, 删除失败!");
+                throw new ServiceException("删除部门账户信息关联关系 - 依据账户ID, 删除部门账户信息关联关系时, 删除失败!");
+            }
         }
+        // 删除成功, 返回 true
         return Boolean.TRUE;
     }
 
@@ -205,11 +213,18 @@ public class DepartmentAccountConnectionService extends ServiceImpl<DepartmentAc
             log.error("删除部门账户信息关联关系 - 依据账户ID List 集合, 删除部门账户信息关联关系时, 账户ID List 集合为空!");
             throw new ServiceException("删除部门账户信息关联关系 - 依据账户ID List 集合, 删除部门账户信息关联关系时, 账户ID List 集合为空!");
         }
-        Boolean deleteResult = departmentAccountConnectionRepository.deleteByAccountIdIn(departmentAccountConnectionDTO.getAccountIds());
-        if (!deleteResult) {
-            log.error("删除部门账户信息关联关系 - 依据账户ID List 集合, 删除部门账户信息关联关系时, 删除失败!");
-            throw new ServiceException("删除部门账户信息关联关系 - 依据账户ID List 集合, 删除部门账户信息关联关系时, 删除失败!");
+        // 查询是否存在需要删除的数据
+        Integer count = this.departmentAccountConnectionRepository.selectCountByAccountIdIn(departmentAccountConnectionDTO.getAccountIds());
+        if (count > 0) {
+            // 执行依据账户ID列表批量删除部门账户关联关系数据操作
+            Boolean deleteResult = departmentAccountConnectionRepository.deleteByAccountIdIn(departmentAccountConnectionDTO.getAccountIds());
+            // 删除失败, 抛出异常
+            if (!deleteResult) {
+                log.error("删除部门账户信息关联关系 - 依据账户ID List 集合, 删除部门账户信息关联关系时, 删除失败!");
+                throw new ServiceException("删除部门账户信息关联关系 - 依据账户ID List 集合, 删除部门账户信息关联关系时, 删除失败!");
+            }
         }
+        // 删除成功, 返回 true
         return Boolean.TRUE;
     }
 

@@ -10,11 +10,14 @@ import com.ranyk.vt.boot.base.constant.OperateTypeEnum;
 import com.ranyk.vt.boot.base.exception.ServiceException;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.datasource.util.PageUtils;
+import com.ranyk.vt.boot.example.web.freamwork.domain.account.dto.AccountRoleConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RoleDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.dto.RolePermissionConnectionDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.role.entity.Role;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.role.RoleMapper;
 import com.ranyk.vt.boot.example.web.freamwork.repository.role.RoleRepository;
+import com.ranyk.vt.boot.example.web.freamwork.service.account.AccountRoleConnectionService;
+import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,10 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      */
     private final RolePermissionConnectionService rolePermissionConnectionService;
     /**
+     * 账户角色关联业务逻辑类对象
+     */
+    private final AccountRoleConnectionService accountRoleConnectionService;
+    /**
      * 角色信息数据转换接口对象
      */
     private final RoleMapper roleMapper;
@@ -55,12 +62,17 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      *
      * @param roleRepository                  角色信息数据操作接口对象
      * @param rolePermissionConnectionService 角色权限关联关系业务逻辑类对象
+     * @param accountRoleConnectionService    账户角色关联业务逻辑类对象
      * @param roleMapper                      角色信息数据转换接口对象
      */
     @Autowired
-    public RoleService(RoleRepository roleRepository, RolePermissionConnectionService rolePermissionConnectionService, RoleMapper roleMapper) {
+    public RoleService(RoleRepository roleRepository,
+                       RolePermissionConnectionService rolePermissionConnectionService,
+                       AccountRoleConnectionService accountRoleConnectionService,
+                       RoleMapper roleMapper) {
         this.roleRepository = roleRepository;
         this.rolePermissionConnectionService = rolePermissionConnectionService;
+        this.accountRoleConnectionService = accountRoleConnectionService;
         this.roleMapper = roleMapper;
     }
 
@@ -70,6 +82,7 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
      */
     @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "新增一条角色数据", type = OperateTypeEnum.SAVE, isSaveOperationRecord = true)
     public void saveOneRole(RoleDTO roleDTO) {
         verifyRoleParams(roleDTO, OperateTypeEnum.SAVE);
         Role role = roleMapper.roleDTOToRoleEntity(roleDTO);
@@ -95,6 +108,7 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
      */
     @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "删除一条角色数据", type = OperateTypeEnum.DELETE, isSaveOperationRecord = true)
     public void deleteOneRole(RoleDTO roleDTO) {
         verifyRoleParams(roleDTO, OperateTypeEnum.DELETE);
         Role role = roleMapper.roleDTOToRoleEntity(roleDTO);
@@ -112,6 +126,7 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
      * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
      */
     @Transactional(rollbackFor = Exception.class)
+    @OperationRecord(desc = "修改一条角色数据", type = OperateTypeEnum.UPDATE, isSaveOperationRecord = true)
     public void updateOneRole(RoleDTO roleDTO) {
         verifyRoleParams(roleDTO, OperateTypeEnum.UPDATE);
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
@@ -158,6 +173,19 @@ public class RoleService extends ServiceImpl<RoleRepository, Role> {
         queryWrapper.like(StrUtil.isNotBlank(roleDTO.getRemark()), Role::getRemark, roleDTO.getRemark());
         Page<Role> rolePage = roleRepository.selectPage(page, queryWrapper);
         return PageUtils.buildPageResponse(rolePage, roleMapper.roleListToRoleDTOList(rolePage.getRecords()));
+    }
+
+    /**
+     * 根据账户ID查询角色信息
+     *
+     * @param roleDTO 角色信息数据传输对象 {@link RoleDTO}
+     * @return 角色信息数据传输对象列表 {@link RoleDTO}
+     */
+    public List<RoleDTO> queryRoleByAccountId(RoleDTO roleDTO) {
+        List<AccountRoleConnectionDTO> accountRoleConnectionDTOS = accountRoleConnectionService.queryAccountRoleConnectionByAccountId(AccountRoleConnectionDTO.builder().accountId(roleDTO.getAccountId()).build());
+        List<String> roleIdList = accountRoleConnectionDTOS.stream().map(AccountRoleConnectionDTO::getRoleId).toList();
+        List<Role> roleList = this.roleRepository.selectByIds(roleIdList);
+        return roleMapper.roleListToRoleDTOList(roleList);
     }
 
     /**

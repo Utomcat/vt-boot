@@ -1,11 +1,10 @@
 package com.ranyk.vt.boot.example.web.freamwork.api.permissions;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.dto.PermissionDTO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.DeletePermissionPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.QueryPermissionPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.SavePermissionPO;
-import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.UpdatePermissionPO;
+import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.po.*;
+import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.vo.QueryAccountPermissionVO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.permissions.vo.QueryPermissionVO;
 import com.ranyk.vt.boot.example.web.freamwork.mapper.permissions.PermissionMapper;
 import com.ranyk.vt.boot.example.web.freamwork.service.permissions.PermissionService;
@@ -14,6 +13,8 @@ import com.ranyk.vt.boot.web.vo.MultiResult;
 import com.ranyk.vt.boot.web.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * CLASS_NAME: PermissionApi.java
@@ -55,6 +56,7 @@ public class PermissionApi {
      * @return 返回新增结果 {@link Boolean} , true: 表示新增成功; false: 表示新增失败;
      */
     @PostMapping
+    @SaCheckPermission(value = {"add:permission"})
     @Log(operation = "新增一条权限信息", type = Log.LogType.INSERT)
     public Result<Boolean> savePermission(@RequestBody SavePermissionPO savePermissionPO) {
         permissionService.saveOnePermission(permissionMapper.savePermissionPOToPermissionDTO(savePermissionPO));
@@ -68,6 +70,7 @@ public class PermissionApi {
      * @return 删除结果 {@link Boolean} , true: 删除成功; false: 删除失败;
      */
     @DeleteMapping
+    @SaCheckPermission(value = {"delete:permission"})
     @Log(operation = "删除一条权限信息", type = Log.LogType.DELETE)
     public Result<Boolean> deletePermission(@RequestBody DeletePermissionPO deletePermissionPO) {
         permissionService.deleteOnePermission(permissionMapper.deletePermissionPOToPermissionDTO(deletePermissionPO));
@@ -81,6 +84,7 @@ public class PermissionApi {
      * @return 修改结果 {@link Boolean} , true: 修改成功; false: 修改失败;
      */
     @PutMapping
+    @SaCheckPermission(value = {"update:permission"})
     @Log(operation = "修改一条权限信息", type = Log.LogType.UPDATE)
     public Result<Boolean> updatePermission(@RequestBody UpdatePermissionPO updatePermissionPO) {
         permissionService.updateOnePermission(permissionMapper.updatePermissionPOToPermissionDTO(updatePermissionPO));
@@ -94,6 +98,7 @@ public class PermissionApi {
      * @return 查询结果 {@link MultiResult} - 权限信息数据转换后的 VO 类对象 {@link QueryPermissionVO}
      */
     @GetMapping
+    @SaCheckPermission(value = {"query:permission"})
     @Log(operation = "查询权限信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryPermissionVO> queryPermission(QueryPermissionPO queryPermissionPO) {
         PageResponse<PermissionDTO> pageResponse = permissionService.queryPermissionByConditions(permissionMapper.queryPermissionPoToPermissionDTO(queryPermissionPO));
@@ -101,5 +106,19 @@ public class PermissionApi {
                 Long.parseLong(String.valueOf(pageResponse.getTotal())),
                 pageResponse.getCurrentPage(),
                 pageResponse.getPageSize());
+    }
+
+    /**
+     * 根据账户ID查询账户拥有的权限信息
+     *
+     * @param queryPermissionByAccountIdPO 查询权限请求参数封装 PO 类对象 {@link QueryPermissionByAccountIdPO}
+     * @return 查询结果 {@link List} - {@link QueryAccountPermissionVO}
+     */
+    @GetMapping("/by/account/id")
+    @SaCheckPermission(value = {"query:permission"})
+    @Log(operation = "根据账户ID查询账户拥有的权限信息", type = Log.LogType.SELECT)
+    public Result<List<QueryAccountPermissionVO>> queryPermissionByAccountId(QueryPermissionByAccountIdPO queryPermissionByAccountIdPO) {
+        List<PermissionDTO> permissionDTOList = permissionService.queryPermissionByAccountId(permissionMapper.queryPermissionByAccountIdPOToPermissionDTO(queryPermissionByAccountIdPO));
+        return Result.success(permissionMapper.permissionDTOListToQueryAccountPermissionVOList(permissionDTOList));
     }
 }

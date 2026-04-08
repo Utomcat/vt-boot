@@ -76,4 +76,20 @@ public interface DepartmentAccountConnectionRepository extends BaseMapper<Depart
      * @return 删除结果, true: 删除成功, false: 删除失败;
      */
     Boolean deleteByAccountIdIn(@Param("accountIds") List<String> accountIds);
+
+    /**
+     * 根据账户ID查询部门账户关联关系数据数量
+     *
+     * @param accountId 账户ID
+     * @return 部门账户关联关系数据数量
+     */
+    Integer selectCountByAccountId(@Param("accountId") String accountId);
+
+    /**
+     * 根据账户ID列表批量查询部门账户关联关系数据数量
+     *
+     * @param accountIds 账户ID List 集合
+     * @return 部门账户关联关系数据数量
+     */
+    Integer selectCountByAccountIdIn(@Param("accountIds") List<String> accountIds);
 }

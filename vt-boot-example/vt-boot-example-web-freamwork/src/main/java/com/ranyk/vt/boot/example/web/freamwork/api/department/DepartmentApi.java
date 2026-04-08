@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.example.web.freamwork.api.department;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.ranyk.vt.boot.base.response.PageResponse;
 import com.ranyk.vt.boot.example.web.freamwork.domain.department.dto.DepartmentDTO;
 import com.ranyk.vt.boot.example.web.freamwork.domain.department.po.DeleteDepartmentPO;
@@ -55,6 +56,7 @@ public class DepartmentApi {
      * @return 保存结果 {@link Result} true: 保存成功; false: 保存失败;
      */
     @PostMapping
+    @SaCheckPermission(value = {"add:department"})
     @Log(operation = "保存一个部门信息", type = Log.LogType.SELECT)
     public Result<Boolean> saveDepartment(@RequestBody SaveDepartmentPO saveDepartmentPO) {
         departmentService.saveOneDepartment(departmentMapper.saveDepartmentPOToDTO(saveDepartmentPO));
@@ -68,6 +70,7 @@ public class DepartmentApi {
      * @return 删除结果 {@link Result} true: 删除成功; false: 删除失败;
      */
     @DeleteMapping
+    @SaCheckPermission(value = {"delete:department"})
     @Log(operation = "删除一个部门信息", type = Log.LogType.DELETE)
     public Result<Boolean> deleteDepartment(@RequestBody DeleteDepartmentPO deleteDepartmentPO) {
         departmentService.deleteOneDepartment(departmentMapper.deleteDepartmentPOToDTO(deleteDepartmentPO));
@@ -81,6 +84,7 @@ public class DepartmentApi {
      * @return 修改结果 {@link Result} true: 修改成功; false: 修改失败;
      */
     @PutMapping
+    @SaCheckPermission(value = {"update:department"})
     @Log(operation = "修改一个部门信息", type = Log.LogType.UPDATE)
     public Result<Boolean> updateDepartment(@RequestBody UpdateDepartmentPO updateDepartmentPO) {
         departmentService.updateOneDepartment(departmentMapper.updateDepartmentPOToDTO(updateDepartmentPO));
@@ -94,6 +98,7 @@ public class DepartmentApi {
      * @return 查询结果 {@link MultiResult}
      */
     @GetMapping
+    @SaCheckPermission(value = {"query:department"})
     @Log(operation = "查询部门信息 - 分页", type = Log.LogType.SELECT)
     public MultiResult<QueryDepartmentVO> queryDepartment(QueryDepartmentPO queryDepartmentPO) {
         PageResponse<DepartmentDTO> departmentDTOPageResponse = departmentService.queryDepartment(departmentMapper.queryDepartmentPOToDTO(queryDepartmentPO));

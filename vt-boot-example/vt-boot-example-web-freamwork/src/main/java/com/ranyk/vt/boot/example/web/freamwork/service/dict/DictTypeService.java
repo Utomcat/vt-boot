@@ -228,7 +228,4 @@ public class DictTypeService extends ServiceImpl<DictTypeRepository, DictType> {
             throw new ServiceException("修改字典类型失败，数据 ID 不能为空!");
         }
     }
-
-
-
 }

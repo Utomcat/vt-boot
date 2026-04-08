@@ -252,4 +252,35 @@ public interface AccountMapper {
             @Mapping(target = "userName", ignore = true),
     })
     AccountUserConnectionDTO accountUserConnectionToAccountUserConnectionDTO(AccountUserConnection accountUserConnection);
+
+    /**
+     * 将 账户用户关联关系 PO类 转换为 账户用户关联关系数据传输 DTO 列表
+     *
+     * @param accountBundledRolePO 账户用户关联关系 PO 类 {@link AccountBundledRolePO}
+     * @return 账户用户关联关系数据传输 DTO 列表 {@link AccountRoleConnectionDTO}
+     */
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "accountId", ignore = true),
+            @Mapping(target = "roleId", ignore = true),
+            @Mapping(target = "remark", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "tenantId", ignore = true),
+            @Mapping(target = "createBy", ignore = true),
+            @Mapping(target = "createTime", ignore = true),
+            @Mapping(target = "updateBy", ignore = true),
+            @Mapping(target = "updateTime", ignore = true),
+            @Mapping(target = "currentPage", ignore = true),
+            @Mapping(target = "pageSize", ignore = true),
+            @Mapping(target = "ids", ignore = true),
+    })
+    AccountRoleConnectionDTO accountBundledRolePOToAccountRoleConnectionDTO(AccountBundledRolePO accountBundledRolePO);
+
+    /**
+     * 将 账户用户关联关系数据传输 DTO 列表转换为 账户用户关联关系数据实体类 列表
+     *
+     * @param accountRoleConnectionDTOS 账户用户关联关系数据传输 DTO 列表 {@link AccountRoleConnectionDTO}
+     * @return 账户用户关联关系数据实体类 列表 {@link AccountRoleConnection}
+     */
+    List<AccountRoleConnection> accountRoleConnectionDTOListToAccountRoleConnectionList(List<AccountRoleConnectionDTO> accountRoleConnectionDTOS);
 }

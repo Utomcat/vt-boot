@@ -33,4 +33,9 @@ public class RoleDTO extends BaseDTO {
     private String code;
 
     // 以下为扩展字段
+
+    /**
+     * 账户ID
+     */
+    private String accountId;
 }

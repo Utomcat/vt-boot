@@ -1,10 +1,13 @@
 package com.ranyk.vt.boot.example.web.freamwork.domain.account.dto;
 
+import cn.hutool.core.collection.CollUtil;
 import com.ranyk.vt.boot.base.domain.dto.BaseDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,4 +47,18 @@ public class AccountRoleConnectionDTO extends BaseDTO {
      * 账户ID 集合
      */
     private List<String> accountIds;
+
+    /**
+     * 构建账户角色关系数据传输对象列表
+     *
+     * @return 账户角色关系数据传输对象列表
+     */
+    public List<AccountRoleConnectionDTO> buildAccountRoleConnectionDTOList() {
+        if (CollUtil.isEmpty(this.accountIds) || CollUtil.isEmpty(this.roleIds)) {
+            return Collections.emptyList();
+        }
+        List<AccountRoleConnectionDTO> accountRoleConnectionDTOList = new ArrayList<>(Math.max(this.roleIds.size(), this.accountIds.size()));
+        this.accountIds.forEach(accountId -> this.roleIds.forEach(roleId -> accountRoleConnectionDTOList.add(AccountRoleConnectionDTO.builder().accountId(accountId).roleId(roleId).build())));
+        return accountRoleConnectionDTOList;
+    }
 }
