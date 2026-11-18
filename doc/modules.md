@@ -39,6 +39,7 @@
 - `TenantContext` / `UserContext`：请求线程上下文（租户 ID、用户信息）。
 - `PasswordUtils`：密码加密工具（业务中示例用 BCrypt）。
 - 常量包：操作类型、消息类型、租户枚举、响应码、 RabbitMQ 键、压缩后缀等。
+- 启动 banner：`src/main/resources/banner.txt`，框架统一品牌输出；业务工程自带 `banner.txt` 或用 `spring.banner.location` 显式覆盖（详见《配置说明》第十节）。
 
 > `ResponseCodeEnum` 的 `code` 在 `Result` 响应中作为字符串返回，禁止使用 HTTP 数字字符串。
 

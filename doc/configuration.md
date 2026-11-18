@@ -261,3 +261,43 @@ sa-token:
 - 通过 `spring.profiles.active` 切换环境（示例默认 `local`）。
 - 敏感信息（数据库密码、密钥）建议使用环境变量或外部配置覆盖，不要提交到仓库。
 - 日志环境、接口文档开关建议按环境差异化配置（生产关闭 Swagger UI）。
+
+## 十、启动 Banner（框架内置）
+
+启动 banner 属于框架级内容，由 `vt-boot-base-starter` 内置在 classpath 根（`src/main/resources/banner.txt`），所有依赖 vt-boot 的应用启动时自动显示，**业务工程不要重复放置**，示例工程也不放。
+
+覆盖方式全部走 Spring Boot 原生机制，无需任何 vt-boot 专属配置：
+
+| 需求 | 做法 |
+|------|------|
+| 使用框架 banner（默认） | 不配置，业务工程也不放 `banner.txt` |
+| 换成业务工程自己的 banner | 业务工程放 `src/main/resources/banner.txt`（fat jar 中 `BOOT-INF/classes` 先于 `BOOT-INF/lib` 加载，应用侧优先） |
+| 指定其它文件名或外部路径 | `spring.banner.location: classpath:my-banner.txt` 或 `file:./config/banner.txt` |
+| 关闭 banner | `spring.main.banner-mode: off` |
+| banner 同时写入日志文件 | `spring.main.banner-mode: log` |
+| 用图片转字符画 | `spring.banner.image.location: classpath:banner.png` |
+
+完整配置写法如下（写入业务工程主配置 `application.yaml` 的最外层，属于框架级配置，不要塞进 `datasource.yaml` / `sa-token.yaml` 这类业务配置）：
+
+```yaml
+spring:
+  main:
+    # 可选值: console(默认, 输出到控制台) / log(输出到日志文件) / off(关闭)
+    banner-mode: console
+  banner:
+    # 默认就是 classpath 根下的 banner.txt, 改名或换目录时才需要写
+    location: classpath:banner.txt
+    # banner 文件编码, 默认即 UTF-8; banner 中含中文时应显式声明
+    charset: UTF-8
+```
+
+要点：
+
+- 以上三个属性全部是 Spring Boot 原生属性（`spring.main.banner-mode`、`spring.banner.location`、`spring.banner.charset`），vt-boot 不做任何改写或二次封装。
+- 三项都有默认值，**全部不配置时即等价于上面这段**：使用框架 `banner.txt`、输出到控制台、按 UTF-8 解码。所以这段配置只在需要改行为（`log` / `off` / 换文件）时按需修改。
+- 如果按本工程的拆分习惯单独建 `banner.yaml`，必须在主配置的 `spring.config.import` 中补上 `classpath:banner.yaml`，否则不会加载。
+- 不要让多个模块各放一份同名 `banner.txt`：classpath 根出现多个同名资源时只会命中其中一个，具体命中哪个由加载顺序决定，属于不可控行为；需要统一品牌时只在 `vt-boot-base-starter` 保留一份。
+- `spring.banner.location` 指向的资源不存在时，Spring Boot 会静默退回内置默认 banner（只打印版本号），不会报错；排查以启动输出为准。
+- banner 中的占位符由 Spring Boot 运行期解析，与 Maven 过滤无关（父 POM 已统一 `filtering=false`）。`${spring-boot.version}` 稳定可用；`${application.version}` 取启动类所在 jar 的 MANIFEST `Implementation-Version`，IDEA 中直接运行解析不到，需打包运行才准确。
+- 修改 banner 后必须重启应用（工程未引入 `spring-boot-devtools`），热重载不会重新打印。
+- `banner.txt` 统一 UTF-8 + CRLF，`*.txt` 已在 `.editorconfig` 中关闭行尾空格修剪，避免艺术字对齐被破坏。
