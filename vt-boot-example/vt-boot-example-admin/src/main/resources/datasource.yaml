@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    # 使用 dynamic-datasource 的配置结构: master 为默认数据源, 需要多数据源时在 datasource 下继续追加
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.31.83:13309/vt_boot_4?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+          username: user
+          password: "123456"
+          hikari:
+            connection-timeout: 30000
+            maximum-pool-size: 20
+            minimum-idle: 5
+            idle-timeout: 600000
+            max-lifetime: 1800000
+            pool-name: vt-boot-hikari
+
+vt:
+  boot:
+    # MyBatis-Plus 分页插件方言 - 当前示例使用 MySQL
+    db-type: MYSQL
+    # 关闭多租户插件(示例中所有表都在同一租户下, 需要时置为 true 并配置忽略表)
+    is-enable-tenant: false

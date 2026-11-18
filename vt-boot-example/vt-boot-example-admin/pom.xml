@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-example</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>vt-boot-example-admin</artifactId>
+
+    <name>vt-boot-example-admin</name>
+    <description>AI 知识库后台示例应用(用户 / 租户 / 登录日志 / 认证)</description>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- 单元测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 参数校验 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- vt-boot web 模块: 提供 Result / MultiResult / 全局异常处理 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-web-starter</artifactId>
+        </dependency>
+
+        <!-- vt-boot sa-token 模块: 提供登录鉴权与拦截器 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-satoken-starter</artifactId>
+        </dependency>
+
+        <!-- vt-boot 日志模块: 提供 4 套 logback 环境配置与操作日志切面 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-log-starter</artifactId>
+        </dependency>
+
+        <!-- vt-boot 数据源模块: 提供 MyBatis-Plus 插件(分页/防全表/乐观锁/多租户)、公共字段自动填充与数据库驱动 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-datasource-starter</artifactId>
+        </dependency>
+
+        <!-- vt-boot OpenAPI 模块: 提供 swagger-ui 与默认接口文档信息 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-openapi-starter</artifactId>
+        </dependency>
+
+        <!-- vt-boot 定时任务模块: 基于 Quartz 的任务调度内核 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-task-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-task-admin-starter</artifactId>
+        </dependency>
+
+        <!-- vt-boot 国际化 Web 模块: 提供 ?lang= 语言切换拦截器 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-internationalization-starter</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Actuator: 暴露健康/指标端点, 供 Spring Boot Admin 采集 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Admin 服务端: 示例自带监控台, 访问 http://localhost:9086 查看 -->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Admin 客户端: 示例自我注册, 演示被监控方接入方式 -->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 覆盖聚合父工程的 skip=true, 本模块需要打可执行 fat jar -->
+                    <skip>false</skip>
+                    <mainClass>com.ranyk.vt.boot.example.VtBootExampleApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,5 +1,7 @@
 package com.ranyk.vt.boot.cache.config;
 
+import com.ranyk.vt.boot.cache.config.CaffeineAutoConfiguration;
+import com.ranyk.vt.boot.cache.config.RedisAutoConfiguration;
 import com.ranyk.vt.boot.cache.config.properties.CacheConfigurationProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,7 +17,7 @@ import org.springframework.context.annotation.Import;
  */
 @AutoConfiguration
 @EnableConfigurationProperties(value = CacheConfigurationProperties.class)
-@Import(value= {com.ranyk.vt.boot.cache.config.RedisAutoConfiguration.class, com.ranyk.vt.boot.cache.config.CaffeineAutoConfiguration.class})
+@Import(value= {RedisAutoConfiguration.class, CaffeineAutoConfiguration.class})
 public class CacheAutoConfiguration {
 
 

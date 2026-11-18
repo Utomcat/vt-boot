@@ -1,0 +1,2 @@
+com.ranyk.vt.boot.task.config.VtTaskAutoConfiguration
+com.ranyk.vt.boot.task.config.VtTaskLogAutoConfiguration

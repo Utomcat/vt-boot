@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProp
 @AutoConfiguration
 @ConditionalOnBooleanProperties(value = {
         @ConditionalOnBooleanProperty(prefix = "vt.cache", name = "enabled", matchIfMissing = true),
-        @ConditionalOnBooleanProperty(prefix = "vt.cache", name = "is-redis-enabled", matchIfMissing = true)
+        @ConditionalOnBooleanProperty(prefix = "vt.cache", name = "is-redis-enabled", matchIfMissing = false)
 })
 public class RedisAutoConfiguration {
 

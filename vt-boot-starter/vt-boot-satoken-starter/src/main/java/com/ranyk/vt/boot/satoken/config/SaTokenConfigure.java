@@ -2,12 +2,14 @@ package com.ranyk.vt.boot.satoken.config;
 
 import cn.dev33.satoken.config.SaTokenConfig;
 import com.ranyk.vt.boot.satoken.config.properties.SaTokenProperties;
+import com.ranyk.vt.boot.satoken.handler.SaTokenExceptionHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
 /**
@@ -21,7 +23,9 @@ import org.springframework.context.annotation.Primary;
 @Slf4j
 @AutoConfiguration
 @EnableConfigurationProperties(SaTokenProperties.class)
-@ConditionalOnProperty(name = "sa-token.enable", havingValue = "true")
+@ConditionalOnBooleanProperty(prefix = "sa-token", name = "enable", matchIfMissing = true)
+@Import(SaTokenExceptionHandler.class)
+@RequiredArgsConstructor
 public class SaTokenConfigure {
 
     /**
@@ -34,10 +38,7 @@ public class SaTokenConfigure {
      *
      * @param saTokenProperties SA-TOKEN 配置属性对象
      */
-    @Autowired
-    public SaTokenConfigure(SaTokenProperties saTokenProperties) {
-        this.saTokenProperties = saTokenProperties;
-    }
+
 
     /**
      * 向 Spring IOC 容器中注册 SA-TOKEN 配置 Bean 对象

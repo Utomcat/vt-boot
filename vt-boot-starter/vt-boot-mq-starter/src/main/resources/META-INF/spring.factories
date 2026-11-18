@@ -1,0 +1,4 @@
+# 自动配置导入过滤器 - 未启用 RabbitMQ 时剔除 Spring Boot 的 RabbitAutoConfiguration,
+# 避免仅引入 starter 而未配置 MQ 的工程在启动时尝试连接 RabbitMQ 并打印健康检查失败告警
+org.springframework.boot.autoconfigure.AutoConfigurationImportFilter=\
+  com.ranyk.vt.boot.mq.env.RabbitMqAutoConfigurationImportFilter

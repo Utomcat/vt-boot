@@ -15,7 +15,6 @@ import java.io.Serial;
  * @date: 2026-02-08
  */
 @Data
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @SuppressWarnings("unused")

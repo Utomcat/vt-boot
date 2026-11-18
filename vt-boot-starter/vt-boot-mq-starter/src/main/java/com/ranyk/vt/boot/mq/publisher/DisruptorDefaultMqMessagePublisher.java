@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.mq.publisher;
 
+import lombok.RequiredArgsConstructor;
 import com.lmax.disruptor.EventTranslatorTwoArg;
 import com.lmax.disruptor.RingBuffer;
 import com.ranyk.vt.boot.mq.domain.dto.BaseMessageDTO;
@@ -19,6 +20,7 @@ import java.util.Map;
  */
 @Component
 @ConditionalOnBean(RingBuffer.class)
+@RequiredArgsConstructor
 public class DisruptorDefaultMqMessagePublisher {
 
     /**
@@ -38,10 +40,7 @@ public class DisruptorDefaultMqMessagePublisher {
      *
      * @param ringBuffer Disruptor 默认消息队列事件发布者
      */
-    @Autowired
-    public DisruptorDefaultMqMessagePublisher(RingBuffer<BaseMessageDTO> ringBuffer) {
-        this.ringBuffer = ringBuffer;
-    }
+
 
     /**
      * 发布消息

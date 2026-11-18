@@ -2,14 +2,13 @@ package com.ranyk.vt.boot.log.handle;
 
 import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import com.ranyk.vt.boot.log.factory.OperationRecordStrategyFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +23,8 @@ import java.util.Objects;
  * @date: 2026-03-24
  */
 @Slf4j
-// 标识为切面类
 @Aspect
-// 交给Spring容器管理
-@Component
+@RequiredArgsConstructor
 public class OperationRecordAspectHandle {
 
     /**
@@ -36,19 +33,9 @@ public class OperationRecordAspectHandle {
     private final OperationRecordStrategyFactory operationRecordStrategyFactory;
 
     /**
-     * 构造函数
-     *
-     * @param operationRecordStrategyFactory 操作记录策略工厂类
-     */
-    @Autowired
-    public OperationRecordAspectHandle(OperationRecordStrategyFactory operationRecordStrategyFactory) {
-        this.operationRecordStrategyFactory = operationRecordStrategyFactory;
-    }
-
-    /**
      * 配置切点
      */
-    @Pointcut("@annotation(com.ranyk.vt.boot.log.annotations.OperationRecord)")
+    @Pointcut("@annotation(OperationRecord)")
     public void operationRecordPointcut() {
     }
 

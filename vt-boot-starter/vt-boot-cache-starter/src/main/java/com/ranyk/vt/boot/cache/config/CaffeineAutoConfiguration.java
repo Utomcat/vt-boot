@@ -3,6 +3,7 @@ package com.ranyk.vt.boot.cache.config;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.ranyk.vt.boot.cache.config.properties.CacheConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Bean;
  */
 @Slf4j
 @AutoConfiguration
+@RequiredArgsConstructor
 @ConditionalOnBooleanProperties(value = {
         @ConditionalOnBooleanProperty(prefix = "vt.cache", name = "enabled", matchIfMissing = true),
         @ConditionalOnBooleanProperty(prefix = "vt.cache", name = "is-caffeine-enabled", matchIfMissing = true)
@@ -31,16 +33,6 @@ public class CaffeineAutoConfiguration {
      * 缓存配置属性对象
      */
     private final CacheConfigurationProperties cacheConfigurationProperties;
-
-    /**
-     * 缓存配置类对象构造方法 - 向 Spring IOC 容器中自动添加缓存配置属性对象
-     *
-     * @param cacheConfigurationProperties 缓存配置属性对象
-     */
-    @Autowired
-    public CaffeineAutoConfiguration(CacheConfigurationProperties cacheConfigurationProperties) {
-        this.cacheConfigurationProperties = cacheConfigurationProperties;
-    }
 
     /**
      * 常规缓存,未设置指定的过期时间,如果需要设置过期时间,则需要另外配置一个缓存

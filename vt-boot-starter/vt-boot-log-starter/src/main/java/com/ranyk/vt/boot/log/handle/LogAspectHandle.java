@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -21,16 +20,13 @@ import java.util.Arrays;
  * @date: 2026-02-09
  */
 @Slf4j
-// 标识为切面类
 @Aspect
-// 交给Spring容器管理
-@Component
 public class LogAspectHandle {
 
     /**
      * 定义切入点：拦截所有标注了@Log注解的方法
      */
-    @Pointcut("@annotation(com.ranyk.vt.boot.log.annotations.Log)")
+    @Pointcut("@annotation(Log)")
     public void logPointcut() {}
 
     /**

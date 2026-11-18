@@ -7,6 +7,7 @@ import com.ranyk.vt.boot.base.constant.TenantEnum;
 import com.ranyk.vt.boot.base.context.TenantContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -30,6 +31,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TenantWebInterceptor extends SaInterceptor {
 
     /**
@@ -47,11 +49,7 @@ public class TenantWebInterceptor extends SaInterceptor {
      * @param isEnableTenant 是否启用多租户功能
      * @param excludePathPatterns 排除的路径模式列表
      */
-    @Autowired
-    public TenantWebInterceptor(Boolean isEnableTenant, List<String> excludePathPatterns) {
-        this.isEnableTenant = isEnableTenant;
-        this.excludePathPatterns = excludePathPatterns;
-    }
+
 
     /**
      * Interception point before the execution of a handler. Called after

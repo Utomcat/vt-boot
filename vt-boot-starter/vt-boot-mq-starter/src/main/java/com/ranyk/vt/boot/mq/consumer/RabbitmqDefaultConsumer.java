@@ -5,6 +5,7 @@ import com.ranyk.vt.boot.base.constant.MessageKeyEnum;
 import com.ranyk.vt.boot.mq.domain.dto.BaseMessageDTO;
 import com.ranyk.vt.boot.mq.util.MessageUtils;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
@@ -12,9 +13,6 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Service;
 
 /**
  * CLASS_NAME: RabbitmqDefaultConsumer.java
@@ -25,8 +23,7 @@ import org.springframework.stereotype.Service;
  * @date: 2026-03-25
  */
 @Slf4j
-@Service
-@ConditionalOnBean(IOperationRecordService.class)
+@RequiredArgsConstructor
 public class RabbitmqDefaultConsumer {
 
     /**
@@ -39,11 +36,7 @@ public class RabbitmqDefaultConsumer {
      *
      * @param operationRecordService 日志服务接口对象, {@link IOperationRecordService}
      */
-    @Autowired
-    @SuppressWarnings("all")
-    public RabbitmqDefaultConsumer(IOperationRecordService operationRecordService) {
-        this.operationRecordService = operationRecordService;
-    }
+
 
     /**
      * 接收 Rabbitmq 默认队列 消息

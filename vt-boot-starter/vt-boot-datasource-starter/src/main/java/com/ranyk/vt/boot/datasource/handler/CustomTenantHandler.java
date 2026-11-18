@@ -6,11 +6,10 @@ import com.ranyk.vt.boot.base.constant.AutoFillFieldEnum;
 import com.ranyk.vt.boot.base.constant.TenantEnum;
 import com.ranyk.vt.boot.base.context.TenantContext;
 import com.ranyk.vt.boot.datasource.config.properties.DatasourceConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.schema.Column;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,23 +23,13 @@ import java.util.Optional;
  * @description: 自定义租户监听器
  * @date: 2026-03-03
  */
-@Component
+@RequiredArgsConstructor
 public class CustomTenantHandler implements TenantLineHandler {
 
     /**
      * 数据源配置属性对象
      */
     private final DatasourceConfigurationProperties datasourceConfigurationProperties;
-
-    /**
-     * 构造方法 - 向 Spring IOC 容器中自动注入数据源配置属性对象
-     *
-     * @param datasourceConfigurationProperties 数据源配置属性对象
-     */
-    @Autowired
-    public CustomTenantHandler(DatasourceConfigurationProperties datasourceConfigurationProperties) {
-        this.datasourceConfigurationProperties = datasourceConfigurationProperties;
-    }
 
     /**
      * 获取租户 ID 值表达式，只支持单个 ID 值

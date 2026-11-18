@@ -2,8 +2,6 @@ package com.ranyk.vt.boot.log.service;
 
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Service;
 
 /**
  * CLASS_NAME: DefaultOperationRecordService.java
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Service;
  * @date: 2026-04-08
  */
 @Slf4j
-@Service
-@ConditionalOnMissingBean(IOperationRecordService.class)
 public class DefaultOperationRecordService implements IOperationRecordService {
 
     /**

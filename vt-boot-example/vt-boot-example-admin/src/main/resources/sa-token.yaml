@@ -1,0 +1,33 @@
+# Sa-Token 配置
+sa-token:
+  enable: true
+  token-name: Authorization
+  timeout: 2592000
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: true
+  is-print: false
+  match-path: /**
+  path-patterns:
+    - /**
+  exclude-path-patterns:
+    - /api/auth/login
+    - /api/auth/refresh
+    - /favicon.ico
+    - /static/**
+    - /error
+    - /v3/api-docs/**
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - /webjars/**
+    # 定时任务管理接口(示例中放开, 便于前端联调; 生产环境请移除本行并交由鉴权控制)
+    - /api/task/**
+    # Spring Boot Admin 监控台(示例自带)
+    - /
+    - /assets/**
+    - /applications/**
+    - /instances/**
+    - /actuator/**
+    - /variables.css
+    - /sba-settings.js

@@ -22,7 +22,6 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @ToString(callSuper=true)
 public class BaseDTO implements Serializable {
     @Serial

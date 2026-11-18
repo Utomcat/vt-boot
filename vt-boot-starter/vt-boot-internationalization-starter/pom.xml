@@ -11,24 +11,15 @@
 	<artifactId>vt-boot-internationalization-starter</artifactId>
 
 	<name>vt-boot-internationalization-starter</name>
-	<description>国际化模块</description>
+	<description>国际化 Web 模块 - 提供 LocaleChangeInterceptor 等 Web 侧能力</description>
 
 	<properties>
 	</properties>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
+			<groupId>com.ranyk</groupId>
+			<artifactId>vt-boot-i18n-core</artifactId>
 		</dependency>
 
 		<dependency>
@@ -36,27 +27,10 @@
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-		</dependency>
-
 		<!-- Source: https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-
-		<!-- Source: https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-to-slf4j</artifactId>
-		</dependency>
-
-		<!-- Source: https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
 		</dependency>
 	</dependencies>
 

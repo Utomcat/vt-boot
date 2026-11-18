@@ -6,6 +6,7 @@ import com.ranyk.vt.boot.mq.domain.dto.BaseMessageDTO;
 import com.ranyk.vt.boot.mq.strategy.DisruptorMqMessageHandlerStrategy;
 import com.ranyk.vt.boot.mq.util.MessageUtils;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @ConditionalOnBean(IOperationRecordService.class)
+@RequiredArgsConstructor
 public class LogDisruptorMqMessageHandlerStrategyImpl implements DisruptorMqMessageHandlerStrategy {
 
     /**
@@ -34,11 +36,7 @@ public class LogDisruptorMqMessageHandlerStrategyImpl implements DisruptorMqMess
      *
      * @param operationRecordService 日志服务接口对象, {@link IOperationRecordService}
      */
-    @Autowired
-    @SuppressWarnings("all")
-    public LogDisruptorMqMessageHandlerStrategyImpl(IOperationRecordService operationRecordService) {
-        this.operationRecordService = operationRecordService;
-    }
+
 
     /**
      * 获取消息类型

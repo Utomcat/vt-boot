@@ -2,7 +2,6 @@ package com.ranyk.vt.boot.cache.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * CLASS_NAME: CacheConfigurationProperties.java
@@ -13,18 +12,17 @@ import org.springframework.stereotype.Component;
  * @date: 2025-09-26
  */
 @Data
-@Component
 @ConfigurationProperties(prefix = "vt.cache")
 public class CacheConfigurationProperties {
 
     /**
-     * 是否启用缓存
+     * 是否启用缓存, 默认启用 (引入即用)
      */
-    private Boolean enabled = Boolean.FALSE;
+    private Boolean enabled = Boolean.TRUE;
     /**
-     * 是否启用 Caffeine 本地缓存
+     * 是否启用 Caffeine 本地缓存, 默认启用 (本地缓存无外部依赖)
      */
-    private Boolean isCaffeineEnabled = Boolean.FALSE;
+    private Boolean isCaffeineEnabled = Boolean.TRUE;
     /**
      * Caffeine 本地缓存初始化大小
      */

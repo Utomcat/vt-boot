@@ -23,10 +23,8 @@ import java.io.Serializable;
  * @date: 2026-02-07
  */
 @Data
-@ToString
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 @SuppressWarnings("unused")
 public class BaseResponse<T> implements Serializable {

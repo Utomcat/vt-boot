@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: vt-boot-example
+  profiles:
+    active: local
+  config:
+    import: classpath:datasource.yaml,classpath:mybatisplus.yaml,classpath:sa-token.yaml
+  threads:
+    virtual:
+      enabled: true
+  thymeleaf:
+    check-template-location: false
+  boot:
+    admin:
+      client:
+        # 示例自我注册到自带的监控台, 演示被监控方接入方式
+        url: http://localhost:${server.port}
+        instance:
+          service-base-url: http://localhost:${server.port}
+
+vt:
+  boot:
+    # OpenAPI 接口文档信息
+    openapi:
+      enabled: true
+      title: AI 知识库后台 API
+      version: 1.0.0
+      description: vt-boot 示例后台接口文档
+      contact-name: ranyk
+
+server:
+  port: 9086
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+logging:
+  level:
+    com.ranyk.vt.boot.example: debug
+    com.ranyk.vt.boot.datasource: info
+
+# Spring Boot Admin 采集所需的 actuator 端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

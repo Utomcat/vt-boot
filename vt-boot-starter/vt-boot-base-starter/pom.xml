@@ -18,9 +18,16 @@
 	</properties>
 
 	<dependencies>
+		<!-- 自动配置编程模型(@AutoConfiguration / @ConditionalOnXxx), 本模块提供 VtBootBaseAutoConfiguration -->
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+
+		<!-- 仅引入 MyBatis-Plus 注解, 用于 BaseEntity 声明表映射, 不引入持久层运行时 -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-annotation</artifactId>
 		</dependency>
 
 		<!-- MapStruct 核心库 -->
@@ -29,10 +36,11 @@
 			<artifactId>mapstruct</artifactId>
 		</dependency>
 
-		<!-- Lombok 和 MapStruct 的绑定依赖，确保两者可以协同工作 -->
+		<!-- Lombok 和 MapStruct 的绑定依赖，确保两者可以协同工作 (编译期使用, 不进入产物) -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok-mapstruct-binding</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -45,10 +53,10 @@
 			<artifactId>jackson-annotations</artifactId>
 		</dependency>
 
-		<!-- 国际化模块 -->
+		<!-- 国际化内核模块: 仅提供 MessageUtils 与消息资源, 不引入 Web -->
 		<dependency>
 			<groupId>com.ranyk</groupId>
-			<artifactId>vt-boot-internationalization-starter</artifactId>
+			<artifactId>vt-boot-i18n-core</artifactId>
 		</dependency>
 	</dependencies>
 

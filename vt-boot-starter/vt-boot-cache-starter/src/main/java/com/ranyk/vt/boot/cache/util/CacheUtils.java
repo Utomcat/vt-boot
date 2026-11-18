@@ -73,6 +73,9 @@ public class CacheUtils {
                 if (cacheConfigurationProperties == null) {
                     try {
                         cacheConfigurationProperties = SpringUtil.getBean(CacheConfigurationProperties.class);
+                    } catch (NoSuchBeanDefinitionException e) {
+                        log.error("未找到缓存配置 Bean, 请确认已引入 vt-boot-cache-starter 且容器已启动完成");
+                        throw new CacheException("未找到缓存配置 Bean, 请确认已引入 vt-boot-cache-starter 且容器已启动完成", e);
                     } catch (Exception e) {
                         log.error("在获取缓存自动配置属性时发生异常, 异常信息 => ", e);
                         throw new CacheException("在获取缓存自动配置属性时发生异常", e);

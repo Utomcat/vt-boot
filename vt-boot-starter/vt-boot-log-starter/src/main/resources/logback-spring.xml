@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    vt-boot 默认日志配置(Logback) - Spring Boot 会自动加载 classpath 下的 logback-spring.xml
+    特点: 按 spring.profiles.active 自动切换控制台/文件输出与日志保留天数, 业务工程无需再手工配置 logging.config。
+
+    环境差异:
+      local / dev / (未指定) : 控制台 + 文件, 日志保留 7 天
+      test                   : 控制台 + 文件, 日志保留 30 天
+      prod                   : 仅文件(不输出控制台), 日志保留 180 天
+
+    可覆盖项(均为可选, 写在业务工程的 application.yaml 里即可):
+      vt.boot.log.base-dir : 日志根目录, 默认 ./logs (相对进程工作目录)
+      spring.application.name : 日志文件名中的模块名, 默认 application
+      logging.level.*      : 日志级别(由 Spring Boot 统一应用)
+
+    说明: 本文件不开启配置热加载(scan=false), 以保证生产环境行为确定;
+         如本地调试确实需要热加载, 可自行放置同名 logback-spring.xml 覆盖, 或用 logging.config 参数指定。
+-->
+<configuration scan="false" debug="false">
+    <!-- 日志根目录, 默认工作目录下的 logs 文件夹 -->
+    <springProperty scope="context" name="LOG_BASE" source="vt.boot.log.base-dir" defaultValue="./logs"/>
+    <!-- 模块名称, 取自应用的 spring.application.name -->
+    <springProperty scope="context" name="MODULE_NAME" source="spring.application.name" defaultValue="application"/>
+
+    <!-- 单文件最大大小 -->
+    <property name="MAX_FILE_SIZE" value="10MB"/>
+    <!-- 日志最大保留天数: 默认 7 天, test / prod 在下方按 profile 覆盖 -->
+    <property name="MAX_HISTORY_DAYS" value="7"/>
+
+    <springProfile name="test">
+        <property name="MAX_HISTORY_DAYS" value="30"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <property name="MAX_HISTORY_DAYS" value="180"/>
+    </springProfile>
+
+    <!-- 控制台输出格式 -->
+    <property name="LOG.PATTERN.CONSOLE"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"/>
+    <!-- 文件输出格式 -->
+    <property name="LOG.PATTERN.FILE"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] %-40.40logger{39} : %m%n%wEx"/>
+
+    <!-- 日志展示规则: 彩色日志、异常堆栈格式化 -->
+    <conversionRule conversionWord="clr" class="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" class="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" class="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG.PATTERN.CONSOLE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- INFO 及以上级别文件, 按天 + 10MB 滚动 -->
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_BASE}/info/${MODULE_NAME}_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_BASE}/info/${MODULE_NAME}/${MODULE_NAME}_info_%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY_DAYS}</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG.PATTERN.FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- DEBUG 及以上级别文件(收集业务全量日志), 按天 + 10MB 滚动 -->
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_BASE}/debug/${MODULE_NAME}_debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_BASE}/debug/${MODULE_NAME}/${MODULE_NAME}_debug_%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY_DAYS}</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG.PATTERN.FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ERROR 级别文件, 便于快速定位异常 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_BASE}/error/${MODULE_NAME}_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_BASE}/error/${MODULE_NAME}/${MODULE_NAME}_error_%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY_DAYS}</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG.PATTERN.FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!-- 生产环境: 仅文件输出(不输出控制台) -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+        <logger name="com.ranyk" level="DEBUG" additivity="false">
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+    </springProfile>
+
+    <!-- 非生产环境: 控制台 + 文件 -->
+    <springProfile name="!prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+        <logger name="com.ranyk" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+    </springProfile>
+</configuration>

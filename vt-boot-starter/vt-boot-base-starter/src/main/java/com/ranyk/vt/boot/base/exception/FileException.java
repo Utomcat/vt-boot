@@ -16,7 +16,6 @@ import java.io.Serial;
  * @date: 2026-03-17
  */
 @Data
-@ToString
 @NoArgsConstructor
 @SuppressWarnings("unused")
 @EqualsAndHashCode(callSuper = true)

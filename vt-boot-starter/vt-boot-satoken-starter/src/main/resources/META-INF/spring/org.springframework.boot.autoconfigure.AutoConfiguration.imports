@@ -1,2 +1,3 @@
 com.ranyk.vt.boot.satoken.config.SaTokenConfigure
 com.ranyk.vt.boot.satoken.config.SaTokenInterceptorsConfig
+com.ranyk.vt.boot.satoken.config.SaTokenPermissionConfiguration

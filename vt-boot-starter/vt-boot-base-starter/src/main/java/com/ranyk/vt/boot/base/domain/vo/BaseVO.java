@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @ToString(callSuper=true)
 @SuppressWarnings("unused")
 public class BaseVO implements Serializable {

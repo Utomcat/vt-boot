@@ -1,449 +1,774 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.1.2</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+
+  <groupId>com.ranyk</groupId>
+  <artifactId>vt-boot</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>vt-boot</name>
+  <description>Spring Boot 4 + JDK 21</description>
+
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>vt-boot-starter</module>
+    <module>vt-boot-example</module>
+  </modules>
+
+  <url>https://github.com/Utomcat/vt-boot</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>ranyk</id>
+      <name>ranyk</name>
+      <email>13547180017@163.com</email>
+      <url>https://github.com/Utomcat</url>
+      <roles>
+        <role>Developer</role>
+        <role>Architect</role>
+      </roles>
+      <timezone>+8</timezone>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/Utomcat/vt-boot.git</connection>
+    <developerConnection>scm:git:git@github.com:Utomcat/vt-boot.git</developerConnection>
+    <url>https://github.com/Utomcat/vt-boot</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <java.version>21</java.version>
+    <spring-boot.version>4.1.2</spring-boot.version>
+    <spring-framework.version>7.0.10</spring-framework.version>
+    <log4j2.version>2.25.5</log4j2.version>
+    <jackson-annotations.version>2.22</jackson-annotations.version>
+    <jackson3.version>3.2.4</jackson3.version>
+    <mysql.version>9.7.0</mysql.version>
+    <springdoc.version>3.2.0</springdoc.version>
+    <lombok.version>1.18.42</lombok.version>
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <mapstruct-binding.version>0.2.0</mapstruct-binding.version>
+    <spring-ai.version>2.0.0</spring-ai.version>
+    <spring-ai-alibaba.version>2.0.0-M1.1</spring-ai-alibaba.version>
+    <spring-ai-alibaba-extensions.version>2.0.0-M1.1</spring-ai-alibaba-extensions.version>
+    <reversion>0.0.1-SNAPSHOT</reversion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- ============================================================
+           Spring Boot 官方依赖统一在此声明版本, 子模块只引用 groupId/artifactId
+           ============================================================ -->
+      <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.10</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+        <artifactId>spring-boot-starter-webmvc</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-aspectj</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-amqp</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-quartz</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-autoconfigure</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-configuration-processor</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${spring-framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${spring-framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-to-slf4j</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson-annotations.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>${mysql.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${springdoc.version}</version>
+      </dependency>
 
-	<groupId>com.ranyk</groupId>
-    <artifactId>vt-boot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-bom</artifactId>
+        <version>${spring-ai.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.cloud.ai</groupId>
+        <artifactId>spring-ai-alibaba-bom</artifactId>
+        <version>${spring-ai-alibaba.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.cloud.ai</groupId>
+        <artifactId>spring-ai-alibaba-extensions-bom</artifactId>
+        <version>${spring-ai-alibaba-extensions.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
 
-    <name>vt-boot</name>
-    <description>Spring Boot 3 + JDK 21</description>
+      <!-- Source: https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-client -->
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-starter-model-openai</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-starter-vector-store-redis</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-starter-model-ollama</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-markdown-document-reader</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-tika-document-reader</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-starter-mcp-client</artifactId>
+        <version>${spring-ai.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.codecentric</groupId>
+        <artifactId>spring-boot-admin-starter-client</artifactId>
+        <version>4.1.4</version>
+        <scope>compile</scope>
+      </dependency>
 
-	<packaging>pom</packaging>
+      <!-- Source: https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-server -->
+      <dependency>
+        <groupId>de.codecentric</groupId>
+        <artifactId>spring-boot-admin-starter-server</artifactId>
+        <version>4.1.4</version>
+        <scope>compile</scope>
+      </dependency>
 
-	<modules>
-		<module>vt-boot-starter</module>
-		<module>vt-boot-example</module>
-	</modules>
+      <!-- Source: https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.27.7</version>
+        <scope>compile</scope>
+      </dependency>
 
-    <url/>
+      <!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
 
-    <licenses>
-        <license/>
-    </licenses>
+      <!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+        <scope>compile</scope>
+      </dependency>
 
-    <developers>
-        <developer/>
-    </developers>
+      <!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${mapstruct.version}</version>
+        <scope>compile</scope>
+      </dependency>
 
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+      <!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-mapstruct-binding</artifactId>
+        <version>${mapstruct-binding.version}</version>
+        <scope>provided</scope>
+      </dependency>
 
-    <properties>
-        <java.version>21</java.version>
+      <!-- Source: https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>5.8.43</version>
+        <scope>compile</scope>
+      </dependency>
 
-		<spring-boot.version>3.5.10</spring-boot.version>
+      <!-- Source: https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+      <dependency>
+        <groupId>org.mariadb.jdbc</groupId>
+        <artifactId>mariadb-java-client</artifactId>
+        <version>3.5.7</version>
+        <scope>compile</scope>
+      </dependency>
 
-		<reversion>0.0.1-SNAPSHOT</reversion>
+      <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot4-starter -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+        <version>3.5.17</version>
+        <scope>compile</scope>
+      </dependency>
 
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+      <!-- Source: https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+      <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>4.1.0</version>
+        <scope>compile</scope>
+      </dependency>
 
-    <dependencyManagement>
-        <dependencies>
-			<!-- Source: https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-client -->
-			<dependency>
-				<groupId>de.codecentric</groupId>
-				<artifactId>spring-boot-admin-starter-client</artifactId>
-				<version>3.5.7</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus</artifactId>
+        <version>3.5.17</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/de.codecentric/spring-boot-admin-starter-server -->
-			<dependency>
-				<groupId>de.codecentric</groupId>
-				<artifactId>spring-boot-admin-starter-server</artifactId>
-				<version>3.5.7</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-extension -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-extension</artifactId>
+        <version>3.5.17</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.assertj/assertj-core -->
-			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>4.0.0-M1</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-annotation -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-annotation</artifactId>
+        <version>3.5.17</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.18.42</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-jsqlparser -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-jsqlparser</artifactId>
+        <version>3.5.17</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-			<dependency>
-				<groupId>org.mapstruct</groupId>
-				<artifactId>mapstruct</artifactId>
-				<version>1.7.0.Beta1</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot4-starter -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>dynamic-datasource-spring-boot4-starter</artifactId>
+        <version>4.6.0</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
-			<dependency>
-				<groupId>org.mapstruct</groupId>
-				<artifactId>mapstruct-processor</artifactId>
-				<version>1.7.0.Beta1</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-boot4-starter -->
+      <dependency>
+        <groupId>cn.dev33</groupId>
+        <artifactId>sa-token-spring-boot4-starter</artifactId>
+        <version>1.46.0</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok-mapstruct-binding</artifactId>
-				<version>0.2.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-aop -->
+      <dependency>
+        <groupId>cn.dev33</groupId>
+        <artifactId>sa-token-spring-aop</artifactId>
+        <version>1.46.0</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-all</artifactId>
-				<version>5.8.43</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+      <dependency>
+        <groupId>com.github.ben-manes.caffeine</groupId>
+        <artifactId>caffeine</artifactId>
+        <version>3.2.3</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
-			<dependency>
-				<groupId>org.mariadb.jdbc</groupId>
-				<artifactId>mariadb-java-client</artifactId>
-				<version>3.5.7</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>4.5.0</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot3-starter -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-				<version>3.5.16</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.lmax/disruptor -->
+      <dependency>
+        <groupId>com.lmax</groupId>
+        <artifactId>disruptor</artifactId>
+        <version>4.0.0</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
-			<dependency>
-				<groupId>org.mybatis.spring.boot</groupId>
-				<artifactId>mybatis-spring-boot-starter</artifactId>
-				<version>4.0.1</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/org.apache.rocketmq/rocketmq-spring-boot-starter -->
+      <dependency>
+        <groupId>org.apache.rocketmq</groupId>
+        <artifactId>rocketmq-spring-boot-starter</artifactId>
+        <version>2.3.5</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus</artifactId>
-				<version>3.5.16</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+      <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka</artifactId>
+        <version>4.1.1</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-extension -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-extension</artifactId>
-				<version>3.5.16</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-test -->
+      <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka-test</artifactId>
+        <version>4.1.1</version>
+        <scope>test</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-jsqlparser -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-jsqlparser</artifactId>
-				<version>3.5.16</version>
-				<scope>compile</scope>
-			</dependency>
+      <!-- Source: https://mvnrepository.com/artifact/tools.jackson.core/jackson-databind -->
+      <dependency>
+        <groupId>tools.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson3.version}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot3-starter -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
-				<version>4.5.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-aop-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-boot3-starter -->
-			<dependency>
-				<groupId>cn.dev33</groupId>
-				<artifactId>sa-token-spring-boot3-starter</artifactId>
-				<version>1.44.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-async-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-aop -->
-			<dependency>
-				<groupId>cn.dev33</groupId>
-				<artifactId>sa-token-spring-aop</artifactId>
-				<version>1.44.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-base-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
-			<dependency>
-				<groupId>com.github.ben-manes.caffeine</groupId>
-				<artifactId>caffeine</artifactId>
-				<version>3.2.3</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-cache-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-collections4</artifactId>
-				<version>4.5.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-datasource-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/com.lmax/disruptor -->
-			<dependency>
-				<groupId>com.lmax</groupId>
-				<artifactId>disruptor</artifactId>
-				<version>4.0.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-file-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.apache.rocketmq/rocketmq-spring-boot-starter -->
-			<dependency>
-				<groupId>org.apache.rocketmq</groupId>
-				<artifactId>rocketmq-spring-boot-starter</artifactId>
-				<version>2.3.5</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-i18n-core</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
-			<dependency>
-				<groupId>org.springframework.kafka</groupId>
-				<artifactId>spring-kafka</artifactId>
-				<version>4.1.0-M2</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-internationalization-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-test -->
-			<dependency>
-				<groupId>org.springframework.kafka</groupId>
-				<artifactId>spring-kafka-test</artifactId>
-				<version>4.1.0-M2</version>
-				<scope>test</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-log-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<!-- Source: https://mvnrepository.com/artifact/tools.jackson.core/jackson-databind -->
-			<dependency>
-				<groupId>tools.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>3.1.0</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-rpc-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-aop-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-mq-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-async-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-openapi-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-base-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-satoken-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-cache-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-task-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-datasource-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-task-admin-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-file-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <dependency>
+        <groupId>com.ranyk</groupId>
+        <artifactId>vt-boot-web-starter</artifactId>
+        <version>${reversion}</version>
+        <scope>compile</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-internationalization-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+  <!--
+    全局公共依赖 - 所有子模块(含 starter 与示例工程)自动继承, 无需重复声明。
+    Lombok 属于编译期注解处理器, 因此统一使用 provided 作用域, 不会进入运行期与最终产物。
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!--
+      日志门面 - 所有模块均使用 @Slf4j 输出日志, 统一在此声明, 避免个别模块依赖"传递进来的" slf4j。
+      版本由 Spring Boot BOM 管理, 运行期实现由使用方工程引入 (框架与示例工程均基于 spring-boot-starter-logging)。
+    -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-log-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+  <build>
+    <plugins>
+      <!--
+        构建环境校验 - 在构建最初阶段校验 JDK 与 Maven 版本, 避免因环境不符导致难以排查的编译错误。
+        本项目硬性依赖 JDK 21 的虚拟线程 API (Executors.newVirtualThreadPerTaskExecutor / Thread.ofVirtual),
+        因此 JDK 最低要求为 21, 不可降级为 17。
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.6.3</version>
+        <executions>
+          <execution>
+            <id>enforce-build-environment</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[21,)</version>
+                  <message>本框架依赖 JDK 21 虚拟线程, 请使用 JDK 21 或更高版本进行构建</message>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.6.3,)</version>
+                  <message>请使用 Maven 3.6.3 或更高版本进行构建, 推荐使用 3.9.9 及以上版本</message>
+                </requireMavenVersion>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-rpc-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.15.0</version>
+        <configuration>
+          <source>21</source>
+          <target>21</target>
+          <encoding>UTF-8</encoding>
+          <fork>true</fork>
+          <!-- 关键配置：annotationProcessorPaths 的顺序和内容 -->
+          <annotationProcessorPaths>
+            <!-- 1. 必须：Lombok 处理器 -->
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <!-- 2. 必须：Lombok-MapStruct 绑定处理器，确保 Lombok 生成完毕后 MapStruct 才工作 -->
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>${mapstruct-binding.version}</version>
+            </path>
+            <!-- 3. 必须：MapStruct 处理器 -->
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${mapstruct.version}</version>
+            </path>
+            <!--
+              4. 必须：Spring Boot 配置元数据处理器
+              显式声明 annotationProcessorPaths 后, maven-compiler-plugin 只会执行这里列出的处理器,
+              不在列表中的处理器(如原先靠 classpath 发现的 spring-boot-configuration-processor)不会运行。
+              缺少它会导致 target/classes/META-INF/spring-configuration-metadata.json 无法生成,
+              IDE 中编写 application.yaml 时不会出现任何配置项提示。
+            -->
+            <path>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-configuration-processor</artifactId>
+              <version>${spring-boot.version}</version>
+            </path>
+          </annotationProcessorPaths>
+          <showWarnings>true</showWarnings>
+          <compilerArgs>
+            <!--<arg>-Amapstruct.verbose=true</arg>-->
+            <!--<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>-->
+            <!--<arg>-Amapstruct.suppressGeneratorVersionInfoComment=true</arg>-->
+          </compilerArgs>
+        </configuration>
+      </plugin>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-mq-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <!-- Lombok 及其绑定包仅用于编译期注解处理, 明确排除, 避免被打进最终产物 -->
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-satoken-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>default-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <propertiesEncoding>UTF-8</propertiesEncoding>
+              <nonFilteredFileExtensions>
+                <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                <nonFilteredFileExtension>pem</nonFilteredFileExtension>
+              </nonFilteredFileExtensions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-task-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
+    <!--
+      资源目录统一不做 Maven 过滤:
+      1. starter 中的 logback-spring.xml / 各环境 logback 配置使用 ${LOG_BASE} 等 logback 运行时变量,
+         一旦开启过滤会被 Maven 当作 Maven 属性解析, 属于典型的"构建期误伤运行期占位符";
+      2. 工程内所有 resources 均未使用 @xxx@ / ${project.version} 这类构建期占位符;
+      3. 原先存在两个 include 均为 */** 的资源块(一个 filtering=true、一个 false), 语义重叠且容易漏拷根目录文件。
+      如后续确有需要过滤的资源(如 build-info.properties), 请为该目录单独声明一个 resource 块并显式开启 filtering。
+    -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
 
-			<dependency>
-				<groupId>com.ranyk</groupId>
-				<artifactId>vt-boot-web-starter</artifactId>
-				<version>${reversion}</version>
-				<scope>compile</scope>
-			</dependency>
-        </dependencies>
-    </dependencyManagement>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.6.0</version>
+          <configuration>
+            <configLocation>${maven.multiModuleProjectDirectory}/config/checkstyle/checkstyle.xml</configLocation>
+            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+            <consoleOutput>true</consoleOutput>
+            <failOnViolation>false</failOnViolation>
+            <logViolationsToConsole>true</logViolationsToConsole>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
-    <build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.15.0</version>
-				<configuration>
-					<source>21</source>
-					<target>21</target>
-					<!-- 关键配置：annotationProcessorPaths 的顺序和内容 -->
-					<annotationProcessorPaths>
-						<!-- 1. 必须：Lombok 处理器 -->
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.42</version>
-						</path>
-						<!-- 2. 必须：Lombok-MapStruct 绑定处理器，确保 Lombok 生成完毕后 MapStruct 才工作 -->
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok-mapstruct-binding</artifactId>
-							<version>0.2.0</version>
-						</path>
-						<!-- 3. 必须：MapStruct 处理器 -->
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>1.7.0.Beta1</version>
-						</path>
-					</annotationProcessorPaths>
-					<showWarnings>true</showWarnings>
-					<compilerArgs>
-						<!--<arg>-Amapstruct.verbose=true</arg>-->
-						<!--<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>-->
-						<!--<arg>-Amapstruct.suppressGeneratorVersionInfoComment=true</arg>-->
-					</compilerArgs>
-				</configuration>
-			</plugin>
+  <profiles>
+    <!--
+        代码风格检查配置 - 使用方式: mvn checkstyle:check -Pcheckstyle
+        该 Profile 不会参与默认构建, 仅在显式激活时执行代码风格检查。
+    -->
+    <profile>
+      <id>checkstyle</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>checkstyle-validate</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.3.1</version>
-				<executions>
-					<execution>
-						<id>default-resources</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>resources</goal>
-						</goals>
-						<configuration>
-							<encoding>UTF-8</encoding>
-							<propertiesEncoding>UTF-8</propertiesEncoding>
-							<nonFilteredFileExtensions>
-								<nonFilteredFileExtension>p12</nonFilteredFileExtension>
-								<nonFilteredFileExtension>pem</nonFilteredFileExtension>
-							</nonFilteredFileExtensions>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>*/**</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>*/**</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
-		</resources>
-    </build>
-
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>

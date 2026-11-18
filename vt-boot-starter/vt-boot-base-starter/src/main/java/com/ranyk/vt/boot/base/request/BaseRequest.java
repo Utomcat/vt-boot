@@ -15,9 +15,7 @@ import java.io.Serializable;
  * @date: 2026-02-07
  */
 @Data
-@ToString
 @SuperBuilder
-@EqualsAndHashCode
 @AllArgsConstructor
 public class BaseRequest implements Serializable {
 

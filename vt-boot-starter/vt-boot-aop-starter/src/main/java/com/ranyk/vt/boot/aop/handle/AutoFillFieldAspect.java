@@ -8,7 +8,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,7 +24,6 @@ import java.util.Objects;
  */
 @Slf4j
 @Aspect
-@Component
 public class AutoFillFieldAspect {
 
     @Before("@annotation(autoFillField)")
@@ -88,7 +86,7 @@ public class AutoFillFieldAspect {
         // 如果需要填充租户 ID，则填充租户 ID 字段
         if (autoFillField.isFillTenantId()) {
             String tenantIdName = autoFillField.tenantIdName();
-            setTenantId(target, tenantIdName, autoFillField.tenantValue(), String.class);
+            setTenantId(target, tenantIdName, autoFillField.tenantValue());
         }
     }
 
@@ -139,9 +137,8 @@ public class AutoFillFieldAspect {
      * @param target      目标对象
      * @param fieldName   字段名
      * @param tenantValue 租户值
-     * @param fieldType   字段类型
      */
-    private void setTenantId(Object target, String fieldName, String tenantValue, Class<?> fieldType) {
+    private void setTenantId(Object target, String fieldName, String tenantValue) {
         try {
             // 检查字段是否存在
             Field field = ReflectUtil.getField(target.getClass(), fieldName);
@@ -158,7 +155,7 @@ public class AutoFillFieldAspect {
             }
             // 根据字段类型生成默认值
             field.set(target, tenantValue);
-            log.debug("自动填充租户字段：{}.{} = {} (类型：{})", target.getClass().getName(), fieldName, tenantValue, fieldType.getSimpleName());
+            log.debug("自动填充租户字段：{}.{} = {} (类型：{})", target.getClass().getName(), fieldName, tenantValue, String.class.getSimpleName());
         } catch (IllegalAccessException e) {
             log.error("设置租户字段值失败：{}.{}", target.getClass().getName(), fieldName, e);
         } catch (Exception e) {

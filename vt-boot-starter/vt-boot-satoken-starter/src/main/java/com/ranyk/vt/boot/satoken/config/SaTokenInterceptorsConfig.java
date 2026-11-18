@@ -4,17 +4,19 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import com.ranyk.vt.boot.base.constant.UserErrorCodeEnum;
 import com.ranyk.vt.boot.base.exception.UserException;
 import com.ranyk.vt.boot.satoken.config.properties.SaTokenProperties;
 import com.ranyk.vt.boot.satoken.interceptor.TenantWebInterceptor;
 import com.ranyk.vt.boot.satoken.interceptor.TokenRequestInterceptor;
 import com.ranyk.vt.boot.satoken.interceptor.TokenResponseInterceptor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -30,7 +32,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Slf4j
 @AutoConfiguration
 @AutoConfigureAfter(SaTokenConfigure.class)
-@ConditionalOnProperty(name = "sa-token.enable", havingValue = "true")
+@ConditionalOnBooleanProperty(prefix = "sa-token", name = "enable", matchIfMissing = true)
+@RequiredArgsConstructor
 public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
 
     /**
@@ -48,12 +51,7 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
      *
      * @param saTokenProperties SA-TOKEN 配置属性对象
      */
-    @Autowired
-    @SuppressWarnings("all")
-    public SaTokenInterceptorsConfig(SaTokenProperties saTokenProperties) {
-        log.debug("Auto wired SaTokenProperties. Current configuration attribute is : {}", saTokenProperties);
-        this.saTokenProperties = saTokenProperties;
-    }
+
 
     /**
      * 向 Spring MVC 中注册 Sa-Token 拦截器，配置路由鉴权规则
@@ -81,7 +79,7 @@ public class SaTokenInterceptorsConfig implements WebMvcConfigurer {
                                     StpUtil.checkLogin();
                                 } catch (NotLoginException e) {
                                     log.trace("========================= Sa-Token Interceptor. check login status. Check fail. ==========================");
-                                    throw new UserException("user.not.login", new Object[]{});
+                                    throw new UserException(UserErrorCodeEnum.NOT_LOGIN.getValue(), new Object[]{});
                                 }
                                 log.trace("========================= Sa-Token Interceptor. check login status. Check pass. ==========================");
                             });

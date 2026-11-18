@@ -9,17 +9,19 @@ import com.ranyk.vt.boot.mq.factory.DisruptorDefaultMessageEventFactory;
 import com.ranyk.vt.boot.mq.factory.DisruptorMqMessageHandlerFactory;
 import com.ranyk.vt.boot.mq.handler.DisruptorDefaultMqMessageHandler;
 import com.ranyk.vt.boot.mq.publisher.DisruptorDefaultMqMessagePublisher;
+import com.ranyk.vt.boot.mq.strategy.DisruptorMqMessageHandlerStrategy;
 import com.ranyk.vt.boot.mq.strategy.impl.EmailDisruptorMqMessageHandlerStrategyImpl;
 import com.ranyk.vt.boot.mq.strategy.impl.LogDisruptorMqMessageHandlerStrategyImpl;
 import com.ranyk.vt.boot.mq.strategy.impl.SmsDisruptorMqMessageHandlerStrategyImpl;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -28,11 +30,15 @@ import java.util.concurrent.ThreadFactory;
  * @author ranyk
  * @version V1.0
  * @description: Disruptor 队列自动配置类
+ * <p>
+ * Disruptor 为框架默认的异步消息队列(本地内存队列), 因此配置项缺省时默认开启;
+ * 未部署 RabbitMQ 的工程仍可直接使用默认的异步能力。
+ * </p>
  * @date: 2026-03-24
  */
 @Slf4j
 @AutoConfiguration
-@ConditionalOnProperty(prefix = "vt.boot.mq", name = "is-enable-disruptor", havingValue = "true")
+@ConditionalOnProperty(prefix = "vt.boot.mq", name = "is-enable-disruptor", havingValue = "true", matchIfMissing = true)
 public class DisruptorAutoConfiguration {
     // Ring Buffer 大小，必须是 2 的幂
     private static final int BUFFER_SIZE = 1024;
@@ -40,17 +46,13 @@ public class DisruptorAutoConfiguration {
     /**
      * 创建 DisruptorMqMessageHandlerFactory Bean 对象
      *
-     * @param logMqMessageHandlerStrategyImpl   {@link LogDisruptorMqMessageHandlerStrategyImpl} Bean 对象
-     * @param emailMqMessageHandlerStrategyImpl {@link EmailDisruptorMqMessageHandlerStrategyImpl} Bean 对象
-     * @param smsMqMessageHandlerStrategyImpl   {@link SmsDisruptorMqMessageHandlerStrategyImpl} Bean 对象
+     * @param handlerStrategies 已注册的消息处理策略列表 {@link DisruptorMqMessageHandlerStrategy}
      * @return 创建的 {@link DisruptorMqMessageHandlerFactory} Bean 对象
      */
     @Bean
     @ConditionalOnMissingBean
-    public DisruptorMqMessageHandlerFactory disruptorMqMessageHandlerFactory(LogDisruptorMqMessageHandlerStrategyImpl logMqMessageHandlerStrategyImpl,
-                                                                             EmailDisruptorMqMessageHandlerStrategyImpl emailMqMessageHandlerStrategyImpl,
-                                                                             SmsDisruptorMqMessageHandlerStrategyImpl smsMqMessageHandlerStrategyImpl) {
-        return new DisruptorMqMessageHandlerFactory(Arrays.asList(logMqMessageHandlerStrategyImpl, emailMqMessageHandlerStrategyImpl, smsMqMessageHandlerStrategyImpl));
+    public DisruptorMqMessageHandlerFactory disruptorMqMessageHandlerFactory(List<DisruptorMqMessageHandlerStrategy> handlerStrategies) {
+        return new DisruptorMqMessageHandlerFactory(handlerStrategies);
     }
 
     /**
@@ -65,12 +67,14 @@ public class DisruptorAutoConfiguration {
     }
 
     /**
-     * 创建 LogDisruptorMqMessageHandlerStrategyImpl Bean 对象
+     * 创建 LogDisruptorMqMessageHandlerStrategyImpl Bean 对象 - 仅在存在操作记录服务时注册
      *
+     * @param operationRecordService 操作记录服务 {@link IOperationRecordService} Bean 对象
      * @return 创建的 {@link LogDisruptorMqMessageHandlerStrategyImpl} Bean 对象
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(IOperationRecordService.class)
     public LogDisruptorMqMessageHandlerStrategyImpl logMqMessageHandlerStrategyImpl(IOperationRecordService operationRecordService) {
         return new LogDisruptorMqMessageHandlerStrategyImpl(operationRecordService);
     }

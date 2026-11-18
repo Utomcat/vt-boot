@@ -1,0 +1,3 @@
+# 国际化默认配置注入 - 向 Spring 环境注入 spring.messages.basename 等默认值
+org.springframework.boot.EnvironmentPostProcessor=\
+com.ranyk.vt.boot.internationalization.env.VtI18nEnvironmentPostProcessor

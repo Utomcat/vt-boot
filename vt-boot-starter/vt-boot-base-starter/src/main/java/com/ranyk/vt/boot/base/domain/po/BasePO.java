@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 @ToString(callSuper=true)
 public class BasePO implements Serializable {

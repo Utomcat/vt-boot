@@ -7,7 +7,6 @@ import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import com.ranyk.vt.boot.log.strategy.OperationRecordStrategy;
 import com.ranyk.vt.boot.mq.util.MqUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -21,7 +20,6 @@ import java.util.Map;
  * @date: 2026-03-24
  */
 @Slf4j
-@Component
 public class AsyncOperationRecordSave implements OperationRecordStrategy {
 
     /**

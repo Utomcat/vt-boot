@@ -1,5 +1,0 @@
-spring:
-  threads:
-    virtual:
-      # 开启虚拟线程
-      enabled: true

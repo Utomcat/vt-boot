@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.ranyk.vt.boot.satoken.config.properties.SaTokenProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TokenResponseInterceptor implements HandlerInterceptor {
 
     /**
@@ -36,10 +38,7 @@ public class TokenResponseInterceptor implements HandlerInterceptor {
      *
      * @param saTokenProperties SA-TOKEN 配置属性对象
      */
-    @Autowired
-    public TokenResponseInterceptor(SaTokenProperties saTokenProperties) {
-        this.saTokenProperties = saTokenProperties;
-    }
+
 
     /**
      * Interception point after successful execution of a handler.

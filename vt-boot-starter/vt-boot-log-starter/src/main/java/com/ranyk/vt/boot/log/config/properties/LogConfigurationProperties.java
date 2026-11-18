@@ -2,7 +2,6 @@ package com.ranyk.vt.boot.log.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * CLASS_NAME: LogConfigurationProperties.java
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
  * @date: 2026-04-08
  */
 @Data
-@Component
 @ConfigurationProperties(prefix = "vt.boot.log")
 public class LogConfigurationProperties {
 

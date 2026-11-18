@@ -5,10 +5,8 @@ import com.ranyk.vt.boot.base.context.UserContext;
 import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import com.ranyk.vt.boot.log.strategy.OperationRecordStrategy;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -22,24 +20,13 @@ import java.util.Map;
  * @date: 2026-03-24
  */
 @Slf4j
-@Component
-@ConditionalOnBean(IOperationRecordService.class)
+@RequiredArgsConstructor
 public class SyncOperationRecordSave implements OperationRecordStrategy {
 
     /**
      * 操作日志记录业务逻辑接口对象
      */
     private final IOperationRecordService operationRecordService;
-
-    /**
-     * 构造函数 - 向 Spring IOC 容器中自动注入操作日志记录业务逻辑接口对象
-     *
-     * @param operationRecordService 操作日志记录业务逻辑接口对象, {@link IOperationRecordService}
-     */
-    @Autowired
-    public SyncOperationRecordSave(IOperationRecordService operationRecordService) {
-        this.operationRecordService = operationRecordService;
-    }
 
     /**
      * 获取保存操作记录方法

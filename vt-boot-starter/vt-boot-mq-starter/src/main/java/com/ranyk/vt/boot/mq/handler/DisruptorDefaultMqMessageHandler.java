@@ -5,6 +5,7 @@ import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.ranyk.vt.boot.mq.domain.dto.BaseMessageDTO;
 import com.ranyk.vt.boot.mq.factory.DisruptorMqMessageHandlerFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DisruptorDefaultMqMessageHandler implements EventHandler<BaseMessageDTO> {
 
     /**
@@ -31,10 +33,7 @@ public class DisruptorDefaultMqMessageHandler implements EventHandler<BaseMessag
      *
      * @param disruptorMqMessageHandlerFactory Disruptor MQ 消息队列默认的事件处理类工厂类
      */
-    @Autowired
-    public DisruptorDefaultMqMessageHandler(DisruptorMqMessageHandlerFactory disruptorMqMessageHandlerFactory) {
-        this.disruptorMqMessageHandlerFactory = disruptorMqMessageHandlerFactory;
-    }
+
 
     /**
      * Called when a publisher has published an event to the {@link RingBuffer}.  The {@link BatchEventProcessor} will

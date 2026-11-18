@@ -18,7 +18,6 @@ import java.util.Map;
 @Data
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 @ToString(callSuper=true)
 public class BaseMessageDTO implements Serializable {

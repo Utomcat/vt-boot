@@ -4,7 +4,6 @@ import com.ranyk.vt.boot.log.annotations.OperationRecord;
 import com.ranyk.vt.boot.log.strategy.OperationRecordStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date: 2026-03-24
  */
 @Slf4j
-@Component
 public class OperationRecordStrategyFactory {
 
     /**
@@ -30,6 +28,9 @@ public class OperationRecordStrategyFactory {
 
     /**
      * 构造函数 - 向 Spring  IOC 容器中注册操作日志策略对象
+     * <p>
+     * 该构造器在初始化阶段需要将策略列表写入静态缓存, 无法由 {@code @RequiredArgsConstructor} 生成, 故保留显式声明。
+     * </p>
      *
      * @param operationRecordStrategyList 操作日志策略列表
      */

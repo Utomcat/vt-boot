@@ -8,6 +8,7 @@ import com.ranyk.vt.boot.mq.domain.dto.BaseMessageDTO;
 import com.ranyk.vt.boot.mq.publisher.DisruptorDefaultMqMessagePublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import java.util.Map;
 
@@ -47,6 +48,9 @@ public class MqUtils {
                 if (disruptorDefaultMqMessagePublisher == null) {
                     try {
                         disruptorDefaultMqMessagePublisher = SpringUtil.getBean(DisruptorDefaultMqMessagePublisher.class);
+                    } catch (NoSuchBeanDefinitionException e) {
+                        log.error("容器中不存在 Disruptor 消息发布者, 请确认已引入 vt-boot-mq-starter 且开启 Disruptor 队列");
+                        throw new MqException("容器中不存在 Disruptor 消息发布者, 请确认已引入 vt-boot-mq-starter 且开启 Disruptor 队列", e);
                     } catch (Exception e) {
                         log.error("在获取 Disruptor 消息队列默认的事件发布者时失败, 异常信息 => ", e);
                         throw new MqException("获取 Disruptor 消息队列默认的事件发布者时发生异常", e);
@@ -68,6 +72,9 @@ public class MqUtils {
                 if (rabbitTemplate == null) {
                     try {
                         rabbitTemplate = SpringUtil.getBean(RabbitTemplate.class);
+                    } catch (NoSuchBeanDefinitionException e) {
+                        log.error("容器中不存在 RabbitTemplate, 请确认已引入 vt-boot-mq-starter 并开启 RabbitMQ 队列");
+                        throw new MqException("容器中不存在 RabbitTemplate, 请确认已引入 vt-boot-mq-starter 并开启 RabbitMQ 队列", e);
                     } catch (Exception e) {
                         log.error("在获取 RabbitMQ 默认的消息发布者时失败, 错误信息 => ", e);
                         throw new MqException("获取 RabbitMQ 默认的消息发布者时发生异常", e);

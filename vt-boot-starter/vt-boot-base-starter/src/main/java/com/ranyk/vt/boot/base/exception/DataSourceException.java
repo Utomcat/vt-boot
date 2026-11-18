@@ -3,7 +3,6 @@ package com.ranyk.vt.boot.base.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.io.Serial;
 
@@ -16,7 +15,6 @@ import java.io.Serial;
  * @date: 2026-02-26
  */
 @Data
-@ToString
 @NoArgsConstructor
 @SuppressWarnings("unused")
 @EqualsAndHashCode(callSuper = true)

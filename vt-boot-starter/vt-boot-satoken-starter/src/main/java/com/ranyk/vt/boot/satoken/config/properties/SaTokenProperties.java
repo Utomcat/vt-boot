@@ -15,14 +15,13 @@ import java.util.List;
  * @date: 2026-02-28
  */
 @Data
-@ToString
 @ConfigurationProperties(prefix = "sa-token")
 public class SaTokenProperties {
 
     /**
-     * 是否启用 sa-token 功能，默认不启用
+     * 是否启用 sa-token 功能, 默认启用 (引入即用)
      */
-    private Boolean enable = false;
+    private Boolean enable = true;
     /**
      * token 名称（同时也是 cookie 名称）
      */
@@ -66,10 +65,18 @@ public class SaTokenProperties {
     /**
      * 哪些路径不需要进行拦截校验, 默认为 /login (登录接口请求), /static/** (静态资源请求), /favicon.ico (图标请求), /api/captcha (验证码接口请求)
      */
-    private List<String> excludePathPatterns = List.of("/api/login", "/static/**", "/favicon.ico", "/api/captcha");
+    private List<String> excludePathPatterns = List.of("/api/login", "/static/**", "/favicon.ico", "/api/captcha", "/error");
     /**
      * 登录接口 - 用于在登录成功后, 拦截请求, 注册认证信息到请求头中
      */
     private String loginPathPatterns = "/api/login";
+    /**
+     * 管理员角色编码 - 权限加载时该角色拥有全部权限, 默认 ADMIN
+     */
+    private String adminRole = "ADMIN";
+    /**
+     * 全部权限通配符 - 管理员角色返回该权限标识, 默认 *
+     */
+    private String allPermission = "*";
 
 }

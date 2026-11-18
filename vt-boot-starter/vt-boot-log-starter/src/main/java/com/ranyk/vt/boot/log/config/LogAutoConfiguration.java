@@ -1,15 +1,20 @@
 package com.ranyk.vt.boot.log.config;
 
+import com.ranyk.vt.boot.log.config.properties.LogConfigurationProperties;
 import com.ranyk.vt.boot.log.factory.OperationRecordStrategyFactory;
 import com.ranyk.vt.boot.log.handle.LogAspectHandle;
 import com.ranyk.vt.boot.log.handle.OperationRecordAspectHandle;
+import com.ranyk.vt.boot.log.service.DefaultOperationRecordService;
 import com.ranyk.vt.boot.log.strategy.impl.AsyncOperationRecordSave;
 import com.ranyk.vt.boot.log.strategy.impl.SyncOperationRecordSave;
 import com.ranyk.vt.boot.rpc.service.IOperationRecordService;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 
@@ -25,7 +30,27 @@ import java.util.Arrays;
  */
 @Slf4j
 @AutoConfiguration
+@ConditionalOnClass(Aspect.class)
+@EnableConfigurationProperties(LogConfigurationProperties.class)
 public class LogAutoConfiguration {
+
+    /**
+     * 向 Spring IOC 容器中注册默认的操作记录服务实现
+     * <p>
+     * 操作记录切面依赖 {@link IOperationRecordService}, 若框架不提供默认实现,
+     * 消费方仅引入 starter 而未实现该接口时启动会直接失败(UnsatisfiedDependencyException)。
+     * 这里提供空实现并按需被业务实现覆盖, 保证"引入即可用"。
+     * </p>
+     *
+     * @return 默认操作记录服务实现 {@link IOperationRecordService}
+     */
+    @Bean
+    @ConditionalOnMissingBean(IOperationRecordService.class)
+    @ConditionalOnBooleanProperty(prefix = "vt.boot.log", name = "operation-record-enabled", matchIfMissing = true)
+    public IOperationRecordService defaultOperationRecordService() {
+        log.debug("Log Stater Injected Successful. Register Default Operation Record Service.");
+        return new DefaultOperationRecordService();
+    }
 
     /**
      * 向 Spring IOC 容器中注册日志切面处理类对象

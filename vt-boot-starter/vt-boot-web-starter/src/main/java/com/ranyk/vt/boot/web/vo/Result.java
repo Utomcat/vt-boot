@@ -17,10 +17,8 @@ import java.io.Serializable;
  * @date: 2026-02-08
  */
 @Data
-@ToString
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 @SuppressWarnings("unused")
 public class Result<T> implements Serializable{
