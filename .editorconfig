@@ -15,11 +15,8 @@ indent_size = 2
 trim_trailing_whitespace = false
 
 [*.java]
-indent_size = 4
 max_line_length = 200
 
-# 纯文本(如启动 banner 艺术字)依靠行尾空格对齐, 不修剪行尾空格, 保持 UTF-8 + CRLF
+# 纯文本(如启动 banner 艺术字)依靠行尾空格对齐, 不修剪行尾空格; charset/end_of_line 继承自 [*]
 [*.txt]
-charset = utf-8
-end_of_line = crlf
 trim_trailing_whitespace = false
