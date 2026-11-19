@@ -43,7 +43,7 @@ public class LoginLogApi {
      */
     @PostMapping("/page")
     public MultiResult<LoginLogVO> page(@RequestBody LoginLogQueryPO queryPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:login-log:list");
         return loginLogService.page(loginLogConverter.toQueryDTO(queryPO));
     }
 }

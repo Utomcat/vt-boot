@@ -6,6 +6,7 @@ import com.ranyk.vt.boot.example.auth.domain.po.LoginPO;
 import com.ranyk.vt.boot.example.auth.domain.po.RefreshTokenPO;
 import com.ranyk.vt.boot.example.auth.domain.vo.LoginVO;
 import com.ranyk.vt.boot.example.auth.domain.vo.UserInfoVO;
+import com.ranyk.vt.boot.example.auth.domain.vo.UserMenuVO;
 import com.ranyk.vt.boot.example.auth.service.AuthService;
 import com.ranyk.vt.boot.web.vo.Result;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,6 +86,16 @@ public class AuthApi {
     @GetMapping("/me")
     public Result<UserInfoVO> me() {
         return Result.success(authService.currentUserInfo());
+    }
+
+    /**
+     * 获取当前登录用户的角色、权限与可见菜单树, 供前端动态生成路由与按钮权限。
+     *
+     * @return 当前登录用户的角色、权限与菜单树
+     */
+    @GetMapping("/menus")
+    public Result<UserMenuVO> menus() {
+        return Result.success(authService.currentUserMenus());
     }
 
     /**

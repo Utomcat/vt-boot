@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * CLASS_NAME: UserVO.java
@@ -49,9 +50,21 @@ public class UserVO implements Serializable {
      */
     private String avatar;
     /**
-     * 角色
+     * 主角色编码(取自 t_user.role, 用于兼容与鉴权会话)
      */
     private String role;
+    /**
+     * 角色ID集合
+     */
+    private List<Long> roleIds;
+    /**
+     * 角色编码集合
+     */
+    private List<String> roleCodes;
+    /**
+     * 角色名称集合
+     */
+    private List<String> roleNames;
     /**
      * 状态: 1-正常 0-禁用
      */

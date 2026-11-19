@@ -24,7 +24,9 @@ import org.springframework.context.annotation.Bean;
  * @version V1.0
  * @description: 定时任务自动配置类 - 基于 Quartz, 补充任务覆盖策略与任务注册能力
  * <p>
- * 线程池、存储类型(内存/JDBC)、集群等能力统一由 spring.quartz.* 配置, 框架不重复造轮子。
+ * 线程池、集群等能力统一由 spring.quartz.* 配置, 框架不重复造轮子。
+ * 存储默认由 {@link VtTaskStoreAutoConfiguration} 装配为 jdbc(任务持久化到数据库, 服务重启不丢失),
+ * 并指向框架内置的幂等建表脚本。
  * 执行日志相关能力见 {@link VtTaskLogAutoConfiguration}。
  * </p>
  * @date: 2026-11-18

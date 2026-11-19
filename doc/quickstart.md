@@ -79,6 +79,18 @@ mvn -pl vt-boot-example/vt-boot-example-admin -am package -DskipTests
 java -jar vt-boot-example/vt-boot-example-admin/target/vt-boot-example-admin-0.0.1-SNAPSHOT.jar
 ```
 
+### 方式三：Docker 部署
+
+仓库根目录 `deploy/docker/` 提供了完整容器化方案（后端 JRE 镜像 + 前端 Nginx 镜像 + Compose 编排）：
+
+```bash
+cd deploy/docker
+cp .env.example .env      # 修改数据库连接等参数
+docker compose up -d --build
+```
+
+启动后前端默认 `http://localhost:8080`，后端直连 `http://localhost:9086`。详见 [Docker 部署](../deploy/docker/README.md)。
+
 示例应用默认端口为 **9086**，默认激活 `local` Profile。
 
 ## 七、验证

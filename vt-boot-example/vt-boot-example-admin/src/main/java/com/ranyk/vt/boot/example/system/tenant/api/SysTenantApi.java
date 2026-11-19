@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * CLASS_NAME: SysTenantApi.java
  *
@@ -50,8 +52,18 @@ public class SysTenantApi {
      */
     @PostMapping("/page")
     public MultiResult<TenantVO> page(@RequestBody TenantQueryPO queryPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:tenant:list");
         return sysTenantService.page(sysTenantConverter.toQueryDTO(queryPO));
+    }
+
+    /**
+     * 查询全部启用租户列表, 供任务管理等业务选择所属租户。仅要求登录, 不额外校验管理权限。
+     *
+     * @return 租户列表
+     */
+    @GetMapping("/options")
+    public Result<List<TenantVO>> options() {
+        return Result.success(sysTenantService.options());
     }
 
     /**
@@ -62,7 +74,7 @@ public class SysTenantApi {
      */
     @GetMapping("/{id}")
     public Result<TenantVO> detail(@PathVariable Long id) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:tenant:list");
         return Result.success(sysTenantService.detail(id));
     }
 
@@ -74,7 +86,7 @@ public class SysTenantApi {
      */
     @PostMapping
     public Result<Long> create(@RequestBody TenantFormPO formPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:tenant:add");
         return Result.success(sysTenantService.create(sysTenantConverter.toFormDTO(formPO)));
     }
 
@@ -86,7 +98,7 @@ public class SysTenantApi {
      */
     @PutMapping
     public Result<Void> update(@RequestBody TenantFormPO formPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:tenant:edit");
         sysTenantService.update(sysTenantConverter.toFormDTO(formPO));
         return Result.success(null);
     }
@@ -99,7 +111,7 @@ public class SysTenantApi {
      */
     @DeleteMapping("/{id}")
     public Result<Void> delete(@PathVariable Long id) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:tenant:delete");
         sysTenantService.delete(id);
         return Result.success(null);
     }
@@ -113,7 +125,7 @@ public class SysTenantApi {
      */
     @PutMapping("/{id}/status")
     public Result<Void> changeStatus(@PathVariable Long id, @RequestParam Integer status) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:tenant:status");
         sysTenantService.changeStatus(id, status);
         return Result.success(null);
     }

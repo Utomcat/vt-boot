@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.ranyk.vt.boot.base.domain.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
  * @date: 2026-11-16
  */
 @Data
+@NoArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

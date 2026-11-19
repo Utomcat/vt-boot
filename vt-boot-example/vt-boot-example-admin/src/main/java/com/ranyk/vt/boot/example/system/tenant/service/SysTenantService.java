@@ -81,6 +81,21 @@ public class SysTenantService {
     }
 
     /**
+     * 查询全部启用租户的精简列表(用于任务等业务选择所属租户), 按名称与主键升序
+     *
+     * @return 租户列表
+     */
+    public List<TenantVO> options() {
+        return sysTenantMapper.selectList(Wrappers.<SysTenant>lambdaQuery()
+                        .eq(SysTenant::getStatus, STATUS_NORMAL)
+                        .orderByAsc(SysTenant::getName)
+                        .orderByAsc(SysTenant::getId))
+                .stream()
+                .map(sysTenantConverter::toVO)
+                .toList();
+    }
+
+    /**
      * 新增租户。会校验租户名称和编码必填、编码全局唯一; 未指定的套餐、用户数上限、
      * 存储上限和每日Token上限会使用系统默认值。
      *

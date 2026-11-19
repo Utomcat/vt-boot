@@ -20,7 +20,7 @@ spring:
 
 | 文件 | 职责 |
 |------|------|
-| `application.yaml` | 主配置：应用名、激活 Profile、虚拟线程、配置导入、端口、日志级别、OpenAPI 信息 |
+| `application.yaml` | 主配置：应用名、激活 Profile、虚拟线程、配置导入、Quartz 持久化、端口、日志级别、OpenAPI 信息 |
 | `datasource.yaml` | 数据源：`dynamic-datasource` 多数据源与 Hikari、MyBatis-Plus 方言、多租户开关 |
 | `mybatisplus.yaml` | MyBatis-Plus：Mapper 位置、驼峰、逻辑删除、主键策略、执行器 |
 | `sa-token.yaml` | 鉴权：Sa-Token 令牌名、有效期、并发/共享、拦截路径与排除路径 |
@@ -256,13 +256,68 @@ sa-token:
 | `vt.boot.openapi.contact-email` | — | 联系人邮箱 |
 | `vt.boot.openapi.contact-url` | — | 联系人主页 |
 
-## 九、多环境配置建议
+## 九、定时任务（task-starter）
+
+任务调度基于 Quartz，**默认把任务持久化到数据库，服务重启后任务不会丢失**。
+
+### 9.1 存储相关（`vt.task.store.*`）
+
+| 属性 | 默认值 | 说明 |
+|------|--------|------|
+| `vt.task.store.type` | `jdbc` | `jdbc` 表示任务与触发器持久化到数据库（默认，重启不丢失）；`memory` 退回 Quartz 内存存储 |
+| `vt.task.store.initialize-schema` | `always` | 启动时执行框架内置的幂等建表脚本；`never` 表示交由 DBA / Flyway 手工建表 |
+| `vt.task.store.schema` | `db/quartz-@@platform@@.sql` | 建表脚本位置，`@@platform@@` 按数据库类型替换为 `mysql_innodb` / `postgres` / `h2` |
+
+要点：
+
+- 存储装配由自动配置类 `VtTaskStoreAutoConfiguration` 完成（不使用 `EnvironmentPostProcessor` 改写配置）：容器中存在唯一数据源且开关打开时，把数据源交给 `SchedulerFactoryBean`，Quartz 自动使用 `LocalDataSourceJobStore`；建表脚本在 Quartz 初始化 JobStore 之前执行。
+- 没有数据源的工程，本自动配置整体不生效，自动退回 Quartz 默认的内存存储。
+- 需要显式接管时，Spring Boot 原生配置 `spring.quartz.job-store-type=memory` 会让框架存储装配整体后退；显式配置 `spring.quartz.job-store-type=jdbc` 时仍由框架负责建表（可用 `vt.task.store.initialize-schema=never` 关闭）。
+- **不要用 Quartz 官方建表脚本替换 `vt.task.store.schema`**：官方脚本以 `DROP TABLE IF EXISTS` 开头，每次启动都会清空 `QRTZ_*` 中的任务数据；框架脚本是 `CREATE TABLE IF NOT EXISTS`，可重复执行且不会清空数据。
+- 建表脚本位于 `vt-boot-task-starter/src/main/resources/db/`，需要离线建表时直接复制执行即可。
+- Oracle / SQL Server / DB2 等未内置脚本，请把 `vt.task.store.initialize-schema` 置为 `never` 后自行建表。
+
+### 9.2 vt.task（定时任务）
+
+| 属性 | 默认值 | 说明 |
+|------|--------|------|
+| `vt.task.enabled` | `true` | 是否启用定时任务 |
+| `vt.task.overwrite-existing-jobs` | `false` | 启动时是否用代码中的定义覆盖数据库中已存在的同名任务 |
+| `vt.task.tenant-id` | 空 | 任务执行时的默认租户 ID，为空表示不切换租户上下文 |
+| `vt.task.jobs` | 空 | 声明式任务清单（`name` / `group` / `cron` / `executor` / `misfire` / `params`） |
+
+> `overwrite-existing-jobs` 语义：`false`（默认）表示保留数据库中已持久化的任务，注册器发现同名任务直接跳过，暂停状态不会被重置；只有代码里的 cron 需要覆盖数据库时才临时置为 `true` 重启一次。
+
+### 9.3 vt.task.log（任务执行日志）
+
+| 属性 | 默认值 | 说明 |
+|------|--------|------|
+| `vt.task.log.enabled` | `true` | 是否启用执行日志（容器中存在 `JdbcTemplate` 时生效） |
+| `vt.task.log.table-name` | `vt_job_log` | 执行日志表名 |
+| `vt.task.log.initialize-schema` | `never` | 置 `always` 时自动创建 `vt_job_log` 表 |
+| `vt.task.log.max-error-length` | `4000` | 异常信息最大保存长度，超出截断 |
+
+### 9.4 示例工程配置
+
+```yaml
+vt:
+  task:
+    overwrite-existing-jobs: false
+    store:
+      type: jdbc
+      initialize-schema: always
+```
+
+> 以上三项均有默认值，全部省略效果相同；示例工程显式声明是为了让持久化行为一目了然。
+> 多实例部署时再补 `spring.quartz.properties.org.quartz.jobStore.isClustered: true`（`spring.quartz.scheduler-name` 默认 `quartzScheduler`，多个应用共用同库时务必区分）。
+
+## 十、多环境配置建议
 
 - 通过 `spring.profiles.active` 切换环境（示例默认 `local`）。
 - 敏感信息（数据库密码、密钥）建议使用环境变量或外部配置覆盖，不要提交到仓库。
 - 日志环境、接口文档开关建议按环境差异化配置（生产关闭 Swagger UI）。
 
-## 十、启动 Banner（框架内置）
+## 十一、启动 Banner（框架内置）
 
 启动 banner 属于框架级内容，由 `vt-boot-base-starter` 内置在 classpath 根（`src/main/resources/banner.txt`），所有依赖 vt-boot 的应用启动时自动显示，**业务工程不要重复放置**，示例工程也不放。
 

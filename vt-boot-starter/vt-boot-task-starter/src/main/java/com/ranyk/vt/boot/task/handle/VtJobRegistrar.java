@@ -26,6 +26,10 @@ import java.util.Map;
  * 注册失败(例如 cron 非法)只记录错误日志, 不阻断应用启动, 避免单个任务配置错误拖垮整个应用。
  * 运行期的增删改由 {@link VtTaskUtils} 承担, 两者共用同一套注册逻辑。
  * </p>
+ * <p>
+ * 框架默认使用 JDBC 存储, 任务在重启后依然存在: 未开启 overwrite-existing-jobs 时,
+ * 已存在于作业存储中的同名任务会被保留(包含暂停状态与运行期修改), 直接跳过注册而非报错。
+ * </p>
  * @date: 2026-11-18
  */
 @Slf4j
@@ -113,8 +117,14 @@ public class VtJobRegistrar implements SmartInitializingSingleton {
      * @param definition 任务定义 {@link VtJobDefinition}
      */
     private void doRegister(VtJobDefinition definition) {
+        boolean overwrite = Boolean.TRUE.equals(taskProperties.getOverwriteExistingJobs());
         try {
-            VtTaskUtils.addOrUpdate(definition, Boolean.TRUE.equals(taskProperties.getOverwriteExistingJobs()));
+            if (!overwrite && VtTaskUtils.exists(definition.getGroup(), definition.getName())) {
+                log.debug("VtJob already exists in job store, keep persisted definition. task: {}, group: {}",
+                        definition.getName(), definition.getGroup());
+                return;
+            }
+            VtTaskUtils.addOrUpdate(definition, overwrite);
             log.debug("VtJob registered. task: {}, group: {}, cron: {}",
                     definition.getName(), definition.getGroup(), definition.getCron());
         } catch (Exception e) {

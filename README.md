@@ -28,6 +28,7 @@
 | 文档 | 说明 |
 |------|------|
 | [快速开始](./doc/quickstart.md) | 环境要求、构建、运行示例、验证接口 |
+| [Docker 部署](../deploy/docker/README.md) | 后端/前端镜像构建、Compose 编排、环境变量与运维命令 |
 | [架构设计](./doc/architecture.md) | 模块划分、分层约定、请求链路、虚拟线程模型 |
 | [模块说明](./doc/modules.md) | 全部 Starter 的职责、关键类与配置 |
 
@@ -65,6 +66,7 @@
 - 🧩 **Starter 化设计**：能力按模块拆分，按需引入，自动配置开箱即用。
 - 🏗️ **单体优先、工程化拉满**：适合新项目 / 中小型系统 / 创业项目，非 Spring Cloud 微服务方案。
 - 🔐 **内置后台骨架**：Sa-Token 鉴权、多租户、统一响应体、全局异常、操作日志、国际化、OpenAPI 一应俱全。
+- ⏱️ **定时任务持久化**：Quartz 任务与触发器默认落库到 `QRTZ_*`，重启不丢失，可平滑切换为集群模式。
 - 🤖 **AI 能力预留**：统一依赖 Spring AI 2.0.0 与 Spring AI Alibaba，便于后续接入大模型与向量检索。
 
 ## ❌ vt-boot 不做什么
@@ -86,6 +88,7 @@
 | 鉴权 | Sa-Token 1.46.0 |
 | 缓存 | Caffeine 3.2.3 + Spring Data Redis |
 | 消息 | LMAX Disruptor 4.0.0、RabbitMQ（Spring AMQP）、Kafka 4.1.1、RocketMQ 2.3.5 |
+| 定时任务 | Quartz 2.5.2（JDBC 持久化 + 执行日志 `vt_job_log`） |
 | 接口文档 | springdoc-openapi 3.2.0 |
 | 工具库 | Lombok 1.18.42、MapStruct 1.6.3、Hutool 5.8.43 |
 | AI | Spring AI 2.0.0、Spring AI Alibaba 2.0.0-M1.1 |
@@ -114,7 +117,7 @@ vt-boot/
 │   ├── vt-boot-satoken-starter      # 鉴权拦截、安全工具、多租户拦截
 │   ├── vt-boot-file-starter         # 文件/流/ZIP 上传工具
 │   ├── vt-boot-rpc-starter          # 服务契约接口（如操作记录 SPI）
-│   └── vt-boot-task-starter         # 定时任务（占位，待实现）
+│   └── vt-boot-task-starter         # Quartz 定时任务（注解/配置声明 + JDBC 持久化 + 执行日志）
 └── vt-boot-example/                 # 示例聚合
     └── vt-boot-example-admin        # AI 知识库后台示例（认证/用户/租户/登录日志）
 ```

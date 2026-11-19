@@ -92,6 +92,28 @@
 
 `vt-boot` 的 Starter 相互解耦、按需引入。最小组合通常为 `vt-boot-web-starter`（响应与异常）+ 业务所需能力模块。详见 [模块说明](./modules.md)。
 
+### Q17：定时任务重启后为什么会丢失？
+
+**原因**：Quartz 默认的 `RAMJobStore` 把任务只放在 JVM 内存里，历史版本的框架正是这种模式。
+
+**处理**：当前版本由自动配置类 `VtTaskStoreAutoConfiguration` 装配 JDBC 存储：存在数据源时把数据源交给 `SchedulerFactoryBean`，任务与触发器落库到 `QRTZ_*` 表，启动时执行幂等建表脚本，重启后自动恢复，无需额外配置。仍会"丢失"的三种典型情况：
+
+- 业务工程把 `vt.task.store.type` 或 `spring.quartz.job-store-type` 显式改成了 `memory`；
+- 工程没有可用数据源（自动配置会退回 Quartz 默认的内存存储）；
+- 改动过 `spring.quartz.scheduler-name`（`QRTZ_*` 表以 `SCHED_NAME` 区分），导致读的是另一套数据。
+
+### Q18：启动报 `Table 'QRTZ_...' doesn't exist` 或任务没被注册？
+
+**原因**：`QRTZ_*` 表未创建（`vt.task.store.initialize-schema` 被置为 `never` 且未手工建表）、数据库账号没有 DDL 权限，或使用的是框架未内置脚本的数据库类型（Oracle / SQL Server / DB2 等）。
+
+**处理**：置回 `always` 让框架自动执行 `db/quartz-@@platform@@.sql`，或让 DBA 直接执行 `vt-boot-task-starter/src/main/resources/db/quartz-*.sql`。注意**不要**把 `vt.task.store.schema` 指回 Quartz 官方脚本：官方脚本以 `DROP TABLE IF EXISTS` 开头，每次启动都会清空已持久化的任务。
+
+### Q19：修改了 `@VtJob` 的 cron，重启后为什么不生效？
+
+**原因**：默认 `vt.task.overwrite-existing-jobs=false`，注册器发现数据库中已有同名任务会保留原定义（包括暂停状态），不会覆盖。
+
+**处理**：临时把 `vt.task.overwrite-existing-jobs` 置为 `true` 重启一次完成同步，之后可以改回 `false`。
+
 ## 五、反馈
 
 如遇本文未覆盖的问题，请优先检查各模块对应的配置项（见 [配置说明](./configuration.md)）与构建环境（JDK 21 / Maven 3.6.3+）。

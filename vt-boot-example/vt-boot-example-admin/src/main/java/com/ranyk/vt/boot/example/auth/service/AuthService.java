@@ -14,9 +14,12 @@ import com.ranyk.vt.boot.base.util.PasswordUtils;
 import com.ranyk.vt.boot.example.auth.domain.dto.LoginDTO;
 import com.ranyk.vt.boot.example.auth.domain.vo.LoginVO;
 import com.ranyk.vt.boot.example.auth.domain.vo.UserInfoVO;
+import com.ranyk.vt.boot.example.auth.domain.vo.UserMenuVO;
 import com.ranyk.vt.boot.base.constant.SessionKeyEnum;
 import com.ranyk.vt.boot.example.system.log.domain.entity.LoginLog;
-import com.ranyk.vt.boot.example.system.log.mapper.LoginLogMapper;
+import com.ranyk.vt.boot.example.system.rbac.service.RbacService;import com.ranyk.vt.boot.example.system.log.mapper.LoginLogMapper;
+import com.ranyk.vt.boot.example.system.tenant.domain.entity.SysTenant;
+import com.ranyk.vt.boot.example.system.tenant.mapper.SysTenantMapper;
 import com.ranyk.vt.boot.example.system.token.domain.entity.UserRefreshToken;
 import com.ranyk.vt.boot.example.system.token.mapper.UserRefreshTokenMapper;
 import com.ranyk.vt.boot.example.system.user.converter.SysUserConverter;
@@ -86,6 +89,14 @@ public class AuthService {
      * 用户实体转换器
      */
     private final SysUserConverter sysUserConverter;
+    /**
+     * RBAC 权限解析服务
+     */
+    private final RbacService rbacService;
+    /**
+     * 租户数据访问对象, 用于回填租户名称
+     */
+    private final SysTenantMapper sysTenantMapper;
 
     /**
      * 校验用户名和密码, 建立 Sa-Token 会话, 签发刷新令牌, 并记录本次登录结果。
@@ -188,7 +199,33 @@ public class AuthService {
         if (ObjectUtil.isNull(user)) {
             throw new ServiceException("用户不存在");
         }
-        return sysUserConverter.toUserInfo(user);
+        UserInfoVO userInfo = sysUserConverter.toUserInfo(user);
+        if (ObjectUtil.isNotNull(user.getTenantId())) {
+            SysTenant tenant = sysTenantMapper.selectById(user.getTenantId());
+            if (ObjectUtil.isNotNull(tenant)) {
+                userInfo.setTenantName(tenant.getName());
+            }
+        }
+        return userInfo;
+    }
+
+    /**
+     * 获取当前登录用户的角色编码、权限码与可见菜单树。会话中只保存用户标识, 这里实时解析,
+     * 保证角色或菜单调整后能尽快生效。
+     *
+     * @return 当前登录用户的角色、权限与菜单树
+     */
+    public UserMenuVO currentUserMenus() {
+        Long userId = Convert.toLong(StpUtil.getLoginIdAsString());
+        SysUser user = sysUserMapper.selectById(userId);
+        if (ObjectUtil.isNull(user)) {
+            throw new ServiceException("用户不存在");
+        }
+        return UserMenuVO.builder()
+                .roles(rbacService.roleCodes(userId))
+                .permissions(rbacService.permissions(userId))
+                .menus(rbacService.menuTree(userId))
+                .build();
     }
 
     /**

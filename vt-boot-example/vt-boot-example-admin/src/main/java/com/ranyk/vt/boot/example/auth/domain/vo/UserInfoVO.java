@@ -1,7 +1,9 @@
 package com.ranyk.vt.boot.example.auth.domain.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,6 +18,8 @@ import java.io.Serializable;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserInfoVO implements Serializable {
 
     @Serial
@@ -41,6 +45,10 @@ public class UserInfoVO implements Serializable {
      * 租户ID
      */
     private Long tenantId;
+    /**
+     * 租户名称
+     */
+    private String tenantName;
     /**
      * 邮箱
      */

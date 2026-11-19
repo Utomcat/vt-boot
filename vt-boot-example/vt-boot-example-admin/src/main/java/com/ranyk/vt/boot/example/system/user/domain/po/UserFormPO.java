@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * CLASS_NAME: UserFormPO.java
@@ -44,9 +45,9 @@ public class UserFormPO implements Serializable {
      */
     private String phone;
     /**
-     * 角色: ADMIN / USER
+     * 角色ID集合, 一个用户可拥有多个角色, 为空时使用默认角色
      */
-    private String role;
+    private List<Long> roleIds;
     /**
      * 状态: 1-正常 0-禁用
      */

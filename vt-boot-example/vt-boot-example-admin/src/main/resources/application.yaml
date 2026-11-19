@@ -27,6 +27,17 @@ vt:
       version: 1.0.0
       description: vt-boot 示例后台接口文档
       contact-name: ranyk
+  task:
+    # 任务覆盖策略: false 表示重启后保留数据库中已持久化的任务(含暂停状态与运行期修改);
+    # 修改了 @VtJob 注解或 vt.task.jobs 中的 cron 需要同步到数据库时, 临时置为 true 重启一次即可
+    overwrite-existing-jobs: false
+    store:
+      # 存储类型: jdbc = 任务与触发器持久化到数据库(默认, 重启不丢失), memory = 仅存内存
+      type: jdbc
+      # 启动时执行框架内置的幂等建表脚本(表已存在则跳过, 不会清空已持久化的任务数据)
+      initialize-schema: always
+      # 建表脚本默认 db/quartz-@@platform@@.sql, 按数据库类型自动选择 mysql_innodb / postgres / h2
+      # schema: db/quartz-@@platform@@.sql
 
 server:
   port: 9086

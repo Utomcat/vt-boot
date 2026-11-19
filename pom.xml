@@ -430,112 +430,112 @@
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-aop-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-async-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-base-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-cache-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-datasource-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-file-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-i18n-core</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-internationalization-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-log-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-rpc-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-mq-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-openapi-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-satoken-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-task-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-task-admin-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
 
       <dependency>
         <groupId>com.ranyk</groupId>
         <artifactId>vt-boot-web-starter</artifactId>
-        <version>${reversion}</version>
+        <version>${project.version}</version>
         <scope>compile</scope>
       </dependency>
     </dependencies>

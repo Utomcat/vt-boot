@@ -1,6 +1,7 @@
 package com.ranyk.vt.boot.task.handle;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.ranyk.vt.boot.base.constant.AutoFillFieldEnum;
 import com.ranyk.vt.boot.base.context.TenantContext;
 import com.ranyk.vt.boot.base.context.UserContext;
 import com.ranyk.vt.boot.task.api.VtJobExecutor;
@@ -71,6 +72,9 @@ public class VtJobAdapter implements Job {
         try {
             if (tenantId != null && !tenantId.isBlank()) {
                 TenantContext.setTenantId(tenantId);
+            } else {
+                // 未配置所属租户: 视为全局任务, 使用默认租户标识以忽略租户过滤, 使所有租户数据都能被执行
+                TenantContext.setTenantId(String.valueOf(AutoFillFieldEnum.TENANT_ID.getDefaultValue()));
             }
             log.debug("VtJob start execute. job: {}, group: {}", vtJobContext.getJobName(), vtJobContext.getJobGroup());
             executor.execute(vtJobContext);

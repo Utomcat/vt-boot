@@ -3,6 +3,7 @@ package com.ranyk.vt.boot.example.system.user.api;
 import com.ranyk.vt.boot.satoken.util.SecurityUtils;
 import com.ranyk.vt.boot.example.system.user.converter.SysUserConverter;
 import com.ranyk.vt.boot.example.system.user.domain.po.UserFormPO;
+import com.ranyk.vt.boot.example.system.user.domain.po.UserPasswordPO;
 import com.ranyk.vt.boot.example.system.user.domain.po.UserQueryPO;
 import com.ranyk.vt.boot.example.system.user.domain.vo.UserVO;
 import com.ranyk.vt.boot.example.system.user.service.SysUserService;
@@ -50,7 +51,7 @@ public class SysUserApi {
      */
     @PostMapping("/page")
     public MultiResult<UserVO> page(@RequestBody UserQueryPO queryPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:user:list");
         return sysUserService.page(sysUserConverter.toQueryDTO(queryPO));
     }
 
@@ -62,7 +63,7 @@ public class SysUserApi {
      */
     @GetMapping("/{id}")
     public Result<UserVO> detail(@PathVariable Long id) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:user:list");
         return Result.success(sysUserService.detail(id));
     }
 
@@ -74,19 +75,19 @@ public class SysUserApi {
      */
     @PostMapping
     public Result<Long> create(@RequestBody UserFormPO formPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:user:add");
         return Result.success(sysUserService.create(sysUserConverter.toFormDTO(formPO)));
     }
 
     /**
-     * 修改用户资料。先校验管理员权限, 仅更新提交的非空字段, 密码有值时才重新加密覆盖。
+     * 修改用户资料。先校验管理员权限, 仅更新提交的非空字段。密码不在此处修改, 统一通过重置密码接口处理。
      *
      * @param formPO 用户表单参数, 必须携带用户ID
      * @return 操作结果
      */
     @PutMapping
     public Result<Void> update(@RequestBody UserFormPO formPO) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:user:edit");
         sysUserService.update(sysUserConverter.toFormDTO(formPO));
         return Result.success(null);
     }
@@ -99,22 +100,23 @@ public class SysUserApi {
      */
     @DeleteMapping("/{id}")
     public Result<Void> delete(@PathVariable Long id) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:user:delete");
         sysUserService.delete(id);
         return Result.success(null);
     }
 
     /**
-     * 重置用户密码。先校验管理员权限, 将新密码加密后覆盖用户原密码。
+     * 重置用户密码。先校验管理员权限, 将新密码加密后覆盖用户原密码。新密码通过请求体传递,
+     * 避免明文出现在 URL 查询串与被访问日志记录。
      *
-     * @param id          用户ID
-     * @param newPassword 新密码明文
+     * @param id         用户ID
+     * @param passwordPO 重置密码请求体, 包含新密码明文
      * @return 操作结果
      */
     @PutMapping("/{id}/password")
-    public Result<Void> resetPassword(@PathVariable Long id, @RequestParam String newPassword) {
-        SecurityUtils.requireAdmin();
-        sysUserService.resetPassword(id, newPassword);
+    public Result<Void> resetPassword(@PathVariable Long id, @RequestBody UserPasswordPO passwordPO) {
+        SecurityUtils.requirePermission("system:user:reset");
+        sysUserService.resetPassword(id, passwordPO.getNewPassword());
         return Result.success(null);
     }
 
@@ -127,7 +129,7 @@ public class SysUserApi {
      */
     @PutMapping("/{id}/status")
     public Result<Void> changeStatus(@PathVariable Long id, @RequestParam Integer status) {
-        SecurityUtils.requireAdmin();
+        SecurityUtils.requirePermission("system:user:status");
         sysUserService.changeStatus(id, status);
         return Result.success(null);
     }

@@ -19,7 +19,7 @@
 | 鉴权模块 | `vt-boot-satoken-starter` | Sa-Token 鉴权拦截器、安全工具、令牌异常处理、多租户拦截 |
 | 文件模块 | `vt-boot-file-starter` | 文件/流内容读取、ZIP 打包等上传处理工具 |
 | RPC 模块 | `vt-boot-rpc-starter` | 服务契约接口（如操作记录 SPI `IOperationRecordService`） |
-| 定时模块 | `vt-boot-task-starter` | 定时任务模块（**占位，暂未实现**） |
+| 定时模块 | `vt-boot-task-starter` | Quartz 任务调度（注解/配置声明、JDBC 持久化、执行日志） |
 
 > 各 Starter 均已注册到 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`，引入后即生效。
 
@@ -167,7 +167,20 @@
 
 ### 14. vt-boot-task-starter（定时任务）
 
-当前为占位模块，`pom.xml` 中未声明任何依赖与源码，**暂未实现定时任务能力**，后续可按需扩展。
+**核心内容**：
+
+- 基于 `spring-boot-starter-quartz`：用 `@VtJob` 注解或 `vt.task.jobs` 配置声明任务，用 `VtTaskUtils` 在运行期做新增 / 修改 / 删除 / 暂停 / 恢复 / 立即执行。
+- `VtJobAdapter`：所有任务统一走同一个 Quartz Job 类，通过 `JobDataMap` 中的执行器 Bean 名称调用业务 Bean 实现的 `VtJobExecutor`。
+- `VtJobListener` + `JdbcVtJobLogRepository`：任务调度前后写入 `vt_job_log` 执行日志（容器中存在 `JdbcTemplate` 时生效）。
+- **JDBC 持久化存储**：自动配置类 `VtTaskStoreAutoConfiguration` 在存在唯一数据源时把数据源交给 `SchedulerFactoryBean`（Quartz 使用 `LocalDataSourceJobStore`），任务与触发器写入数据库的 `QRTZ_*` 表，**服务重启后任务不会丢失**；建表脚本为框架内置的幂等脚本（`db/quartz-mysql_innodb.sql` / `quartz-postgres.sql` / `quartz-h2.sql`），只在表不存在时创建，不会清空已有数据。
+- 线程池、错过触发、集群等仍然全部走 Spring Boot 原生 `spring.quartz.*`，框架不重复封装。
+
+**使用边界**：
+
+- 默认 `vt.task.overwrite-existing-jobs=false`：重启时数据库中已存在的同名任务会被保留（包含暂停状态与运行期修改）。修改了注解/配置里的 cron 需要同步到数据库时，临时置为 `true` 重启一次即可。
+- 多实例部署时需要配置 `spring.quartz.properties.org.quartz.jobStore.isClustered=true`（Quartz 集群依赖 JDBC 存储，本模块默认已满足），避免同一任务被多个实例重复执行。
+- JDBC 存储会把 `JobDataMap` 序列化落库，`VtJobContext` 已实现 `Serializable`，任务参数（`params`）只放可序列化的值。
+- 没有数据源或显式配置 `vt.task.store.type=memory`（或 `spring.quartz.job-store-type=memory`）时退回 Quartz 内存存储（重启即丢失）。
 
 ---
 
