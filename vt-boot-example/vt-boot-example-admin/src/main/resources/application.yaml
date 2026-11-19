@@ -31,6 +31,14 @@ vt:
       version: 1.0.0
       description: vt-boot 示例后台接口文档
       contact-name: ranyk
+  # 缓存配置 - 用于字典读取缓存; 默认启用 Caffeine 本地缓存(无外部依赖)
+  # 后续如需分布式缓存, 将 is-redis-enabled 置 true 并配置 spring.data.redis.* 即可, 字典代码无需改动
+  cache:
+    enabled: true
+    is-caffeine-enabled: true
+    caffeine-init-size: 100
+    caffeine-max-size: 1000
+    is-redis-enabled: false
   task:
     # 任务覆盖策略: false 表示重启后保留数据库中已持久化的任务(含暂停状态与运行期修改);
     # 修改了 @VtJob 注解或 vt.task.jobs 中的 cron 需要同步到数据库时, 临时置为 true 重启一次即可
@@ -68,3 +76,8 @@ management:
   endpoint:
     health:
       show-details: always
+  # 本地未启动 Redis 时关闭 Redis 健康检查, 避免 actuator 健康探测去连 6379 报 DOWN;
+  # 这不是启用/禁用字典缓存, 字典缓存仍使用 Caffeine(见 vt.cache)
+  health:
+    redis:
+      enabled: false

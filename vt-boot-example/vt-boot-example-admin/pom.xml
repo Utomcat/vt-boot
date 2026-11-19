@@ -58,6 +58,12 @@
             <artifactId>vt-boot-openapi-starter</artifactId>
         </dependency>
 
+        <!-- vt-boot 缓存模块: 提供 Caffeine 本地缓存 + Redis, CacheUtils 工具; 用于字典读取缓存 -->
+        <dependency>
+            <groupId>com.ranyk</groupId>
+            <artifactId>vt-boot-cache-starter</artifactId>
+        </dependency>
+
         <!-- vt-boot 定时任务模块: 基于 Quartz 的任务调度内核 -->
         <dependency>
             <groupId>com.ranyk</groupId>

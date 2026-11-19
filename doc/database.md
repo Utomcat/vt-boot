@@ -17,6 +17,8 @@
 | `t_menu` | 菜单与权限表（DIR / MENU / BUTTON） |
 | `t_user_role` | 用户-角色关联表 |
 | `t_role_menu` | 角色-菜单关联表 |
+| `t_dict_type` | 字典类型表（系统字典的分类） |
+| `t_dict_data` | 字典数据表（系统字典的明细项） |
 | `QRTZ_*`（11 张） | Quartz JDBC 存储表（任务明细 / 触发器 / 锁 / 实例状态），默认开启 JDBC 存储时自动创建 |
 | `vt_job_log` | 定时任务执行日志表（`vt.task.log.initialize-schema=always` 时自动创建） |
 | `operation_log_info` | 操作记录表（`@OperationRecord` 默认写入表，非强制，按需创建） |
@@ -208,6 +210,58 @@ CREATE TABLE IF NOT EXISTS `t_role_menu` (
 ### 6. operation_log_info — 操作记录表（可选）
 
 `@OperationRecord` 默认将审计记录写入 `operation_log_info` 表。若启用操作记录审计（`vt.boot.log.operation-record-enabled=true`），需自行建表，表字段可与 `t_login_log` 保持一致并按需扩展 `operation / module / param / operator` 等字段；也可通过 `@OperationRecord(module = "xxx")` 指定自定义表名。
+
+### 7. 字典表（t_dict_type / t_dict_data）
+
+字典由「字典类型 + 字典数据」两张表组成，业务通过 `dict_type` 编码读取某类型下启用的字典项。完整建表与种子数据见 `vt-boot-example-admin/src/main/resources/db/dict-mysql.sql`（幂等，可重复执行）。读写分层、缓存与失效约定见 [系统字典](./dict.md)。
+
+```sql
+CREATE TABLE IF NOT EXISTS `t_dict_type` (
+    `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `tenant_id`   BIGINT          NOT NULL DEFAULT 1 COMMENT '租户ID',
+    `dict_name`   VARCHAR(128)    NOT NULL COMMENT '字典名称',
+    `dict_type`   VARCHAR(128)    NOT NULL COMMENT '字典类型编码(业务引用唯一标识)',
+    `status`      TINYINT         NOT NULL DEFAULT 1 COMMENT '状态: 1-正常 0-禁用',
+    `remark`      VARCHAR(255)             DEFAULT NULL COMMENT '备注',
+    `deleted`     TINYINT         NOT NULL DEFAULT 0 COMMENT '逻辑删除',
+    `create_by`   BIGINT                   DEFAULT NULL COMMENT '创建人ID',
+    `create_time` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by`   BIGINT                   DEFAULT NULL COMMENT '更新人ID',
+    `update_time` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_dict_type` (`tenant_id`, `dict_type`),
+    KEY `idx_dict_type_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
+
+CREATE TABLE IF NOT EXISTS `t_dict_data` (
+    `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `tenant_id`   BIGINT          NOT NULL DEFAULT 1 COMMENT '租户ID',
+    `dict_type`   VARCHAR(128)    NOT NULL COMMENT '所属字典类型编码',
+    `dict_label`  VARCHAR(255)    NOT NULL COMMENT '字典标签',
+    `dict_value`  VARCHAR(255)    NOT NULL COMMENT '字典键值',
+    `dict_sort`   INT             NOT NULL DEFAULT 0 COMMENT '排序值',
+    `tag_type`    VARCHAR(32)              DEFAULT NULL COMMENT '标签样式: primary/success/warning/danger/info',
+    `css_class`   VARCHAR(128)             DEFAULT NULL COMMENT '额外样式类名',
+    `is_default`  TINYINT         NOT NULL DEFAULT 0 COMMENT '是否默认选中: 1-是 0-否',
+    `status`      TINYINT         NOT NULL DEFAULT 1 COMMENT '状态: 1-正常 0-禁用',
+    `remark`      VARCHAR(255)             DEFAULT NULL COMMENT '备注',
+    `deleted`     TINYINT         NOT NULL DEFAULT 0 COMMENT '逻辑删除',
+    `create_by`   BIGINT                   DEFAULT NULL COMMENT '创建人ID',
+    `create_time` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by`   BIGINT                   DEFAULT NULL COMMENT '更新人ID',
+    `update_time` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_dict_value` (`tenant_id`, `dict_type`, `dict_value`),
+    KEY `idx_dict_data_type` (`dict_type`),
+    KEY `idx_dict_data_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典数据表';
+```
+
+约定：
+
+- `t_dict_type.dict_type` 为业务引用标识，`(tenant_id, dict_type)` 唯一；修改编码时后端会级联更新其下字典数据。
+- `t_dict_data` 以 `dict_type` 关联类型，`(tenant_id, dict_type, dict_value)` 唯一，同一类型下键值不可重复；删除类型前需先清空其下数据。
+- `tag_type` 对齐 Element Plus 标签类型（`primary/success/warning/danger/info`）。
 
 ## 三、字段约定
 

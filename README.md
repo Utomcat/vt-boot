@@ -39,6 +39,7 @@
 | [配置说明](./doc/configuration.md) | 各配置文件拆分方式与全部可配置项 |
 | [API 接口](./doc/api.md) | 示例工程 `vt-boot-example-admin` 的 REST 接口 |
 | [数据库设计](./doc/database.md) | 示例工程涉及的数据库表结构说明 |
+| [系统字典](./doc/dict.md) | 字典读写分层、缓存失效约定与下沉触发条件 |
 
 ### 规范与维护
 
