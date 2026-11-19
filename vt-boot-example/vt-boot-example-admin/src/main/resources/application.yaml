@@ -17,6 +17,10 @@ spring:
         url: http://localhost:${server.port}
         instance:
           service-base-url: http://localhost:${server.port}
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
 
 vt:
   boot:
@@ -41,10 +45,6 @@ vt:
 
 server:
   port: 9086
-  servlet:
-    encoding:
-      charset: UTF-8
-      force: true
 
 springdoc:
   api-docs:

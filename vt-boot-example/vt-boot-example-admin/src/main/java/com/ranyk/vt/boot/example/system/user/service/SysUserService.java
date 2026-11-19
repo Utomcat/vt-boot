@@ -129,7 +129,7 @@ public class SysUserService {
         if (count > 0) {
             throw new ServiceException("用户名已存在");
         }
-        // 表单转实体后, 补齐密码加密与默认值
+        // 表单转实体后, 补 齐密码加密与默认值
         SysUser user = sysUserConverter.toEntity(formDTO);
         user.setPassword(PasswordUtils.encode(formDTO.getPassword()));
         List<Long> roleIds = normalizeRoleIds(formDTO.getRoleIds());
@@ -211,7 +211,7 @@ public class SysUserService {
     }
 
     /**
-     * 同步用户的角色绑定: 先清除原有绑定, 再按角色ID写入新的绑定关系。
+     * 同步用户的角色绑定: 先清除原有绑定, 再按角色ID写入新 的绑定关系。
      *
      * @param userId  用户ID
      * @param roleIds 角色ID集合
@@ -259,7 +259,7 @@ public class SysUserService {
         }
         List<SysRole> roles = sysRoleMapper.selectByIds(roleIds).stream()
                 .sorted(Comparator.comparing(SysRole::getSort, Comparator.nullsLast(Comparator.naturalOrder())))
-                .collect(Collectors.toList());
+                .toList();
         boolean isAdmin = roles.stream()
                 .anyMatch(role -> ObjectUtil.equal(RoleCodeEnum.ADMIN.getValue(), role.getCode()));
         if (isAdmin) {
@@ -311,7 +311,7 @@ public class SysUserService {
                     .map(roleMap::get)
                     .filter(ObjectUtil::isNotNull)
                     .sorted(Comparator.comparing(SysRole::getSort, Comparator.nullsLast(Comparator.naturalOrder())))
-                    .collect(Collectors.toList());
+                    .toList();
             vo.setRoleIds(roleIds);
             vo.setRoleCodes(roles.stream().map(SysRole::getCode).collect(Collectors.toList()));
             vo.setRoleNames(roles.stream().map(SysRole::getName).collect(Collectors.toList()));

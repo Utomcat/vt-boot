@@ -1,5 +1,6 @@
 package com.ranyk.vt.boot.task.config;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
@@ -25,7 +26,7 @@ public class VtTaskStoreCondition implements Condition {
     private static final String DEFAULT_STORE_TYPE = "jdbc";
 
     @Override
-    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    public boolean matches(ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
         Environment environment = context.getEnvironment();
         String storeType = environment.getProperty("vt.task.store.type", DEFAULT_STORE_TYPE);
         if (!DEFAULT_STORE_TYPE.equalsIgnoreCase(storeType)) {

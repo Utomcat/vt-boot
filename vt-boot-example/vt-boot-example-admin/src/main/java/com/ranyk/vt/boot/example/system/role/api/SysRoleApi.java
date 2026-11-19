@@ -56,12 +56,6 @@ public class SysRoleApi {
     }
 
     /**
-     * 根据角色ID查询角色详情, 同时返回已授权的菜单ID。要求 system:role:list 权限
-     *
-     * @param id 角色ID
-     * @return 角色详情
-     */
-    /**
      * 查询全部启用角色列表, 供用户管理分配角色时选择。要求 system:user:list 权限
      *
      * @return 角色列表
