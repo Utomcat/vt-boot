@@ -63,8 +63,7 @@ public class AuthApi {
      */
     @PostMapping("/refresh")
     public Result<LoginVO> refresh(@Valid @RequestBody RefreshTokenPO refreshTokenPO, HttpServletRequest request) {
-        return Result.success(
-                authService.refresh(authConverter.toRefreshTokenDTO(refreshTokenPO).getRefreshToken(), getClientIp(request)));
+        return Result.success(authService.refresh(authConverter.toRefreshTokenDTO(refreshTokenPO).getRefreshToken(), getClientIp(request)));
     }
 
     /**

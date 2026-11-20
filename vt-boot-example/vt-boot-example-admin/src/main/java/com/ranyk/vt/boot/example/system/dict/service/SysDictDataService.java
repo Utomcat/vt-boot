@@ -96,7 +96,7 @@ public class SysDictDataService {
             throw new ServiceException("字典类型编码不能为空");
         }
         return dictReader.listByType(dictType).stream()
-                .map(item -> sysDictDataConverter.toVO(item))
+                .map(sysDictDataConverter::toVO)
                 .toList();
     }
 

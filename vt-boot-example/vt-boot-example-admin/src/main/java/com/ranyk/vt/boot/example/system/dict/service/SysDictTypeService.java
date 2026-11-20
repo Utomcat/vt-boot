@@ -69,11 +69,11 @@ public class SysDictTypeService {
     public MultiResult<DictTypeVO> page(DictTypeQueryDTO queryDTO) {
         Page<SysDictType> page = new Page<>(queryDTO.getPage(), queryDTO.getSize());
         LambdaQueryWrapper<SysDictType> wrapper = Wrappers.<SysDictType>lambdaQuery()
-                .like(StrUtil.isNotBlank(queryDTO.getDictName()), SysDictType::getDictName, queryDTO.getDictName())
-                .like(StrUtil.isNotBlank(queryDTO.getDictType()), SysDictType::getDictType, queryDTO.getDictType())
-                .eq(ObjectUtil.isNotNull(queryDTO.getStatus()), SysDictType::getStatus, queryDTO.getStatus())
-                .orderByDesc(SysDictType::getCreateTime)
-                .orderByDesc(SysDictType::getId);
+            .like(StrUtil.isNotBlank(queryDTO.getDictName()), SysDictType::getDictName, queryDTO.getDictName())
+            .like(StrUtil.isNotBlank(queryDTO.getDictType()), SysDictType::getDictType, queryDTO.getDictType())
+            .eq(ObjectUtil.isNotNull(queryDTO.getStatus()), SysDictType::getStatus, queryDTO.getStatus())
+            .orderByDesc(SysDictType::getCreateTime)
+            .orderByDesc(SysDictType::getId);
         IPage<SysDictType> result = sysDictTypeMapper.selectPage(page, wrapper);
         List<DictTypeVO> list = result.getRecords().stream().map(sysDictTypeConverter::toVO).toList();
         return MultiResult.successMulti(list, result.getTotal(), (int) result.getCurrent(), (int) result.getSize());
@@ -86,12 +86,12 @@ public class SysDictTypeService {
      */
     public List<DictTypeVO> options() {
         return sysDictTypeMapper.selectList(Wrappers.<SysDictType>lambdaQuery()
-                        .eq(SysDictType::getStatus, STATUS_NORMAL)
-                        .orderByAsc(SysDictType::getDictName)
-                        .orderByAsc(SysDictType::getId))
-                .stream()
-                .map(sysDictTypeConverter::toVO)
-                .toList();
+                .eq(SysDictType::getStatus, STATUS_NORMAL)
+                .orderByAsc(SysDictType::getDictName)
+                .orderByAsc(SysDictType::getId))
+            .stream()
+            .map(sysDictTypeConverter::toVO)
+            .toList();
     }
 
     /**
@@ -153,8 +153,8 @@ public class SysDictTypeService {
         // 类型编码变更时级联更新字典数据的所属类型, 避免数据成为孤儿
         if (StrUtil.isNotBlank(newCode) && !StrUtil.equals(oldCode, newCode)) {
             sysDictDataMapper.update(null, Wrappers.<SysDictData>lambdaUpdate()
-                    .set(SysDictData::getDictType, newCode)
-                    .eq(SysDictData::getDictType, oldCode));
+                .set(SysDictData::getDictType, newCode)
+                .eq(SysDictData::getDictType, oldCode));
         }
         // 失效受影响类型的读取缓存: 旧类型必有缓存需清理; 编码变更时新类型也需失效
         dictReader.evict(oldCode);
@@ -172,7 +172,7 @@ public class SysDictTypeService {
     public void delete(Long id) {
         SysDictType dictType = getExist(id);
         Long dataCount = sysDictDataMapper.selectCount(
-                Wrappers.<SysDictData>lambdaQuery().eq(SysDictData::getDictType, dictType.getDictType()));
+            Wrappers.<SysDictData>lambdaQuery().eq(SysDictData::getDictType, dictType.getDictType()));
         if (dataCount > 0) {
             throw new ServiceException("该字典类型下存在字典数据, 请先删除字典数据");
         }
@@ -200,14 +200,14 @@ public class SysDictTypeService {
     /**
      * 判断字典类型编码是否已被占用
      *
-     * @param dictType 字典类型编码
+     * @param dictType  字典类型编码
      * @param excludeId 需要排除的字典类型ID(修改场景传自身ID), 新增场景传 null
      * @return 是否已存在
      */
     private boolean existsDictType(String dictType, Long excludeId) {
         Long count = sysDictTypeMapper.selectCount(Wrappers.<SysDictType>lambdaQuery()
-                .eq(SysDictType::getDictType, dictType)
-                .ne(ObjectUtil.isNotNull(excludeId), SysDictType::getId, excludeId));
+            .eq(SysDictType::getDictType, dictType)
+            .ne(ObjectUtil.isNotNull(excludeId), SysDictType::getId, excludeId));
         return count > 0;
     }
 

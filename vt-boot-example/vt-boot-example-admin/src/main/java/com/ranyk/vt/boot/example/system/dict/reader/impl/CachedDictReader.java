@@ -45,6 +45,7 @@ public class CachedDictReader implements DictReader {
     /**
      * 缓存未命中时 CacheUtils 返回的占位值
      */
+    @SuppressWarnings("unused")
     private static final String CACHE_MISS_PLACEHOLDER = "-";
 
     /**
@@ -111,7 +112,7 @@ public class CachedDictReader implements DictReader {
     private List<DictItem> readFromCache(String dictType) {
         try {
             Object cached = CacheUtils.getCache(CACHE_KEY_PREFIX + dictType);
-            if (cached == null || CACHE_MISS_PLACEHOLDER.equals(cached) || !(cached instanceof List<?>)) {
+            if (!(cached instanceof List<?>)) {
                 return null;
             }
             return new ArrayList<>((List<DictItem>) cached);
@@ -136,12 +137,6 @@ public class CachedDictReader implements DictReader {
     }
 
     /**
-     * 从数据库加载指定类型下启用的字典项
-     *
-     * @param dictType 字典类型编码
-     * @return 字典项列表
-     */
-    /**
      * 从数据库加载指定类型下启用的字典项; 字典类型不存在或已被禁用时返回空列表(整类不可读)
      *
      * @param dictType 字典类型编码
@@ -149,18 +144,18 @@ public class CachedDictReader implements DictReader {
      */
     private List<DictItem> loadFromDb(String dictType) {
         SysDictType dictTypeEntity = sysDictTypeMapper.selectOne(
-                Wrappers.<SysDictType>lambdaQuery().eq(SysDictType::getDictType, dictType));
+            Wrappers.<SysDictType>lambdaQuery().eq(SysDictType::getDictType, dictType));
         if (dictTypeEntity == null || !Integer.valueOf(STATUS_NORMAL).equals(dictTypeEntity.getStatus())) {
             return List.of();
         }
         return sysDictDataMapper.selectList(Wrappers.<SysDictData>lambdaQuery()
-                        .eq(SysDictData::getDictType, dictType)
-                        .eq(SysDictData::getStatus, STATUS_NORMAL)
-                        .orderByAsc(SysDictData::getDictSort)
-                        .orderByAsc(SysDictData::getId))
-                .stream()
-                .map(this::toItem)
-                .toList();
+                .eq(SysDictData::getDictType, dictType)
+                .eq(SysDictData::getStatus, STATUS_NORMAL)
+                .orderByAsc(SysDictData::getDictSort)
+                .orderByAsc(SysDictData::getId))
+            .stream()
+            .map(this::toItem)
+            .toList();
     }
 
     /**
@@ -171,13 +166,13 @@ public class CachedDictReader implements DictReader {
      */
     private DictItem toItem(SysDictData entity) {
         return DictItem.builder()
-                .dictType(entity.getDictType())
-                .label(entity.getDictLabel())
-                .value(entity.getDictValue())
-                .sort(entity.getDictSort())
-                .tagType(entity.getTagType())
-                .cssClass(entity.getCssClass())
-                .isDefault(entity.getIsDefault())
-                .build();
+            .dictType(entity.getDictType())
+            .label(entity.getDictLabel())
+            .value(entity.getDictValue())
+            .sort(entity.getDictSort())
+            .tagType(entity.getTagType())
+            .cssClass(entity.getCssClass())
+            .isDefault(entity.getIsDefault())
+            .build();
     }
 }
